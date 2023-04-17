@@ -245,7 +245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bad83240d1d66864089f62d0176c0f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 30
+  speed: 20
   isWalking: 0
 --- !u!212 &201449927
 SpriteRenderer:
@@ -4475,13 +4475,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1891873805}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bba449bbf5953114fa42eb1838a58e2b, type: 3}
+  m_Script: {fileID: 11500000, guid: e971a2170dabf964cb558126cebde389, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerLocation: {fileID: 0}
-  distance: 10
-  height: 5
-  smoothRotate: 5
+  player: {fileID: 201449920}
 --- !u!1001 &1041545820895174210
 PrefabInstance:
   m_ObjectHideFlags: 0
