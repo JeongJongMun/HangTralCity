@@ -8,64 +8,30 @@ using Amazon.CognitoIdentity;
 using Amazon;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class CognitoSignUp : MonoBehaviour
 {
     private AmazonCognitoIdentityProviderClient cognitoService; // cognitoService 객체 선언
 
-    public InputField signUpEMail;
-    public InputField signUpPassWord;
-    public InputField signUpNickName;
+    public TMP_InputField sign_up_email;
+    public TMP_InputField sign_up_password;
+    public TMP_InputField sign_up_nickname;
 
-    public Button signUpSignUp;
-    public Button signUpBackToSignIn;
+    public Button sign_up_sign_up_btn;
+    public Button sign_up_back_btn;
 
-    private string email;
-    private string password;
-    private string nickname;
-
-    private void Awake()
+    private void Start()
     {
-        if (signUpNickName.GetComponent<InputField>().text == null)
-        {
-            nickname = " ";
-        }
-        else
-        {
-            nickname = signUpNickName.GetComponent<InputField>().text;
-        }
 
-        if (signUpEMail.GetComponent<InputField>().text == null)
-        {
-            email = " ";
-        }
-        else
-        {
-            email = signUpEMail.GetComponent<InputField>().text;
-
-        }
-
-        if (signUpPassWord.GetComponent<InputField>().text == null)
-        {
-            password = " ";
-        }
-        else
-        {
-            password = signUpPassWord.GetComponent<InputField>().text;
-
-        }
-    }
-
-    void Start()
-    {
         // Amazon Cognito 인증 정보 설정 (IdentityPool, Region)
         var credentials = new CognitoAWSCredentials("ap-northeast-2:49b91ce6-d3db-47f2-af63-2a9db71ca292", RegionEndpoint.APNortheast2);
 
         // Amazon Cognito 서비스의 객체를 인스턴스화
         cognitoService = new AmazonCognitoIdentityProviderClient(credentials, RegionEndpoint.APNortheast2);
         
-        signUpSignUp.onClick.AddListener(SignUp); // 유니티 실행하면 바로 회원가입 보내게끔 해놨음
-        signUpBackToSignIn.onClick.AddListener(changeSignInScene);
+        sign_up_sign_up_btn.onClick.AddListener(SignUp); // 유니티 실행하면 바로 회원가입 보내게끔 해놨음
+        sign_up_back_btn.onClick.AddListener(changeSignInScene);
     }
 
     void changeSignInScene()
@@ -79,12 +45,12 @@ public class CognitoSignUp : MonoBehaviour
         var signUpRequest = new SignUpRequest
         {
             ClientId = "1luokqrq9t4j8gag5kbnphunvu", // 클라이언트 ID (모든 사용자들 공통)
-            Username = signUpNickName.ToString(), // 사용자 이름
-            Password = signUpPassWord.ToString(), // 비밀번호
+            Username = sign_up_nickname.text.ToString(), // 사용자 이름
+            Password = sign_up_password.text.ToString(), // 비밀번호
             UserAttributes = new List<AttributeType> // aws에서 우리가 직접 설정한 필수 속성
             {
-                new AttributeType { Name = "email", Value = signUpEMail.ToString() },
-                new AttributeType { Name = "nickname", Value = signUpNickName.ToString() }
+                new AttributeType { Name = "email", Value = sign_up_email.text.ToString() },
+                new AttributeType { Name = "nickname", Value = sign_up_nickname.text.ToString() }
             }
         };
 
@@ -96,6 +62,7 @@ public class CognitoSignUp : MonoBehaviour
             if (response.HttpStatusCode == HttpStatusCode.OK)
             {
                 Debug.Log("Sign-Up Successful.");
+                SceneManager.LoadScene("SignInScene");
             }
             else
             {

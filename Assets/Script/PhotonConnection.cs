@@ -4,11 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
+using TMPro;
 
 public class PhotonConnection : MonoBehaviourPunCallbacks
 {
-    public GameObject Player;
-
+    public TMP_Text for_test;
     void Start()
     {
         Screen.SetResolution(1080, 2340, false);
@@ -21,14 +21,14 @@ public class PhotonConnection : MonoBehaviourPunCallbacks
         RoomOptions options = new RoomOptions();
         options.MaxPlayers = 10;
 
-        PhotonNetwork.LocalPlayer.NickName = Player.GetComponent<PlayerInfo>().nickname;
+        PhotonNetwork.LocalPlayer.NickName = PlayerInfo.player_info.nickname;
         PhotonNetwork.JoinOrCreateRoom("Room1", options, null);
 
     }
     public override void OnJoinedRoom()
     {
         updatePlayer();
-        Debug.LogFormat("{0}님이 방에 참가하였습니다.", Player.GetComponent<PlayerInfo>().nickname);
+        Debug.LogFormat("{0}님이 방에 참가하였습니다.", PlayerInfo.player_info.nickname);
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -53,6 +53,7 @@ public class PhotonConnection : MonoBehaviourPunCallbacks
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
         {
             Debug.LogFormat("현재 접속자 : {0}", PhotonNetwork.PlayerList[i].NickName);
+            for_test.text += PhotonNetwork.PlayerList[i].NickName;
         }
     }
 
