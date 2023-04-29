@@ -8,7 +8,7 @@ public class PlayerMove : MonoBehaviour
     public float speed; // 이동 속도
     public bool isWalking = false;
 
-    private float playerScale = 0.05f; // 플레이어 크기 비율
+    private float playerScale = 0.1f; // 플레이어 크기 비율
 
     Rigidbody2D rigid;
     Animator animator;

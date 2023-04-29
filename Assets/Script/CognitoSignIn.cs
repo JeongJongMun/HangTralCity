@@ -40,8 +40,7 @@ public class CognitoSignIn : MonoBehaviour
             {
                 // 인증 성공시 Access Token 반환
                 PlayerInfo.player_info.access_token = authResponse.AuthenticationResult.AccessToken;
-                PlayerInfo.player_info.nickname = username;
-                SceneManager.LoadScene("MainScene");
+                SceneManager.LoadScene("CharacterCreateScene");
                 return authResponse.AuthenticationResult.AccessToken;
             }
             else

@@ -8,7 +8,6 @@ public class PlayerInfo : MonoBehaviour
     public static PlayerInfo player_info;
     public string nickname;
     public string email;
-    public string password;
     public string access_token;
 
     void Awake()

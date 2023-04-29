@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using Amazon.CognitoIdentityProvider.Model;
 using System;
@@ -6,7 +5,6 @@ using System.Net;
 using Amazon.CognitoIdentityProvider;
 using Amazon.CognitoIdentity;
 using Amazon;
-using UnityEngine.UI;
 
 public class CognitoGetUserInfo : MonoBehaviour
 {
@@ -29,6 +27,7 @@ public class CognitoGetUserInfo : MonoBehaviour
 
     public async void GetUserInfo()
     {
+        Debug.Log("GetUserInfo Called");
         // 사용자 정보 가져오기 요청 생성
         var getUserInfoRequest = new GetUserRequest
         {
@@ -42,6 +41,13 @@ public class CognitoGetUserInfo : MonoBehaviour
             if (response.HttpStatusCode == HttpStatusCode.OK)
             {
                 Debug.Log("User Info: " + response.UserAttributes);
+                foreach (var attribute in response.UserAttributes)
+                {
+                    // UserAttributes 리스트를 순회하며 유저 정보 가져오기
+                    if (attribute.Name == "nickname") PlayerInfo.player_info.nickname = attribute.Value;
+                    if (attribute.Name == "email") PlayerInfo.player_info.email = attribute.Value;
+                    Debug.LogFormat("{0} : {1}", attribute.Name, attribute.Value);
+                }
             }
             else
             {
