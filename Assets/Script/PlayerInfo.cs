@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerInfo : MonoBehaviour
 {
-    string name = "JJM";
+    public string nickname = "JJM";
     int std_id = 2019125058;
     string email = "";
     string pw = "";
