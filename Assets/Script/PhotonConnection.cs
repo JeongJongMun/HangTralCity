@@ -8,6 +8,17 @@ using TMPro;
 
 public class PhotonConnection : MonoBehaviourPunCallbacks
 {
+    public static PhotonConnection photon_connection;
+
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+
+        // player_info가 유일한 인스턴스
+        if (photon_connection == null) photon_connection = this;
+        // player_info 인스턴스가 이게 아니라면, 다른 인스턴스 삭제
+        else if (photon_connection != this) Destroy(gameObject);
+    }
     public TMP_Text for_test;
     void Start()
     {
