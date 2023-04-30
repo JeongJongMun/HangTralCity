@@ -9,6 +9,8 @@ public class PlayerInfo : MonoBehaviour
     public string nickname;
     public string email;
     public string access_token;
+    public int custom_hat = -1;
+    public int custom_eye = -1;
 
     void Awake()
     {
