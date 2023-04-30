@@ -7,6 +7,7 @@ TagManager:
   - BlueTeam
   - RedTeam
   - Point
+  - GangDoor
   layers:
   - Default
   - TransparentFX
