@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4827858825106943487}
   m_Layer: 0
   m_Name: Sofa
-  m_TagString: Untagged
+  m_TagString: Custom_Dorm
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

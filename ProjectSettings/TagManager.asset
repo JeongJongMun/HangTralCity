@@ -8,6 +8,7 @@ TagManager:
   - RedTeam
   - Point
   - GangDoor
+  - Custom_Dorm
   layers:
   - Default
   - TransparentFX
