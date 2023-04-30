@@ -2,25 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class CharacterCreateManage : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public Button camera_btn, create_btn;
     void Start()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        create_btn.onClick.AddListener(Click_CreateBtn);
+        camera_btn.onClick.AddListener(Click_CameraBtn);
     }
     public void Click_CreateBtn() {
         SceneManager.LoadScene("MainScene");
     }
-    public void Click_ReCreateBtn() {
-        Debug.Log("Clicked RecreateBtn");
+    public void Click_CameraBtn() {
+        SceneManager.LoadScene("CameraScene");
     }
     public void Click_LeftBtn() {
         Debug.Log("Clicked LeftBtn");

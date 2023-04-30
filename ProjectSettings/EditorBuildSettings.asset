@@ -12,18 +12,24 @@ EditorBuildSettings:
     path: Assets/Scenes/SignUpScene.unity
     guid: 982b7493d2841e443b5bab5401cb63a6
   - enabled: 1
+    path: Assets/Scenes/CharacterCreateScene.unity
+    guid: a3f14279e81cd7a419cd7f663bedad03
+  - enabled: 1
+    path: Assets/Scenes/CameraScene.unity
+    guid: b4e483cdd5862ec449aad0a80ead5564
+  - enabled: 1
     path: Assets/Scenes/MainScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
     path: Assets/Scenes/CustomizeScene.unity
     guid: 7a0a66e5ec501764b8988181773773f9
   - enabled: 1
-    path: Assets/Scenes/CharacterCreateScene.unity
-    guid: a3f14279e81cd7a419cd7f663bedad03
+    path: Assets/Scenes/GangScene.unity
+    guid: edf92c983342ea8488fd980192904d0a
+  - enabled: 1
+    path: Assets/Scenes/DormScene.unity
+    guid: 0ba3af732dbf3334dbbe3b53e33dabae
   - enabled: 1
     path: Assets/Scenes/MiniGame1Scene.unity
     guid: 63f80a7a911665d45a8c6f8b993144f4
-  - enabled: 1
-    path: Assets/Scenes/GangScene.unity
-    guid: edf92c983342ea8488fd980192904d0a
   m_configObjects: {}

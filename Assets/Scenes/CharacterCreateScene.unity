@@ -357,6 +357,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41feff55f72c56b4fbf84c330bcb2085, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camera_btn: {fileID: 2082369402}
+  create_btn: {fileID: 873133024}
 --- !u!1 &549025978
 GameObject:
   m_ObjectHideFlags: 0
@@ -1299,7 +1301,7 @@ GameObject:
   - component: {fileID: 2082369403}
   - component: {fileID: 2082369402}
   m_Layer: 5
-  m_Name: ReCreated_Btn
+  m_Name: Camera_Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

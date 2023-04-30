@@ -9907,10 +9907,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 6669955342313860848, guid: 0f28b31e3c3e66d438cf0e8951d38327, type: 3}
-      propertyPath: m_IsTrigger
-      value: 0
-      objectReference: {fileID: 0}
+    - target: {fileID: 1718209541, guid: 0f28b31e3c3e66d438cf0e8951d38327, type: 3}
+      propertyPath: exit_btn
+      value: 
+      objectReference: {fileID: 844198540}
     - target: {fileID: 8475009562212874255, guid: 0f28b31e3c3e66d438cf0e8951d38327, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -9955,20 +9955,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8475009562212874352, guid: 0f28b31e3c3e66d438cf0e8951d38327, type: 3}
-      propertyPath: m_SortingOrder
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8475009562212874355, guid: 0f28b31e3c3e66d438cf0e8951d38327, type: 3}
-      propertyPath: m_BodyType
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8475009562212874358, guid: 0f28b31e3c3e66d438cf0e8951d38327, type: 3}
       propertyPath: m_Name
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 8475009562212874358, guid: 0f28b31e3c3e66d438cf0e8951d38327, type: 3}
-      propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -10060,11 +10048,10 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8475009562212874358, guid: 0f28b31e3c3e66d438cf0e8951d38327, type: 3}
   m_PrefabInstance: {fileID: 1061671509}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1718209541
+--- !u!114 &1718209541 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 1718209541, guid: 0f28b31e3c3e66d438cf0e8951d38327, type: 3}
+  m_PrefabInstance: {fileID: 1061671509}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1718209533}
   m_Enabled: 1
@@ -10072,7 +10059,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3091086f9c126c4f8feff1b9d38de53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exit_btn: {fileID: 844198540}
 --- !u!1 &1772917048
 GameObject:
   m_ObjectHideFlags: 0
