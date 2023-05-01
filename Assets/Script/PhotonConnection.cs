@@ -33,19 +33,12 @@ public class PhotonConnection : MonoBehaviourPunCallbacks
     {
         Debug.Log("enter\n");
         PhotonNetwork.LoadLevel("GangScene");
+        PhotonNetwork.Instantiate("Player", transform.position, Quaternion.identity);
         updatePlayer();
         Debug.LogFormat("{0}님이 방에 참가하였습니다.2", PlayerInfo.player_info.nickname);
     }
 
-    /*public override void OnConnectedToMaster()
-    {
-        Debug.Log("OnConnectedToMaster\n");
-*//*        RoomOptions options = new RoomOptions();
-        options.MaxPlayers = 10;*//*
 
-        //PhotonNetwork.LocalPlayer.NickName = PlayerInfo.player_info.nickname;
-        PhotonNetwork.JoinOrCreateRoom("Room1", new RoomOptions { MaxPlayers = 10 }, null);
-    }*/
 
     /*public override void OnJoinedRoom() //JoinOrCreateRoom callbackfunction
     {
@@ -54,6 +47,13 @@ public class PhotonConnection : MonoBehaviourPunCallbacks
         updatePlayer();
         Debug.LogFormat("{0}님이 방에 참가하였습니다.2", PlayerInfo.player_info.nickname);
     }*/
+
+    public void JoinRoom()
+    {
+        Debug.Log("방에 참가하였습니다");
+
+        PhotonNetwork.LoadLevel("GangScene");
+    }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {

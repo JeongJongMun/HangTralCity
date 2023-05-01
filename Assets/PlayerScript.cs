@@ -51,10 +51,10 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             else if (axis_x > 0) transform.localScale = new Vector3(1 * playerScale, playerScale, playerScale);
         }
 
-        //ismine이 아닌경우 위치동기화
+        //ismine이 아닌경우 위치동기화 (다른 사람이 움직이는걸 내가 볼 수 있게
         else if ((transform.position - curPos).sqrMagnitude >= 100) transform.position = curPos; // 멀리 떨어졌다면
         else transform.position = Vector3.Lerp(transform.position, curPos, Time.deltaTime * 10); // 근처라면
-                }
+    }
 
     //[PunRPC]
     //void FlipXRPC(float axis) => SR.flipX = axis == -1;

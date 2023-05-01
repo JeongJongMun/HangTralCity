@@ -423,7 +423,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8531276924640856091}
   - component: {fileID: 8531276924640856164}
-  - component: {fileID: 8531276924640856165}
   - component: {fileID: 8531276924640856166}
   - component: {fileID: 8531276924640856167}
   - component: {fileID: 8531276924640856161}
@@ -448,7 +447,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8531276924640856162}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.09, y: 6.01, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -510,19 +509,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8531276924640856165
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8531276924640856162}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bad83240d1d66864089f62d0176c0f9c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 20
 --- !u!114 &8531276924640856166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -689,4 +675,4 @@ MonoBehaviour:
   AN: {fileID: 8531276924640856161}
   SR: {fileID: 8531276924640856164}
   PV: {fileID: 8295723562029454646}
-  NickNameText: {fileID: 0}
+  NickNameText: {fileID: 286092250842272282}
