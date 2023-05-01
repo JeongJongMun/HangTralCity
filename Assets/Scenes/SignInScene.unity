@@ -402,7 +402,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 195468897}
-  - component: {fileID: 195468896}
   - component: {fileID: 195468898}
   m_Layer: 0
   m_Name: SignInManager
@@ -411,18 +410,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &195468896
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 195468895}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c395204023dd40f4e853323ef7a3d34d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &195468897
 Transform:
   m_ObjectHideFlags: 0
@@ -1297,19 +1284,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1108100501}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 195468896}
-        m_TargetAssemblyTypeName: LogInManage, Assembly-CSharp
-        m_MethodName: Click_LogIn_Btn
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1108100501
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1756,19 +1731,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1319216559}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 195468896}
-        m_TargetAssemblyTypeName: LogInManage, Assembly-CSharp
-        m_MethodName: Click_LogIn_Btn
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1319216559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2213,19 +2176,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1800960074}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 195468898}
-        m_TargetAssemblyTypeName: CognitoSignIn, Assembly-CSharp
-        m_MethodName: SignInBtnClicked
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1800960074
 MonoBehaviour:
   m_ObjectHideFlags: 0

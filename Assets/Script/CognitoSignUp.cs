@@ -31,12 +31,7 @@ public class CognitoSignUp : MonoBehaviour
         cognitoService = new AmazonCognitoIdentityProviderClient(credentials, RegionEndpoint.APNortheast2);
         
         sign_up_sign_up_btn.onClick.AddListener(SignUp); // 유니티 실행하면 바로 회원가입 보내게끔 해놨음
-        sign_up_back_btn.onClick.AddListener(changeSignInScene);
-    }
-
-    void changeSignInScene()
-    {
-        SceneManager.LoadScene("SignInScene");
+        sign_up_back_btn.onClick.AddListener(ClickBackBtn);
     }
 
     public async void SignUp()
@@ -73,5 +68,9 @@ public class CognitoSignUp : MonoBehaviour
         {
             Debug.LogError("Sign-Up Failed: " + e.Message);
         }
+    }
+    public void ClickBackBtn()
+    {
+        SceneManager.LoadScene("SignInScene");
     }
 }

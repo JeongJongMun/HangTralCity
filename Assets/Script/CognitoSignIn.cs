@@ -9,17 +9,20 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using Unity.VisualScripting;
 
 public class CognitoSignIn : MonoBehaviour
 {
     private string _clientId = "1luokqrq9t4j8gag5kbnphunvu"; // 클라이언트 ID
-    private string _userPoolId = "ap-northeast-2:49b91ce6-d3db-47f2-af63-2a9db71ca292"; // 유저 풀 ID
 
     public TMP_InputField sign_in_nickname;
     public TMP_InputField sign_in_password;
     public Button sign_in_sign_in_btn;
     public Button sign_in_sign_up_btn;
+    private void Start()
+    {
+        sign_in_sign_in_btn.onClick.AddListener(ClickSignInBtn);
+        sign_in_sign_up_btn.onClick.AddListener(ClickSignUpBtn);
+    }
 
 
     public async Task<string> SignInAsync(string username, string password)
@@ -64,8 +67,13 @@ public class CognitoSignIn : MonoBehaviour
     }
 
     // 로그인 버튼 클릭 시 코루틴 시작
-    public void SignInBtnClicked()
+    public void ClickSignInBtn()
     {
         StartCoroutine(MyCoroutine());
+    }
+    // 회원가입 버튼 클릭 시
+    public void ClickSignUpBtn()
+    {
+        SceneManager.LoadScene("SignUpScene");
     }
 }
