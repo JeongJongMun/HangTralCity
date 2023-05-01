@@ -2,17 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Timer : MonoBehaviour
 {
     public TMP_Text timerText;
-    public TMP_Text finalPanalty;
+    public TMP_Text finalPenalty;
+
+    public Button lobby;
+    public Button ranking;
 
     public GameObject text;
-    public GameObject panaltyText;
+    public GameObject penaltyText;
     public GameObject timeRemainingText;
     public GameObject timeoverText;
-    public GameObject finalPanaltyText;
+    public GameObject finalPenaltyText;
+
+    public GameObject lobbyBtn;
+    public GameObject rankingBtn;
 
     public int timer = 60;
     private float count = 0;
@@ -58,13 +65,15 @@ public class Timer : MonoBehaviour
         if (timer == 0)
         {
             finishedFlag = true;
-            finalPanalty.text = "panalty : " + PanaltyCount.GetPanalty();
+            finalPenalty.text = "penalty : " + PenaltyCount.GetPenalty();
 
             text.SetActive(false);
-            panaltyText.SetActive(false);
+            penaltyText.SetActive(false);
             timeRemainingText.SetActive(false);
             timeoverText.SetActive(true);
-            finalPanaltyText.SetActive(true);
+            finalPenaltyText.SetActive(true);
+            lobbyBtn.SetActive(true);
+            rankingBtn.SetActive(true);
         }
     }
 

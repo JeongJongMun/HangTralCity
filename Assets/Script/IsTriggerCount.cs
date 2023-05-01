@@ -8,7 +8,7 @@ public class IsTriggerCount : MonoBehaviour
     {
         if (collision.tag == "Player" && Timer.GetFinishedFlag() == false)
         {
-            PanaltyCount.AddPanalty(1); //노란타일이 플레이어에게 닿으면 패널티 +1
+            PenaltyCount.AddPanalty(1); //노란타일이 플레이어에게 닿으면 패널티 +1
         }
     }
 }
