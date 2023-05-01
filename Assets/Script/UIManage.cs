@@ -1,39 +1,59 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
-using Unity.VisualScripting;
 
 public class UIManage : MonoBehaviour
 {
+    // Canvas의 TopBar, BottomBar UI 관리
     private TMP_Text nickname;
-    private Button setting_btn, customize_btn, home_btn;
-    private void Start()
+    private Button home_btn, closet_btn, setting_btn, logout_btn;
+    private GameObject setting_content;
+    void Start()
     {
-        nickname.text = PlayerInfo.player_info.nickname;
+        //nickname.text = PlayerInfo.player_info.nickname;
+
+        home_btn = GameObject.Find("HomeBtn").GetComponent<Button>();
+        home_btn.onClick.AddListener(ClickHomeBtn);
+        Debug.Log("STARATWQTQTQ");
+
+        closet_btn = GameObject.Find("ClosetBtn").GetComponent<Button>();
+        closet_btn.onClick.AddListener(ClickClosetBtn);
 
         setting_btn = GameObject.Find("SettingBtn").GetComponent<Button>();
-        customize_btn = GameObject.Find("CustomBtn").GetComponent<Button>();
-        home_btn = GameObject.Find("HomeBtn").GetComponent<Button>();
+        setting_btn.onClick.AddListener(ClickSettingBtn);
 
-        setting_btn.onClick.AddListener(Click_Setting_Btn);
-        customize_btn.onClick.AddListener(Click_Customize_Btn);
-        home_btn.onClick.AddListener(Click_Home_Btn);
+        logout_btn = GameObject.Find("LogOutBtn").GetComponent<Button>();
+        logout_btn.onClick.AddListener(ClickLogOutBtn);
+
+        setting_content = GameObject.Find("SettingContent");
+        setting_content.SetActive(false);
+
     }
-
-    public void Click_Setting_Btn()
+    private void ClickSettingBtn()
     {
+        Debug.Log("SettingBtn Clicked");
+
+        if (setting_content.activeSelf) setting_content.SetActive(false);
+        else setting_content.SetActive(true);
+    }
+    private void ClickLogOutBtn()
+    {
+        Debug.Log("LogoutBtn Clicked");
+        // 로그아웃시 자동 로그인된 정보를 삭제
+        PlayerPrefs.DeleteKey("LastLoggedInUserId");
+        PlayerPrefs.DeleteKey("LastLoggedInPassword");
         SceneManager.LoadScene("SignInScene");
     }
 
-    public void Click_Customize_Btn()
+    private void ClickClosetBtn()
     {
-        SceneManager.LoadScene("CustomizeScene");
+        Debug.Log("ClosetBtn Clicked");
+        SceneManager.LoadScene("ClosetScene");
     }
-    public void Click_Home_Btn()
+    private void ClickHomeBtn()
     {
+        Debug.Log("HomeBtn Clicked");
         SceneManager.LoadScene("MainScene");
     }
 }

@@ -699,7 +699,7 @@ RectTransform:
   m_Father: {fileID: 1808680337}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.1, y: 0.9}
+  m_AnchorMin: {x: 0.1, y: 0.8}
   m_AnchorMax: {x: 0.9, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
@@ -1495,7 +1495,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41feff55f72c56b4fbf84c330bcb2085, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
   camera_btn: {fileID: 2082369402}
   create_btn: {fileID: 873133024}
   left_btn: {fileID: 1040664711}

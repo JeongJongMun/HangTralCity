@@ -8,11 +8,11 @@ public class PlayerInfo : MonoBehaviour
     public static PlayerInfo player_info;
     public string nickname;
     public string email;
-    public string access_token;
+    public string access_token; // Cognito 로그인시 받는 토큰
     public int custom_hat = -1; // 캐릭터 커스터마이징 hat 에셋 저장
     public int custom_eye = -1; // 캐릭터 커스터마이징 eye 에셋 저장
     public Dictionary<string, Vector3> furniture_pos = new Dictionary<string, Vector3>(); // 방 커스터마이징 가구 종류 및 위치 저장
-    public int character_type;
+    public int character_type; // 캐릭터 타입
     
     // PlayerInfo 클래스를 싱글 톤으로 생성
     // 단 하나의 인스턴스만을 가지며 어디서든 접근 가능
