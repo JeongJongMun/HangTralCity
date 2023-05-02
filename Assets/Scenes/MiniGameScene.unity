@@ -319,7 +319,7 @@ MonoBehaviour:
   m_text: Penalty
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
-  m_sharedMaterial: {fileID: -7003938371316324875, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
+  m_sharedMaterial: {fileID: 6050269839329081815, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2396,7 +2396,7 @@ MonoBehaviour:
   m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
-  m_sharedMaterial: {fileID: -7003938371316324875, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
+  m_sharedMaterial: {fileID: 6050269839329081815, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -22229,6 +22229,7 @@ GameObject:
   - component: {fileID: 1792071240}
   - component: {fileID: 1792071241}
   - component: {fileID: 1792071242}
+  - component: {fileID: 1792071243}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -22301,6 +22302,20 @@ MonoBehaviour:
   lobbyBtn: {fileID: 1724190589}
   rankingBtn: {fileID: 2087856128}
   timer: 60
+--- !u!114 &1792071243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1792071238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d932abaf8e9420f4d82ea870e97ebe1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ranking: {fileID: 2087856130}
+  main: {fileID: 1724190591}
 --- !u!1 &1877684352
 GameObject:
   m_ObjectHideFlags: 0
@@ -22362,7 +22377,7 @@ MonoBehaviour:
   m_text: "\uB0A8\uC740\uC2DC\uAC04 : 60\uCD08 "
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
-  m_sharedMaterial: {fileID: -7003938371316324875, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
+  m_sharedMaterial: {fileID: 6050269839329081815, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
