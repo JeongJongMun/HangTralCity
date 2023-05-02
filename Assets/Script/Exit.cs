@@ -25,6 +25,6 @@ public class Exit : MonoBehaviour
     }
     public void ExitBtnClicked()
     {
-        SceneManager.LoadScene("MainScene");
+        //SceneManager.LoadScene("MainScene");
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
+using Cinemachine;
 
 public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -23,6 +24,13 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         NickNameText.color = PV.IsMine ? Color.green : Color.red;
         RB = GetComponent<Rigidbody2D>();
         AN = GetComponent<Animator>();
+
+        if (PV.IsMine) {
+            var CM = GameObject.Find("CM camera").GetComponent<CinemachineVirtualCamera>();
+            CM.Follow = transform;
+            CM.LookAt = transform;
+        }
+        
     }
 
     // Update is called once per frame

@@ -1,4 +1,4 @@
-using Amazon.S3.Transfer;
+/*using Amazon.S3.Transfer;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,3 +32,4 @@ public class PlayerMove : MonoBehaviour
         else animator.SetBool("isWalking", false);
     }
 }
+*/

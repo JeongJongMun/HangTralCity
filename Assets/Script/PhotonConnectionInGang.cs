@@ -13,7 +13,7 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
     {
         if (!PhotonNetwork.IsConnected)
         {
-            PhotonNetwork.ConnectUsingSettings();
+            Connect();
             Screen.SetResolution(1080, 2340, false);
             PhotonNetwork.SendRate = 60;
             PhotonNetwork.SerializationRate = 30;
@@ -32,8 +32,13 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
     }
     public override void OnJoinedRoom()
     {
-        PhotonNetwork.Instantiate("Player", transform.position, Quaternion.identity);
+        PhotonNetwork.Instantiate("Player", new Vector3((float)-12.00, (float)4.76, -1) , Quaternion.identity);
         Debug.LogFormat("{0}님이 방에 참가하였습니다.", PlayerInfo.player_info.nickname);
+    }
+
+    public void Connect()
+    {
+        PhotonNetwork.ConnectUsingSettings();
     }
 
     public void OnClickGoMain()
