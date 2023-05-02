@@ -46,7 +46,7 @@ public class CameraManage : MonoBehaviour
 
         try
         {
-            var response = s3Client.PutObjectAsync(request);
+            var response = await s3Client.PutObjectAsync(request);
         }
         catch (Exception e)
         {
