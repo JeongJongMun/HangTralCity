@@ -28,7 +28,13 @@ public class PlayerMove : MonoBehaviour
         else if(Input.GetAxisRaw("Horizontal") > 0) transform.localScale = new Vector3(1 * playerScale, playerScale, playerScale);
 
         // 걷기 애니메이션 설정
-        if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0) animator.SetBool("isWalking", true);
-        else animator.SetBool("isWalking", false);
+        if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
+        {
+            animator.SetBool("isWalking", true);
+        }
+        else
+        {
+            animator.SetBool("isWalking", false);
+        }
     }
 }

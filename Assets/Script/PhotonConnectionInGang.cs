@@ -9,6 +9,8 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
 {
     public Button GoMain;
 
+    AudioSource dooropenEffect;
+
     void Awake()
     {
         if (!PhotonNetwork.IsConnected)
@@ -19,6 +21,11 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
             PhotonNetwork.SerializationRate = 30;
             Debug.Log("Awake\n");
         }
+    }
+
+    private void Start()
+    {
+        dooropenEffect = GetComponent<AudioSource>();
     }
 
     public override void OnConnectedToMaster()
@@ -40,6 +47,7 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsConnected)
         {
+            dooropenEffect.Play();
             PhotonNetwork.Disconnect();
             Debug.Log("Disconnect\n");
         }
