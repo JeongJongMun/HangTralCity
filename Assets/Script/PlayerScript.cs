@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
+using UnityEditor.Animations;
 
 public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -17,12 +18,18 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
 
     private float playerScale = 0.1f; // 플레이어 크기 비율
 
+    // 캐릭터 타입 변경 변수
+    public AnimatorController[] animators;
+    public Sprite[] sprites;
+
     void Awake()
     {
         NickNameText.text = PV.IsMine ? PhotonNetwork.NickName : PV.Owner.NickName;
         NickNameText.color = PV.IsMine ? Color.green : Color.red;
         RB = GetComponent<Rigidbody2D>();
         AN = GetComponent<Animator>();
+        SR = GetComponent<SpriteRenderer>();
+        SetCharacterType();
     }
 
     // Update is called once per frame
@@ -69,5 +76,13 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         {
             curPos = (Vector3)stream.ReceiveNext();
         }
+    }
+    private void SetCharacterType()
+    {
+        Debug.LogFormat("플레이어 타입 : {0}",PlayerInfo.player_info.character_type);
+        SR.sprite = sprites[PlayerInfo.player_info.character_type];
+        AN.runtimeAnimatorController = animators[PlayerInfo.player_info.character_type];
+        Debug.Log(SR.sprite);
+        Debug.Log(AN.runtimeAnimatorController);
     }
 }
