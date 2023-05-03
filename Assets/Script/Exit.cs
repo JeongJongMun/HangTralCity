@@ -2,29 +2,34 @@ using Amazon.EC2.Model;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
 
 public class Exit : MonoBehaviour
 {
-    public GameObject exit_btn;
+   /* public GameObject ExitBtn;
+
+    void Awake()
+    {
+        ExitBtn = GameObject.Find("Exit_Btn");
+        ExitBtn.GetComponent<GameObject>();
+
+    }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.CompareTag("GangDoor"))
         {
-            exit_btn.SetActive(true);
+            ExitBtn.SetActive(true);
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("GangDoor"))
         {
-            exit_btn.SetActive(false);
+            ExitBtn.SetActive(false);
         }
     }
-    public void ExitBtnClicked()
-    {
-        SceneManager.LoadScene("MainScene");
-    }
+ */
 }

@@ -5,6 +5,8 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
 using UnityEditor.Animations;
+using Cinemachine;
+using UnityEngine.SceneManagement;
 
 public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -13,6 +15,11 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     public SpriteRenderer SR;
     public PhotonView PV;
     public Text NickNameText;
+
+    public GameObject ExitBtn;
+    public Button btn_exit;
+
+    AudioSource dooropenEffect;
 
     Vector3 curPos;
 
@@ -30,6 +37,15 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         AN = GetComponent<Animator>();
         SR = GetComponent<SpriteRenderer>();
         SetCharacterType();
+        if (PV.IsMine)
+        {
+            var CM = GameObject.Find("CMCamera").GetComponent<CinemachineVirtualCamera>();
+            CM.Follow = transform;
+            CM.LookAt = transform;
+        }
+
+        ExitBtn = GameObject.Find("ExitBtn");
+        ExitBtn.SetActive(false);
     }
 
     // Update is called once per frame
@@ -61,6 +77,33 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         //ismine이 아닌경우 위치동기화 (다른 사람이 움직이는걸 내가 볼 수 있게
         else if ((transform.position - curPos).sqrMagnitude >= 100) transform.position = curPos; // 멀리 떨어졌다면
         else transform.position = Vector3.Lerp(transform.position, curPos, Time.deltaTime * 10); // 근처라면
+
+
+
+
+        float distance1 = Vector3.Distance(new Vector3(-14, (float)7.5, -1), transform.position);
+        float distance2= Vector3.Distance(new Vector3(14, (float)7.5, -1), transform.position);
+
+        if (distance1 <= 2.5f || distance2 <= 2.5f)
+        {
+            ExitBtn.SetActive(true);
+        }
+        else
+        {
+            ExitBtn.SetActive(false);
+        }
+
+
+    }
+
+    public void Exit()
+    {
+        btn_exit.GetComponent<Button>().onClick.AddListener(EnterMain);
+    }
+    void EnterMain()
+    {
+        PhotonNetwork.Disconnect();
+        Debug.Log("call");
     }
 
     //[PunRPC]
@@ -79,10 +122,11 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     }
     private void SetCharacterType()
     {
-        Debug.LogFormat("플레이어 타입 : {0}",PlayerInfo.player_info.character_type);
+        Debug.LogFormat("플레이어 타입 : {0}", PlayerInfo.player_info.character_type);
         SR.sprite = sprites[PlayerInfo.player_info.character_type];
         AN.runtimeAnimatorController = animators[PlayerInfo.player_info.character_type];
         Debug.Log(SR.sprite);
         Debug.Log(AN.runtimeAnimatorController);
     }
 }
+
