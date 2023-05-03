@@ -29,6 +29,7 @@ public class CharacterCreateManage : MonoBehaviour
     }
 
     private void ClickCreateBtn() {
+        PlayerInfo.player_info.character_type = type;
         SceneManager.LoadScene("MainScene");
     }
 

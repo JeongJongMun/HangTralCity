@@ -1,5 +1,8 @@
+using Amazon.Runtime.Internal.Transform;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 
 public class DormManage : MonoBehaviour
 {
@@ -52,12 +55,25 @@ public class DormManage : MonoBehaviour
             {
                 // 원하는 태그가 있는 오브젝트의 이름과 포지션 가져오기
                 string name = obj.name;
-                Vector3 position = obj.transform.position;
+                Vector3 pos = obj.transform.position;
 
                 // PlayerInfo에 기숙사 커스터마이징 정보 저장
-                PlayerInfo.player_info.furniture_pos.Add(name, position);
+                // 기존 key가 있다면 list에 추가
+                if (PlayerInfo.player_info.furniture_pos.ContainsKey(name)) PlayerInfo.player_info.furniture_pos[name].Add(pos);
+                // key가 없다면 list를 만들어서 추가
+                else
+                {
+                    List<Vector3> list = new List<Vector3>
+                    {
+                        pos
+                    };
+                    PlayerInfo.player_info.furniture_pos.Add(name, list);
+                }
             }
         }
+
+        S3Manage.s3Manage.UploadToS3(PlayerInfo.player_info.furniture_pos, PlayerInfo.player_info.nickname);
+
         // 확인용 출력   
         foreach (var kvp in PlayerInfo.player_info.furniture_pos)
             Debug.Log("Key = " + kvp.Key + ", Value : " + kvp.Value);
@@ -74,15 +90,15 @@ public class DormManage : MonoBehaviour
         string to_remove = "(Clone)";
         foreach (var kvp in PlayerInfo.player_info.furniture_pos)
         {
-            if (kvp.Key.Replace(to_remove, "") == "Bed") Instantiate(bed, kvp.Value, Quaternion.identity);
-            else if (kvp.Key.Replace(to_remove, "") == "Carpet1") Instantiate(carpet1, kvp.Value, Quaternion.identity);
-            else if (kvp.Key.Replace(to_remove, "") == "Carpet2") Instantiate(carpet2, kvp.Value, Quaternion.identity);
-            else if (kvp.Key.Replace(to_remove, "") == "Desk") Instantiate(desk, kvp.Value, Quaternion.identity);
-            else if (kvp.Key.Replace(to_remove, "") == "Drawer") Instantiate(drawer, kvp.Value, Quaternion.identity);
-            else if (kvp.Key.Replace(to_remove, "") == "FlowerPot") Instantiate(flower_pot, kvp.Value, Quaternion.identity);
-            else if (kvp.Key.Replace(to_remove, "") == "Sofa") Instantiate(sofa, kvp.Value, Quaternion.identity);
-            else if (kvp.Key.Replace(to_remove, "") == "TrashBin") Instantiate(trash_bin, kvp.Value, Quaternion.identity);
-            Debug.Log("Key = " + kvp.Key + ", Value : " + kvp.Value);
+            //if (kvp.Key.Replace(to_remove, "") == "Bed") Instantiate(bed, kvp.Value, Quaternion.identity);
+            //else if (kvp.Key.Replace(to_remove, "") == "Carpet1") Instantiate(carpet1, kvp.Value, Quaternion.identity);
+            //else if (kvp.Key.Replace(to_remove, "") == "Carpet2") Instantiate(carpet2, kvp.Value, Quaternion.identity);
+            //else if (kvp.Key.Replace(to_remove, "") == "Desk") Instantiate(desk, kvp.Value, Quaternion.identity);
+            //else if (kvp.Key.Replace(to_remove, "") == "Drawer") Instantiate(drawer, kvp.Value, Quaternion.identity);
+            //else if (kvp.Key.Replace(to_remove, "") == "FlowerPot") Instantiate(flower_pot, kvp.Value, Quaternion.identity);
+            //else if (kvp.Key.Replace(to_remove, "") == "Sofa") Instantiate(sofa, kvp.Value, Quaternion.identity);
+            //else if (kvp.Key.Replace(to_remove, "") == "TrashBin") Instantiate(trash_bin, kvp.Value, Quaternion.identity);
+            //Debug.Log("Key = " + kvp.Key + ", Value : " + kvp.Value);
         }
     }
     private void ClickLeftBtn() // 스크롤 바 왼쪽으로 이동

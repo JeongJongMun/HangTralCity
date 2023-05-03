@@ -2,11 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Android;
 using UnityEngine.SceneManagement;
-using Amazon.S3;
-using Amazon.S3.Model;
-using Amazon.Runtime;
-using System;
-using System.Threading.Tasks;
 
 public class CameraManage : MonoBehaviour
 {
@@ -16,44 +11,13 @@ public class CameraManage : MonoBehaviour
 
     public Button take_picture_btn, back_btn;
 
-    private const string bucketName = "project-userpicture";
-    private const string accessKey = "AKIA4SLVEG5W3BBNELIJ";
-    private const string secretKey = "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";
-    private AmazonS3Client s3Client;
-
     private void Start()
     {
         take_picture_btn.onClick.AddListener(TakePicture);
         back_btn.onClick.AddListener(BackToCharacterCreateScene);
         CameraOn();
 
-        var credentials = new BasicAWSCredentials(accessKey, secretKey);
-        s3Client = new AmazonS3Client(credentials, Amazon.RegionEndpoint.APNortheast2);
-
     }
-
-    // S3에 사진 업로드
-    public async Task UploadToS3(string filePath, string keyName)
-    {
-        // S3에 업로드 요청
-        var request = new PutObjectRequest
-        {
-            BucketName = bucketName, // S3 버킷 이름
-            Key = keyName, // S3에 저장될 Key 이름 (파일 이름)
-            FilePath = filePath, // 파일 경로
-            ContentType = "image/png" // 파일 형식
-        };
-
-        try
-        {
-            var response = s3Client.PutObjectAsync(request);
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"Error uploading file to S3: {e.Message}");
-        }
-    }
-
 
     public void CameraOn() //카메라 켜기
     {
@@ -126,7 +90,7 @@ public class CameraManage : MonoBehaviour
         Debug.Log("Picture saved at " + Application.persistentDataPath + "/" + fileName);
 
         // S3 버킷에 촬영한 사진 업로드
-        UploadToS3(Application.persistentDataPath + "/" + fileName, "testPictureKey");
+        S3Manage.s3Manage.UploadToS3(Application.persistentDataPath + "/" + fileName, PlayerInfo.player_info.nickname);
     }
 
     public void BackToCharacterCreateScene()
