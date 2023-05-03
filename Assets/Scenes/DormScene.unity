@@ -6346,7 +6346,7 @@ MonoBehaviour:
   m_text: "\uAFB8\uBBF8\uAE30"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
-  m_sharedMaterial: {fileID: 6050269839329081815, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
+  m_sharedMaterial: {fileID: -6262507259396665765, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -7562,9 +7562,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 2062278395}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ae81c41c7b346340b8b1f8a3a08866b, type: 3}
+  m_Script: {fileID: 11500000, guid: 3d19efe9e58ce90478d746b18e812603, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scroll_amount: {x: 0, y: 0}
+  edit: {fileID: 1238110212}
+  save_btn: {fileID: 674189695}
+  reset_btn: {fileID: 645625830}
+  furniture_list: {fileID: 677316827}
+  left_btn: {fileID: 502728727}
+  right_btn: {fileID: 437589351}
+  bed: {fileID: 8728349253131858858, guid: 8219731a7c45aa742bd4d994325cbb1d, type: 3}
+  carpet1: {fileID: 6952779960609072472, guid: c3a347480476a684195321743a9e1f54, type: 3}
+  carpet2: {fileID: 0}
+  desk: {fileID: 0}
+  drawer: {fileID: 0}
+  flower_pot: {fileID: 0}
+  sofa: {fileID: 0}
+  trash_bin: {fileID: 0}
 --- !u!4 &2062278397
 Transform:
   m_ObjectHideFlags: 0
