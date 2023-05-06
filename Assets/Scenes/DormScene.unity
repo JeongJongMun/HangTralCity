@@ -6016,7 +6016,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &985801019
 GameObject:
@@ -6969,19 +6969,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2896056029876647876, guid: 5305c5ac994cade4aa52f081ae888507, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2896056029876647876, guid: 5305c5ac994cade4aa52f081ae888507, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2896056029876647876, guid: 5305c5ac994cade4aa52f081ae888507, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 75
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2896056029876647876, guid: 5305c5ac994cade4aa52f081ae888507, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -50
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4572149546510094315, guid: 5305c5ac994cade4aa52f081ae888507, type: 3}
       propertyPath: m_SizeDelta.y
@@ -7565,7 +7565,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d19efe9e58ce90478d746b18e812603, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scroll_amount: {x: 0, y: 0}
   edit: {fileID: 1238110212}
   save_btn: {fileID: 674189695}
   reset_btn: {fileID: 645625830}
@@ -7574,12 +7573,12 @@ MonoBehaviour:
   right_btn: {fileID: 437589351}
   bed: {fileID: 8728349253131858858, guid: 8219731a7c45aa742bd4d994325cbb1d, type: 3}
   carpet1: {fileID: 6952779960609072472, guid: c3a347480476a684195321743a9e1f54, type: 3}
-  carpet2: {fileID: 0}
-  desk: {fileID: 0}
-  drawer: {fileID: 0}
-  flower_pot: {fileID: 0}
-  sofa: {fileID: 0}
-  trash_bin: {fileID: 0}
+  carpet2: {fileID: 4727325555750561362, guid: 42e3505899ad08e45803d16afef6686a, type: 3}
+  desk: {fileID: 5091348893949393960, guid: 506959684b182774e96ed6c0317ef50d, type: 3}
+  drawer: {fileID: 6609352618417240811, guid: 898bf2f372d44fa4d921294588fa0582, type: 3}
+  flower_pot: {fileID: 5643718184698701353, guid: da0ecb94e579b6847a7fe8c2bff4efe2, type: 3}
+  sofa: {fileID: 4827858825106943486, guid: e91348a52c055dd43af7fd7ddda700d2, type: 3}
+  trash_bin: {fileID: 4899152414871960755, guid: 016754d2cc2f1ba49b88a619254011ec, type: 3}
 --- !u!4 &2062278397
 Transform:
   m_ObjectHideFlags: 0
@@ -7593,7 +7592,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2085942007
 GameObject:
@@ -7995,7 +7994,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1558463736155975617, guid: 3557a3f3fb4165d44af3007954d7c361, type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1558463736155975617, guid: 3557a3f3fb4165d44af3007954d7c361, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8043,64 +8042,3 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3557a3f3fb4165d44af3007954d7c361, type: 3}
---- !u!1001 &8475009562157413327
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 8475009562212874255, guid: 0f28b31e3c3e66d438cf0e8951d38327, type: 3}
-      propertyPath: m_RootOrder
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 8475009562212874255, guid: 0f28b31e3c3e66d438cf0e8951d38327, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8475009562212874255, guid: 0f28b31e3c3e66d438cf0e8951d38327, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8475009562212874255, guid: 0f28b31e3c3e66d438cf0e8951d38327, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8475009562212874255, guid: 0f28b31e3c3e66d438cf0e8951d38327, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8475009562212874255, guid: 0f28b31e3c3e66d438cf0e8951d38327, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8475009562212874255, guid: 0f28b31e3c3e66d438cf0e8951d38327, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8475009562212874255, guid: 0f28b31e3c3e66d438cf0e8951d38327, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8475009562212874255, guid: 0f28b31e3c3e66d438cf0e8951d38327, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8475009562212874255, guid: 0f28b31e3c3e66d438cf0e8951d38327, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8475009562212874255, guid: 0f28b31e3c3e66d438cf0e8951d38327, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8475009562212874358, guid: 0f28b31e3c3e66d438cf0e8951d38327, type: 3}
-      propertyPath: m_Name
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 9142211102865863423, guid: 0f28b31e3c3e66d438cf0e8951d38327, type: 3}
-      propertyPath: sceneViewId
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 0f28b31e3c3e66d438cf0e8951d38327, type: 3}
