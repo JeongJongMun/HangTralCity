@@ -1,4 +1,4 @@
-using Amazon.EC2.Model;
+/*using Amazon.EC2.Model;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,13 +8,16 @@ using UnityEngine.SceneManagement;
 
 public class Exit : MonoBehaviour
 {
-   /* public GameObject ExitBtn;
+    public GameObject ExitBtn;
+    public GameObject Canvas;
 
     void Awake()
     {
-        ExitBtn = GameObject.Find("Exit_Btn");
-        ExitBtn.GetComponent<GameObject>();
-
+        ExitBtn = FindObjectWithTag("GangDoor");
+        ExitBtn = Canvas.transform.Find("Exit_Btn").gameObject;
+        ExitBtn.SetActive(false);
+        Debug.Log("In");
+        //ExitBtn.GetComponent<GameObject>();
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -31,5 +34,6 @@ public class Exit : MonoBehaviour
             ExitBtn.SetActive(false);
         }
     }
- */
+ 
 }
+*/

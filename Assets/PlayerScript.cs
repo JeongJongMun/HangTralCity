@@ -16,9 +16,6 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     public PhotonView PV;
     public Text NickNameText;
 
-    public GameObject ExitBtn;
-    public Button btn_exit;
-
     AudioSource dooropenEffect;
 
     Vector3 curPos;
@@ -43,9 +40,6 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             CM.Follow = transform;
             CM.LookAt = transform;
         }
-
-        ExitBtn = GameObject.Find("ExitBtn");
-        ExitBtn.SetActive(false);
     }
 
     // Update is called once per frame
@@ -81,7 +75,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
 
 
 
-        float distance1 = Vector3.Distance(new Vector3(-14, (float)7.5, -1), transform.position);
+        /*float distance1 = Vector3.Distance(new Vector3(-14, (float)7.5, -1), transform.position);
         float distance2= Vector3.Distance(new Vector3(14, (float)7.5, -1), transform.position);
 
         if (distance1 <= 2.5f || distance2 <= 2.5f)
@@ -90,13 +84,10 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         }
         else
         {
-            ExitBtn.SetActive(false);
-        }
-
-
+            ExitBtn.SetActive(false);*/
     }
 
-    public void Exit()
+   /* public void Exit()
     {
         btn_exit.GetComponent<Button>().onClick.AddListener(EnterMain);
     }
@@ -104,7 +95,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     {
         PhotonNetwork.Disconnect();
         Debug.Log("call");
-    }
+    }*/
 
     //[PunRPC]
     //void FlipXRPC(float axis) => SR.flipX = axis == -1;
