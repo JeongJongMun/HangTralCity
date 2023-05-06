@@ -14,53 +14,48 @@ public class MiniGameManage : MonoBehaviour
     public Button settingMain, settingSound;
     public GameObject settingMAIN, settingSOUND;
 
-    bool settingButtonActive = false;
-
     void Start()
     {
-        ranking.GetComponent<Button>().onClick.AddListener(EnterRanking);
-        main.GetComponent<Button>().onClick.AddListener(EnterMain);
+        setting.onClick.AddListener(ActiveSetting);
+       
+        ranking.onClick.AddListener(EnterRanking);
+        main.onClick.AddListener(EnterMain);
 
-        settingMain.GetComponent<Button>().onClick.AddListener(EnterMain);
-        settingSound.GetComponent<Button>().onClick.AddListener(EnterSoundSetting);
+        settingMain.onClick.AddListener(EnterMain);
+        settingSound.onClick.AddListener(EnterSoundSetting);
 
-        if (settingButtonActive == false)
-        {
-            setting.GetComponent<Button>().onClick.AddListener(SettingActiveTrue);
-            settingButtonActive = true;
-        }
-        else
-        {
-            setting.GetComponent<Button>().onClick.AddListener(SettingActiveTrue);
-            settingButtonActive = false;
-        }
-
+        settingMAIN.SetActive(false);
+        settingSOUND.SetActive(false);
     }
 
-    public void EnterRanking()
+
+
+    private void EnterRanking()
     {
         SceneManager.LoadScene("RankingScene");
     }
 
-    public void EnterMain()
+    private void EnterMain()
     {
         SceneManager.LoadScene("MainScene");
     }
 
-    public void EnterSoundSetting()
+    private void EnterSoundSetting()
     {
         SceneManager.LoadScene("SoundSettingScene");
     }
 
-    public void SettingActiveTrue()
+    private void ActiveSetting()
     {
-        settingMAIN.SetActive(true);
-        settingSOUND.SetActive(true);
-    }
-
-    public void SettingActiveFalse()
-    {
-        settingMAIN.SetActive(false);
-        settingSOUND.SetActive(false);
+        if (!settingMAIN.activeSelf)
+        {
+            settingMAIN.SetActive(true);
+            settingSOUND.SetActive(true);
+        }
+        else
+        {
+            settingMAIN.SetActive(false);
+            settingSOUND.SetActive(false);
+        }
     }
 }
