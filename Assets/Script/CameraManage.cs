@@ -52,10 +52,10 @@ public class CameraManage : MonoBehaviour
         //카메라 켜기
         if (selectedCameraIndex >= 0)
         {
-            // 선택된 후면 카메라를 가져옴.
+            // 선택된 카메라를 가져옴.
             camTexture = new WebCamTexture(devices[selectedCameraIndex].name);
 
-            camTexture.requestedFPS = 30; // 카메라 프레임설정
+            camTexture.requestedFPS = 30;
 
             cameraViewImage.texture = camTexture; // 영상을 raw Image에 할당.
 
@@ -69,7 +69,7 @@ public class CameraManage : MonoBehaviour
         if (camTexture != null)
         {
             camTexture.Stop(); // 카메라 정지
-            WebCamTexture.Destroy(camTexture); // 카메라 객체반납
+            Destroy(camTexture); // 카메라 객체반납
             camTexture = null; // 변수 초기화
         }
     }
@@ -81,8 +81,13 @@ public class CameraManage : MonoBehaviour
         picture.SetPixels(camTexture.GetPixels());
         picture.Apply();
 
+        // 동물상 학습에 적합하게 224x224 사이즈로 조정
+        Texture2D resizePicture = ScaleTexture(picture, 224, 224);
+
+        Debug.LogFormat("ResizedPhoto width:{0}, height{1}", resizePicture.width, resizePicture.height);
+
         // 이미지를 파일로 저장
-        byte[] bytes = picture.EncodeToPNG();
+        byte[] bytes = resizePicture.EncodeToPNG();
         string fileName = "picture.png";
         System.IO.File.WriteAllBytes(Application.persistentDataPath + "/" + fileName, bytes);
 
@@ -91,6 +96,25 @@ public class CameraManage : MonoBehaviour
 
         // S3 버킷에 촬영한 사진 업로드
         S3Manage.s3Manage.UploadToS3(Application.persistentDataPath + "/" + fileName, PlayerInfo.player_info.nickname);
+
+        CharacterCreateManage.isPredicted = true;
+        CameraOff();
+        SceneManager.LoadScene("CharacterCreateScene");
+    }
+
+    private Texture2D ScaleTexture(Texture2D source, int targetWidth, int targetHeight)
+    {
+        Texture2D result = new Texture2D(targetWidth, targetHeight, source.format, true);
+        Color[] rpixels = result.GetPixels(0);
+        float incX = (1.0f / (float)targetWidth);
+        float incY = (1.0f / (float)targetHeight);
+        for (int px = 0; px < rpixels.Length; px++)
+        {
+            rpixels[px] = source.GetPixelBilinear(incX * ((float)px % targetWidth), incY * ((float)Mathf.Floor(px / targetWidth)));
+        }
+        result.SetPixels(rpixels, 0);
+        result.Apply();
+        return result;
     }
 
     public void BackToCharacterCreateScene()
