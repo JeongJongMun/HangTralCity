@@ -91,8 +91,8 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
 
     public void Send()
     {
-        string msg = ChatInput.text;
-        PV.RPC("ChatRPC", RpcTarget.All, ChatInput.text);
+        string msg = PlayerInfo.player_info.nickname + ":" + ChatInput.text;
+        PV.RPC("ChatRPC", RpcTarget.All, PlayerInfo.player_info.nickname + ":" + ChatInput.text);
         ChatInput.text = ""; 
     }
 
