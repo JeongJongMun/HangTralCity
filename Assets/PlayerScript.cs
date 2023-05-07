@@ -1,17 +1,14 @@
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.UI;
-using UnityEditor.Animations;
 using UnityEngine.SceneManagement;
 using Cinemachine;
 using TMPro;
-using Unity.VisualScripting;
+using System.Collections.Generic;
 
 public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
 {
     public Rigidbody2D RB;
-    public Animator AN;
-    public SpriteRenderer SR;
     public PhotonView PV;
 
     AudioSource dooropenEffect;
@@ -22,8 +19,12 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     private float speed = 10f; // 플레이어 이동 속도
 
     // 캐릭터 타입 변경 변수
-    public AnimatorController[] animators;
-    public Sprite[] sprites;
+    private SpriteRenderer SR;
+    private Animator AN;
+    //public AnimatorController[] animators;
+    private List<string> animators = new List<string> {"puppy", "cat", "bear", "dino", "rabbit" }; 
+    private List<string> sprites = new List<string> {"puppy_ridle", "cat_ridle", "bear_ridle", "dino_ridle", "rabbit_ridle" }; 
+    //public Sprite[] characterSprites;
     // 캐릭터 커스텀 변경 변수
     public GameObject hatPoint;
     public GameObject eyePoint;
@@ -34,7 +35,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     public GameObject nickNameTxt;
     public GameObject nickNamePoint;
     // 나가기 버튼
-    public GameObject exitBtn;
+    private GameObject exitBtn;
 
     void Awake()
     {
@@ -44,10 +45,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         AN = GetComponent<Animator>();
         SR = GetComponent<SpriteRenderer>();
         
-        // 캐릭터 생성시 타입/커스텀/닉네임 설정
-        SetCharacterType();
-        SetCharacterCustom();
-        SetCharacterName();
+
         // 나가기 버튼 (강의동일 경우에만 찾음)
         if (SceneManager.GetActiveScene().name == "GangScene")
         {
@@ -63,6 +61,13 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             CM.Follow = transform;
             CM.LookAt = transform;
         }
+    }
+    void Start()
+    {
+        // 캐릭터 생성시 타입/커스텀/닉네임 설정
+        SetCharacterType();
+        SetCharacterCustom();
+        SetCharacterName();
     }
 
     // Update is called once per frame
@@ -130,11 +135,12 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     }
     private void SetCharacterType()
     {
-        Debug.LogFormat("플레이어 타입 : {0}", PlayerInfo.playerInfo.characterType);
-        SR.sprite = sprites[PlayerInfo.playerInfo.characterType];
-        AN.runtimeAnimatorController = animators[PlayerInfo.playerInfo.characterType];
-        Debug.Log(SR.sprite);
-        Debug.Log(AN.runtimeAnimatorController);
+        SR.sprite = Resources.Load<Sprite>(sprites[PlayerInfo.playerInfo.characterType]);
+        //SR.sprite = characterSprites[PlayerInfo.playerInfo.characterType];
+        //AN.runtimeAnimatorController = animators[PlayerInfo.playerInfo.characterType];
+        AN.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(animators[PlayerInfo.playerInfo.characterType]);
+        Debug.LogFormat("스프라이트:{0}, 컨트롤러:{1}, 캐릭터타입인덱스:{2}", SR.sprite.name, AN.runtimeAnimatorController.name, PlayerInfo.playerInfo.characterType);
+        //Debug.LogFormat("지정된 스프라이트:{0}", characterSprites[PlayerInfo.playerInfo.characterType].name);
     }
     public void SetCharacterCustom()
     {

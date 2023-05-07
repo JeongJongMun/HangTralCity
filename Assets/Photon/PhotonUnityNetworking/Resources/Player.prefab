@@ -166,11 +166,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3770448723398332660}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f933bf9b07dae14aa78e3ee14a1e2c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chatTr: {fileID: 3770448723370312563}
+  chatBoxPrefab: {fileID: 8738170607878483221, guid: a3ee6c0f9a346dd4bac0818015a5a106, type: 3}
 --- !u!50 &3770448723398332657
 Rigidbody2D:
   serializedVersion: 4
@@ -338,21 +340,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RB: {fileID: 3770448723398332657}
-  AN: {fileID: 3770448723398332663}
-  SR: {fileID: 3770448723398332658}
   PV: {fileID: 4544611303875189373}
-  animators:
-  - {fileID: 9100000, guid: 04f20389e4fa0c24783c6f08c0f6c109, type: 2}
-  - {fileID: 9100000, guid: b60742287bb04874184c1f822c37c75a, type: 2}
-  - {fileID: 9100000, guid: 7a8141264103fbb4ba493a69165de150, type: 2}
-  - {fileID: 9100000, guid: e53bf77fae262364a850516380ebef30, type: 2}
-  - {fileID: 9100000, guid: 1952f1ae83be5a1449e03bf5c1888cb5, type: 2}
-  sprites:
-  - {fileID: 21300000, guid: f1c5e6e3db808364c963079232f6fc80, type: 3}
-  - {fileID: 21300000, guid: 1699b91e44b575345bb9784998baf548, type: 3}
-  - {fileID: 21300000, guid: f0eb6cc8d592b67479385fb196cfcc4c, type: 3}
-  - {fileID: 21300000, guid: b36777ce680c8c84caefe1c02985f0a9, type: 3}
-  - {fileID: 21300000, guid: 51f6aff0b857d8541a643cc80bdc1304, type: 3}
   hatPoint: {fileID: 4741757591591741739}
   eyePoint: {fileID: 4741757591373194355}
   hatSprites:
@@ -380,7 +368,6 @@ MonoBehaviour:
   - {fileID: 0}
   nickNameTxt: {fileID: 6959556668094625948}
   nickNamePoint: {fileID: 2076128750696303140}
-  exitBtn: {fileID: 0}
 --- !u!114 &4544611303875189373
 MonoBehaviour:
   m_ObjectHideFlags: 0

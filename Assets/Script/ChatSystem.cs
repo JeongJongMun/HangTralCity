@@ -1,4 +1,4 @@
-/*using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -12,11 +12,11 @@ public class ChatSystem : MonoBehaviour
     private GameObject player;
     private void Start()
     {
-        player = GameObject.Find("Player");
+        player = GameObject.Find("Player(Clone)");
     }
     private void Update()
     {
-        transform.position = player.transform.position + new Vector3(0,1,0);
+        transform.position = player.transform.position + new Vector3(0,3.5f,0);
     }
 
     public void Ondialogue(string[] lines, Transform chatPoint)
@@ -50,4 +50,3 @@ public class ChatSystem : MonoBehaviour
         Destroy(gameObject);
     }
 }
-*/
