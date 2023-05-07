@@ -7,7 +7,7 @@ public class UIManage : MonoBehaviour
 {
     // CanvasÀÇ TopBar, BottomBar UI °ü¸®
     private TMP_Text nickname;
-    private Button home_btn, closet_btn, setting_btn, logout_btn;
+    private Button home_btn, closet_btn, setting_btn, logout_btn, chat_btn;
     private GameObject setting_content;
     void Start()
     {
@@ -22,6 +22,10 @@ public class UIManage : MonoBehaviour
 
         setting_btn = GameObject.Find("SettingBtn").GetComponent<Button>();
         setting_btn.onClick.AddListener(ClickSettingBtn);
+
+        chat_btn = GameObject.Find("ChatBtn").GetComponent<Button>();
+        chat_btn.onClick.AddListener(ClickChatBtn);
+
 
         logout_btn = GameObject.Find("LogOutBtn").GetComponent<Button>();
         logout_btn.onClick.AddListener(ClickLogOutBtn);
@@ -55,5 +59,11 @@ public class UIManage : MonoBehaviour
     {
         Debug.Log("HomeBtn Clicked");
         SceneManager.LoadScene("MainScene");
+    }
+
+    private void ClickChatBtn()
+    {
+        Debug.Log("ChatBtn Clicked");
+        SceneManager.LoadScene("MainChatScene");
     }
 }

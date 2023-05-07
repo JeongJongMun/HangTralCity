@@ -10,6 +10,7 @@ public class MainManage : MonoBehaviour
     // 메인 화면 건물과 입장하기 버튼 누르면 이벤트 관리
     public Button building_gang, building_hack, building_dorm, building_playground;
     public Button enter_btn_gang, enter_btn_hack, enter_btn_dorm, enter_btn_playground;
+    public GameObject enterChat;
 
     void Start()
     {
@@ -24,6 +25,8 @@ public class MainManage : MonoBehaviour
 
         building_playground.GetComponent<Button>().onClick.AddListener(EnterPlayground);
         enter_btn_playground.GetComponent<Button>().onClick.AddListener(EnterPlayground);
+
+        enterChat.GetComponent<Button>().onClick.AddListener(EnterChat);
     }
 
     public void EnterGang()
@@ -43,4 +46,10 @@ public class MainManage : MonoBehaviour
     {
 
     }
+
+    public void EnterChat()
+    {
+        SceneManager.LoadScene("MainChatScene");
+    }
+
 }
