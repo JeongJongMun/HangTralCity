@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PhotonChatNetwork : MonoBehaviourPunCallbacks
 {
@@ -25,8 +26,12 @@ public class PhotonChatNetwork : MonoBehaviourPunCallbacks
             PhotonNetwork.SerializationRate = 30;
             Debug.Log("Awake\n");
         }
+        else
+        {
+            Debug.Log("already in server");
+        }
         ChatInput.text = "";
-        //for (int i = 0; i < ChatText.Length; i++) ChatText[i].text = "";
+        for (int i = 0; i < ChatText.Length; i++) Debug.Log(ChatText[i].text);
     }
 
     public override void OnConnectedToMaster()
@@ -42,25 +47,36 @@ public class PhotonChatNetwork : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.LogFormat("{0}님이 채팅에 참가하였습니다.", PlayerInfo.playerInfo.nickname);
+        PV.RPC("ChatRPC", RpcTarget.All, "<size=60><color=#ffa93a>" + PlayerInfo.playerInfo.nickname + " 님이 채팅에 참가하였습니다</color></size>");
+    }
+
+    void Update()
+    {
+        if(SceneManager.GetActiveScene().name != "MainChatScene")
+        {
+            PhotonNetwork.Disconnect();
+        }
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        Debug.Log("Disconnect Chat\n");
     }
 
     public void Send()
     {
-        string msg = PlayerInfo.playerInfo.nickname + ":" + ChatInput.text;
-        PV.RPC("ChatRPC", RpcTarget.All, PlayerInfo.playerInfo.nickname + ":" + ChatInput.text);
+        string msg = PlayerInfo.playerInfo.nickname + " : " + ChatInput.text;
+        if (!PV.IsMine)
+        {
+            PV.RPC("ChatRPC", RpcTarget.All, "<color=#82a571>" + PlayerInfo.playerInfo.nickname + "</color>" + " : " + ChatInput.text);
+        }
+        else
+        {
+            PV.RPC("ChatRPC", RpcTarget.All, "<color=#7d9dcd>" + PlayerInfo.playerInfo.nickname + "</color>" + " : " + ChatInput.text);
+        }
+        
         ChatInput.text = "";
     }
-
-    public void OnClickHome()
-    {
-        PhotonNetwork.Disconnect();
-    }
-    public override void OnDisconnected(DisconnectCause cause)
-    {
-        PhotonNetwork.LoadLevel("MainScene");
-        Debug.Log("Move\n");
-    }
-
 
     [PunRPC]
     void ChatRPC(string msg)

@@ -64,6 +64,11 @@ public class UIManage : MonoBehaviour
     private void ClickChatBtn()
     {
         Debug.Log("ChatBtn Clicked");
-        SceneManager.LoadScene("MainChatScene");
+        if (SceneManager.GetActiveScene().name != "MainChatScene")
+        {
+            SceneManager.LoadScene("MainChatScene");
+        }
+        
+        
     }
 }
