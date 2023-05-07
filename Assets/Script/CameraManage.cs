@@ -95,7 +95,7 @@ public class CameraManage : MonoBehaviour
         Debug.Log("Picture saved at " + Application.persistentDataPath + "/" + fileName);
 
         // S3 버킷에 촬영한 사진 업로드
-        S3Manage.s3Manage.UploadToS3(Application.persistentDataPath + "/" + fileName, PlayerInfo.player_info.nickname);
+        S3Manage.s3Manage.UploadToS3(Application.persistentDataPath + "/" + fileName, PlayerInfo.playerInfo.nickname);
 
         CharacterCreateManage.isPredicted = true;
         CameraOff();

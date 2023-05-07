@@ -56,7 +56,7 @@ public class CognitoSignIn : MonoBehaviour
             if (authResponse.AuthenticationResult != null)
             {
                 // 인증 성공시 Access Token 반환
-                PlayerInfo.player_info.access_token = authResponse.AuthenticationResult.AccessToken;
+                PlayerInfo.playerInfo.access_token = authResponse.AuthenticationResult.AccessToken;
 
                 // 로그인 성공 후 PlayerPrefs에 사용자 ID와 비밀번호 저장
                 PlayerPrefs.SetString("LastLoggedInUserId", sign_in_nickname.text);

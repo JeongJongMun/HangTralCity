@@ -52,7 +52,7 @@ public class CharacterCreateManage : MonoBehaviour
     }
 
     private void ClickCreateBtn() {
-        PlayerInfo.player_info.character_type = type;
+        PlayerInfo.playerInfo.characterType = type;
         SceneManager.LoadScene("MainScene");
     }
 
@@ -64,13 +64,13 @@ public class CharacterCreateManage : MonoBehaviour
         type--;
         if (type == -1) type = 4;
         animator.SetInteger("type", type);
-        PlayerInfo.player_info.character_type = type;
+        PlayerInfo.playerInfo.characterType = type;
     }
 
     private void ClickRightBtn() {
         type++;
         if (type == 5) type = 0;
         animator.SetInteger("type", type);
-        PlayerInfo.player_info.character_type = type;
+        PlayerInfo.playerInfo.characterType = type;
     }
 }

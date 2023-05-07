@@ -52,7 +52,7 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         PhotonNetwork.Instantiate("Player", new Vector3(-11, 6, -1), Quaternion.identity);
-        Debug.LogFormat("{0}님이 방에 참가하였습니다.", PlayerInfo.player_info.nickname);
+        Debug.LogFormat("{0}님이 방에 참가하였습니다.", PlayerInfo.playerInfo.nickname);
         UserInPanel.SetActive(false);
     }
 
@@ -91,8 +91,8 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
 
     public void Send()
     {
-        string msg = PlayerInfo.player_info.nickname + ":" + ChatInput.text;
-        PV.RPC("ChatRPC", RpcTarget.All, PlayerInfo.player_info.nickname + ":" + ChatInput.text);
+        string msg = PlayerInfo.playerInfo.nickname + ":" + ChatInput.text;
+        PV.RPC("ChatRPC", RpcTarget.All, PlayerInfo.playerInfo.nickname + ":" + ChatInput.text);
         ChatInput.text = ""; 
     }
 

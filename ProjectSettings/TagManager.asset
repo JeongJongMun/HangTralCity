@@ -7,8 +7,10 @@ TagManager:
   - BlueTeam
   - RedTeam
   - Point
-  - GangDoor
   - Custom_Dorm
+  - Wall
+  - Tile
+  - Door
   layers:
   - Default
   - TransparentFX

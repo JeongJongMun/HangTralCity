@@ -21,7 +21,7 @@ public class CognitoGetUserInfo : MonoBehaviour
         // Amazon Cognito 서비스의 객체를 인스턴스화
         cognitoService = new AmazonCognitoIdentityProviderClient(credentials, RegionEndpoint.APNortheast2);
 
-        access_token = PlayerInfo.player_info.access_token; // 로그인 성공 후 반환받은 엑세스 토큰
+        access_token = PlayerInfo.playerInfo.access_token; // 로그인 성공 후 반환받은 엑세스 토큰
         GetUserInfo(); // 메인 화면 시작시 자동으로 유저 정보 가져오기
     }
 
@@ -44,8 +44,8 @@ public class CognitoGetUserInfo : MonoBehaviour
                 foreach (var attribute in response.UserAttributes)
                 {
                     // UserAttributes 리스트를 순회하며 유저 정보 가져오기
-                    if (attribute.Name == "nickname") PlayerInfo.player_info.nickname = attribute.Value;
-                    if (attribute.Name == "email") PlayerInfo.player_info.email = attribute.Value;
+                    if (attribute.Name == "nickname") PlayerInfo.playerInfo.nickname = attribute.Value;
+                    if (attribute.Name == "email") PlayerInfo.playerInfo.email = attribute.Value;
                     Debug.LogFormat("{0} : {1}", attribute.Name, attribute.Value);
                 }
             }
