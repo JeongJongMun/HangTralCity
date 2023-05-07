@@ -166,7 +166,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3770448723398332660}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.123014, y: -0.4433769, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -240,11 +240,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f933bf9b07dae14aa78e3ee14a1e2c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sentences:
-  - Hello
-  - TestChating
-  chatTr: {fileID: 3770448723370312563}
-  chatBoxPrefab: {fileID: 8738170607878483221, guid: a3ee6c0f9a346dd4bac0818015a5a106, type: 3}
 --- !u!50 &3770448723398332657
 Rigidbody2D:
   serializedVersion: 4
