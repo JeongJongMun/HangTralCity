@@ -66,7 +66,7 @@ public class PhotonChatNetwork : MonoBehaviourPunCallbacks
     public void Send()
     {
         string msg = PlayerInfo.playerInfo.nickname + " : " + ChatInput.text;
-        if (!PV.IsMine)
+        if (PV.IsMine)
         {
             PV.RPC("ChatRPC", RpcTarget.All, "<color=#82a571>" + PlayerInfo.playerInfo.nickname + "</color>" + " : " + ChatInput.text);
         }

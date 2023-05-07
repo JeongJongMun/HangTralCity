@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using Photon.Realtime;
+using Photon.Pun;
 
 public class UIManage : MonoBehaviour
 {
@@ -53,21 +55,24 @@ public class UIManage : MonoBehaviour
     private void ClickClosetBtn()
     {
         Debug.Log("ClosetBtn Clicked");
+        PhotonNetwork.Disconnect();
         SceneManager.LoadScene("ClosetScene");
     }
     private void ClickHomeBtn()
     {
         Debug.Log("HomeBtn Clicked");
+        PhotonNetwork.Disconnect();
         SceneManager.LoadScene("MainScene");
     }
 
     private void ClickChatBtn()
     {
-        Debug.Log("ChatBtn Clicked");
         if (SceneManager.GetActiveScene().name != "MainChatScene")
         {
+            Debug.Log("ChatBtn Clicked");
             SceneManager.LoadScene("MainChatScene");
         }
+       
         
         
     }

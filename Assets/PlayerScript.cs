@@ -40,7 +40,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     void Awake()
     {
         //nameText.text = PV.IsMine ? PhotonNetwork.NickName : PV.Owner.NickName;
-        nickNameTxt.GetComponent<TMP_Text>().color = PV.IsMine ? Color.green : Color.red;
+        nickNameTxt.GetComponent<TMP_Text>().color = PV.IsMine ? Color.green : Color.blue;
         RB = GetComponent<Rigidbody2D>();
         AN = GetComponent<Animator>();
         SR = GetComponent<SpriteRenderer>();

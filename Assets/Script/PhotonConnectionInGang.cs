@@ -51,7 +51,7 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
     }
     public override void OnJoinedRoom()
     {
-        PhotonNetwork.Instantiate("Player", new Vector3(-11, 6, -1), Quaternion.identity);
+        PhotonNetwork.Instantiate("Player", new Vector3((float)-9.9, 6, -1), Quaternion.identity);
         Debug.LogFormat("{0}님이 방에 참가하였습니다.", PlayerInfo.playerInfo.nickname);
         UserInPanel.SetActive(false);
     }
