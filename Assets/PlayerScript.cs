@@ -150,6 +150,12 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             hatPoint.GetComponent<SpriteRenderer>().sprite = hatSprites[PlayerInfo.playerInfo.hatCustom];
             eyePoint.GetComponent<SpriteRenderer>().sprite = eyeSprites[PlayerInfo.playerInfo.eyeCustom];
         }
+        else
+        {
+            Debug.Log("Not Is Mine");
+            hatPoint.GetComponent<SpriteRenderer>().sprite = hatSprites[PlayerInfo.playerInfo.hatCustom];
+            eyePoint.GetComponent<SpriteRenderer>().sprite = eyeSprites[PlayerInfo.playerInfo.eyeCustom];
+        }
         
     }
     private void SetCharacterName()
@@ -157,6 +163,10 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         if (PV.IsMine)
         {
             Debug.LogFormat("플레이어 닉네임:{0}", PlayerInfo.playerInfo.nickname);
+            nickNameTxt.GetComponent<TMP_Text>().text = PlayerInfo.playerInfo.nickname;
+        }
+        else
+        {
             nickNameTxt.GetComponent<TMP_Text>().text = PlayerInfo.playerInfo.nickname;
         }
 
