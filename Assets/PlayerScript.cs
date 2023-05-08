@@ -144,14 +144,22 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     }
     public void SetCharacterCustom()
     {
-        Debug.LogFormat("플레이어 커스텀 모자:{0}, 눈:{1}", PlayerInfo.playerInfo.hatCustom, PlayerInfo.playerInfo.eyeCustom);
-        hatPoint.GetComponent<SpriteRenderer>().sprite = hatSprites[PlayerInfo.playerInfo.hatCustom];
-        eyePoint.GetComponent<SpriteRenderer>().sprite = eyeSprites[PlayerInfo.playerInfo.eyeCustom];
+        if (PV.IsMine)
+        {
+            Debug.LogFormat("플레이어 커스텀 모자:{0}, 눈:{1}", PlayerInfo.playerInfo.hatCustom, PlayerInfo.playerInfo.eyeCustom);
+            hatPoint.GetComponent<SpriteRenderer>().sprite = hatSprites[PlayerInfo.playerInfo.hatCustom];
+            eyePoint.GetComponent<SpriteRenderer>().sprite = eyeSprites[PlayerInfo.playerInfo.eyeCustom];
+        }
+        
     }
     private void SetCharacterName()
     {
-        Debug.LogFormat("플레이어 닉네임:{0}", PlayerInfo.playerInfo.nickname);
-        nickNameTxt.GetComponent<TMP_Text>().text = PlayerInfo.playerInfo.nickname;
+        if (PV.IsMine)
+        {
+            Debug.LogFormat("플레이어 닉네임:{0}", PlayerInfo.playerInfo.nickname);
+            nickNameTxt.GetComponent<TMP_Text>().text = PlayerInfo.playerInfo.nickname;
+        }
+
     }
 }
 
