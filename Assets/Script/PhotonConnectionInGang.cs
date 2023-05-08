@@ -12,8 +12,7 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
     public GameObject UserOutPanel;
 
     [Header("ChatPanel")]
-    public GameObject ChatPanel;
-    public Text[] ChatText;
+    private Text ChatText;
     public InputField ChatInput;
 
     [Header("ETC")]
@@ -28,10 +27,9 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
             Screen.SetResolution(1080, 2340, false);
             PhotonNetwork.SendRate = 60;
             PhotonNetwork.SerializationRate = 30;
-            Debug.Log("Awake\n");
+
             UserOutPanel.SetActive(false);
             UserInPanel.SetActive(true);
-            ChatPanel.SetActive(false);
         }
     }
 
@@ -43,11 +41,11 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         Debug.Log("OnConnectedToMaster\n");
-        RoomOptions options = new RoomOptions();
-        options.MaxPlayers = 10;
+        
+        PhotonNetwork.LocalPlayer.NickName = PlayerInfo.playerInfo.nickname; // 닉네임 가져오기
+        
 
-        //PhotonNetwork.LocalPlayer.NickName = PlayerInfo.player_info.nickname;
-        PhotonNetwork.JoinOrCreateRoom("Room1", options, null);
+        PhotonNetwork.JoinOrCreateRoom("Room1", new RoomOptions { MaxPlayers = 10 }, null);
     }
     public override void OnJoinedRoom()
     {
@@ -56,43 +54,17 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
         UserInPanel.SetActive(false);
     }
 
-    public void OnClickChat ()
-    {
-        ChatPanel.SetActive(true);
-        //OnJoinedRoom();
-        ChatInput.text = "";
-        for (int i = 0; i < ChatText.Length; i++) ChatText[i].text = "";
-    }
-    public void OnClickGoMain()
-    {
-        if (PhotonNetwork.IsConnected)
-        {
-            UserOutPanel.SetActive(true);
-            dooropenEffect.Play();
-            PhotonNetwork.Disconnect();
-            Debug.Log("Disconnect\n");
-        }
-    }
     public override void OnDisconnected(DisconnectCause cause)
     {
         PhotonNetwork.LoadLevel("MainScene");
         Debug.Log("Move\n");
     }
 
-    public void Input(Text text)
+    /*public void Send()
     {
-        text.text = ChatInput.text;
-    }
-
-    public void OnClickExitChat()
-    {
-        ChatPanel.SetActive(false);
-    }
-
-    public void Send()
-    {
-        string msg = PlayerInfo.playerInfo.nickname + ":" + ChatInput.text;
-        PV.RPC("ChatRPC", RpcTarget.All, PlayerInfo.playerInfo.nickname + ":" + ChatInput.text);
+        string msg = ChatInput.text;
+        PV.RPC("ChatRPC", RpcTarget.All, ChatInput.text);
+        
         ChatInput.text = ""; 
     }
 
@@ -100,9 +72,21 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
     [PunRPC]
     void ChatRPC(string msg)
     {
-        bool isInput = false;
-        for(int i = 0; i < ChatText.Length; i++)
-            if (ChatText[i].text == "")
+        ChatText = GameObject.Find("ChatText").GetComponent<Text>();
+
+        if(ChatText.text == "")
+        {
+            ChatText.text = msg;
+        }
+        else
+        {
+            ChatText.text = "";
+            ChatText.text = msg;
+        }*/
+        
+     
+        /*bool isInput = false;
+            if (ChatText == "")
             {
                 isInput = true;
                 ChatText[i].text = msg;
@@ -114,5 +98,6 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
             ChatText[ChatText.Length - 1].text = msg;
         }
         
-    }
+    }*/
+    
 }
