@@ -38,4 +38,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MainChatScene.unity
     guid: 617af4360ac828d419f89ed62dd6a32c
+  - enabled: 1
+    path: Assets/Scenes/FriendScene.unity
+    guid: d4f5a9d76cbfa5340924c4327c072163
+  - enabled: 1
+    path: Assets/Scenes/ProfileScene.unity
+    guid: faaee0ef280f48c47b80b68925a37d2c
   m_configObjects: {}

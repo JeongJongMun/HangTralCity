@@ -22,10 +22,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     private SpriteRenderer SR;
     private Animator AN;
 
-    //public AnimatorController[] animators;
     private List<string> animators = new List<string> {"puppy", "cat", "bear", "dino", "rabbit" }; 
     private List<string> sprites = new List<string> {"puppy_ridle", "cat_ridle", "bear_ridle", "dino_ridle", "rabbit_ridle" }; 
-    //public Sprite[] characterSprites;
 
     // 캐릭터 커스텀 변경 변수
     public GameObject hatPoint;
@@ -61,8 +59,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         ChatText.GetComponent<TMP_Text>().text = "";
 
         RB = GetComponent<Rigidbody2D>();
-        AN = GetComponent<Animator>();
-        SR = GetComponent<SpriteRenderer>();
+
         
 
         // 나가기 버튼 (강의동일 경우에만 찾음)
@@ -73,21 +70,24 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             exitBtn.SetActive(false);
         }
 
-        // if (서버 내에서 내 캐릭터 AND 현재 씬이 로컬 기숙사가 아님)
-        if (PV.IsMine && SceneManager.GetActiveScene().name != "DormScene" && SceneManager.GetActiveScene().name != "ClosetScene")
+        // if (서버 내에서 내 캐릭터 AND 현재 씬이 기숙사&&옷장&&프로필이 아님)
+        if (PV.IsMine && SceneManager.GetActiveScene().name != "DormScene" && SceneManager.GetActiveScene().name != "ClosetScene" && SceneManager.GetActiveScene().name != "ProfileScene")
         {
             var CM = GameObject.Find("CMCamera").GetComponent<CinemachineVirtualCamera>();
             CM.Follow = transform;
             CM.LookAt = transform;
         }
-    }
-    void Start()
-    {
-        // 캐릭터 생성시 타입/커스텀/닉네임 설정
-        SetCharacterType();
-        SetCharacterCustom();
-        Chat();
-        //SetCharacterName();
+        if (PV.IsMine)
+        {
+            AN = GetComponent<Animator>();
+            SR = GetComponent<SpriteRenderer>();
+
+            // 캐릭터 생성시 타입/커스텀/닉네임 설정
+            AN.SetInteger("type", PlayerInfo.playerInfo.characterType);
+            SetCharacterCustom();
+            Chat();
+            //SetCharacterName();
+        }
     }
 
     // Update is called once per frame
@@ -199,15 +199,6 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         else curPos = (Vector3)stream.ReceiveNext();
     }
 
-    private void SetCharacterType()
-    {
-        SR.sprite = Resources.Load<Sprite>(sprites[PlayerInfo.playerInfo.characterType]);
-        //SR.sprite = characterSprites[PlayerInfo.playerInfo.characterType];
-        //AN.runtimeAnimatorController = animators[PlayerInfo.playerInfo.characterType];
-        AN.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(animators[PlayerInfo.playerInfo.characterType]);
-        Debug.LogFormat("스프라이트:{0}, 컨트롤러:{1}, 캐릭터타입인덱스:{2}", SR.sprite.name, AN.runtimeAnimatorController.name, PlayerInfo.playerInfo.characterType);
-        //Debug.LogFormat("지정된 스프라이트:{0}", characterSprites[PlayerInfo.playerInfo.characterType].name);
-    }
     public void SetCharacterCustom()
     {
         if (PV.IsMine)
