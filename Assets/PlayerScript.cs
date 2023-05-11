@@ -81,17 +81,10 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         SR = GetComponent<SpriteRenderer>();
 
         // 캐릭터 생성시 타입/커스텀/닉네임 설정
-        PV.RPC("SetCharacterType", RpcTarget.All);
-        PV.RPC("SetCharacterCustom", RpcTarget.All);
+        AN.SetInteger("type", PlayerInfo.playerInfo.characterType);
+        SetCharacterCustom();
         Chat();
         //SetCharacterName();
-    }
-
-
-    [PunRPC]
-    void SetCharacterType()
-    {
-        AN.SetInteger("type", PlayerInfo.playerInfo.characterType);
     }
 
     // Update is called once per frame
@@ -183,12 +176,20 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     // 문에 닿아있을 경우 나가기 버튼 활성화
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.tag == "Door") exitBtn.SetActive(true);
+        if (PV.IsMine)
+        {
+            if (collision.tag == "Door") exitBtn.SetActive(true);
+        }
+        
     }
     // 문과 떨어질 경우 나가기 버튼 비활성화
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag == "Door") exitBtn.SetActive(false);
+        if (PV.IsMine)
+        {
+            if (collision.tag == "Door") exitBtn.SetActive(false);
+        }
+        
     }
     // 나가기 버튼 클릭시
     public void Exit()
@@ -203,25 +204,11 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         else curPos = (Vector3)stream.ReceiveNext();
     }
 
-    [PunRPC]
     public void SetCharacterCustom()
     {
         Debug.LogFormat("플레이어 커스텀 모자:{0}, 눈:{1}", PlayerInfo.playerInfo.hatCustom, PlayerInfo.playerInfo.eyeCustom);
         hatPoint.GetComponent<SpriteRenderer>().sprite = hatSprites[PlayerInfo.playerInfo.hatCustom];
         eyePoint.GetComponent<SpriteRenderer>().sprite = eyeSprites[PlayerInfo.playerInfo.eyeCustom];
-    }
-    private void SetCharacterName()
-    {
-        /*if (PV.IsMine)
-        {
-            Debug.LogFormat("플레이어 닉네임:{0}", PlayerInfo.playerInfo.nickname);
-            nickNameTxt.GetComponent<TMP_Text>().text = PlayerInfo.playerInfo.nickname;
-        }
-        else
-        {
-            nickNameTxt.GetComponent<TMP_Text>().text = PlayerInfo.playerInfo.nickname;
-        }*/
-
     }
 }
 

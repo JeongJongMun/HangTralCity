@@ -18,6 +18,7 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
     [Header("ETC")]
     public PhotonView PV;
     AudioSource dooropenEffect;
+    public Animator AN;
 
     void Awake()
     {
@@ -30,14 +31,24 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
 
             UserInPanel.SetActive(true);
             UserOutPanel.SetActive(false);
-            
+
+            PV.RPC("SetCharacter", RpcTarget.All);
         }
     }
 
-    private void Panel_()
+    [PunRPC]
+    private void SetCharacter()
     {
-        UserInPanel.SetActive(false);
+        AN.SetInteger("type", PlayerInfo.playerInfo.characterType);
     }
+
+/*    public void SetCharacterCustom()
+    {
+        Debug.LogFormat("플레이어 커스텀 모자:{0}, 눈:{1}", PlayerInfo.playerInfo.hatCustom, PlayerInfo.playerInfo.eyeCustom);
+        hatPoint.GetComponent<SpriteRenderer>().sprite = hatSprites[PlayerInfo.playerInfo.hatCustom];
+        eyePoint.GetComponent<SpriteRenderer>().sprite = eyeSprites[PlayerInfo.playerInfo.eyeCustom];
+    }*/
+
     private void Start()
     {
         dooropenEffect = GetComponent<AudioSource>();
@@ -52,12 +63,17 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
 
         PhotonNetwork.JoinOrCreateRoom("Room1", new RoomOptions { MaxPlayers = 5 }, null);
     }
+
     public override void OnJoinedRoom()
     {
         PhotonNetwork.Instantiate("Player", new Vector3((float)-9.9, 6, -1), Quaternion.identity);
         Debug.LogFormat("{0}님이 방에 참가하였습니다.", PlayerInfo.playerInfo.nickname);
         Invoke("Panel_", 1f);
-        
+    }
+
+    private void Panel_()
+    {
+        UserInPanel.SetActive(false);
     }
 
     public override void OnDisconnected(DisconnectCause cause)

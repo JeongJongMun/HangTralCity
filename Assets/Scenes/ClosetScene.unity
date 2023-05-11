@@ -2383,6 +2383,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1563549275310144858, guid: f24830e3694e3b74dbd1a020e9b6c3c3, type: 3}
+      propertyPath: m_SynchronizeParameters.Array.data[1].SynchronizeType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3770448723398332557, guid: f24830e3694e3b74dbd1a020e9b6c3c3, type: 3}
       propertyPath: m_RootOrder
       value: 7
