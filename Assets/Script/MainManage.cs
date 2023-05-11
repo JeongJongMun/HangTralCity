@@ -22,25 +22,24 @@ public class MainManage : MonoBehaviour
 
         building_playground.GetComponent<Button>().onClick.AddListener(EnterPlayground);
         enter_btn_playground.GetComponent<Button>().onClick.AddListener(EnterPlayground);
-
     }
 
-    public void EnterGang()
+    void EnterGang()
     {
         SceneManager.LoadScene("GangScene");
     }
-    public void EnterDorm()
+    void EnterDorm()
     {
         SceneManager.LoadScene("DormScene");
     }
-    public void EnterHack()
+    void EnterHack()
     {
 
     }
 
-    public void EnterPlayground()
+    void EnterPlayground()
     {
-
+        SceneManager.LoadScene("MiniGameScene");
     }
 
 
