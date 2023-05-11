@@ -77,17 +77,21 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             CM.Follow = transform;
             CM.LookAt = transform;
         }
-        if (PV.IsMine)
-        {
-            AN = GetComponent<Animator>();
-            SR = GetComponent<SpriteRenderer>();
+        AN = GetComponent<Animator>();
+        SR = GetComponent<SpriteRenderer>();
 
-            // 캐릭터 생성시 타입/커스텀/닉네임 설정
-            AN.SetInteger("type", PlayerInfo.playerInfo.characterType);
-            SetCharacterCustom();
-            Chat();
-            //SetCharacterName();
-        }
+        // 캐릭터 생성시 타입/커스텀/닉네임 설정
+        PV.RPC("SetCharacterType", RpcTarget.All);
+        PV.RPC("SetCharacterCustom", RpcTarget.All);
+        Chat();
+        //SetCharacterName();
+    }
+
+
+    [PunRPC]
+    void SetCharacterType()
+    {
+        AN.SetInteger("type", PlayerInfo.playerInfo.characterType);
     }
 
     // Update is called once per frame
@@ -199,21 +203,12 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         else curPos = (Vector3)stream.ReceiveNext();
     }
 
+    [PunRPC]
     public void SetCharacterCustom()
     {
-        if (PV.IsMine)
-        {
-            Debug.LogFormat("플레이어 커스텀 모자:{0}, 눈:{1}", PlayerInfo.playerInfo.hatCustom, PlayerInfo.playerInfo.eyeCustom);
-            hatPoint.GetComponent<SpriteRenderer>().sprite = hatSprites[PlayerInfo.playerInfo.hatCustom];
-            eyePoint.GetComponent<SpriteRenderer>().sprite = eyeSprites[PlayerInfo.playerInfo.eyeCustom];
-        }
-        else
-        {
-            Debug.Log("Not Is Mine");
-            hatPoint.GetComponent<SpriteRenderer>().sprite = hatSprites[PlayerInfo.playerInfo.hatCustom];
-            eyePoint.GetComponent<SpriteRenderer>().sprite = eyeSprites[PlayerInfo.playerInfo.eyeCustom];
-        }
-        
+        Debug.LogFormat("플레이어 커스텀 모자:{0}, 눈:{1}", PlayerInfo.playerInfo.hatCustom, PlayerInfo.playerInfo.eyeCustom);
+        hatPoint.GetComponent<SpriteRenderer>().sprite = hatSprites[PlayerInfo.playerInfo.hatCustom];
+        eyePoint.GetComponent<SpriteRenderer>().sprite = eyeSprites[PlayerInfo.playerInfo.eyeCustom];
     }
     private void SetCharacterName()
     {

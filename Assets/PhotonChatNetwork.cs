@@ -31,14 +31,13 @@ public class PhotonChatNetwork : MonoBehaviourPunCallbacks
             Debug.Log("already in server");
         }
         ChatInput.text = "";
-        for (int i = 0; i < ChatText.Length; i++) Debug.Log(ChatText[i].text);
     }
 
     public override void OnConnectedToMaster()
     {
         Debug.Log("OnConnectedToMaster\n");
         RoomOptions options = new RoomOptions();
-        options.MaxPlayers = 20;
+        options.MaxPlayers = 5;
 
         //PhotonNetwork.LocalPlayer.NickName = PlayerInfo.player_info.nickname;
         PhotonNetwork.JoinOrCreateRoom("Room1", options, null);
