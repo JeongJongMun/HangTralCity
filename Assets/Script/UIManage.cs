@@ -8,29 +8,31 @@ using Photon.Pun;
 public class UIManage : MonoBehaviour
 {
     // CanvasÀÇ TopBar, BottomBar UI °ü¸®
-    private Button home_btn, closet_btn, setting_btn, logout_btn, chat_btn, friendBtn, profileBtn;
-    private GameObject setting_content;
+    private Button homeBtn, closetBtn, settingBtn, logoutBtn, chatBtn, friendBtn, profileBtn, settingCloseBtn;
+    private GameObject settingPanel;
     void Start()
     {
 
-        home_btn = GameObject.Find("HomeBtn").GetComponent<Button>();
-        home_btn.onClick.AddListener(ClickHomeBtn);
+        homeBtn = GameObject.Find("HomeBtn").GetComponent<Button>();
+        homeBtn.onClick.AddListener(ClickHomeBtn);
 
-        closet_btn = GameObject.Find("ClosetBtn").GetComponent<Button>();
-        closet_btn.onClick.AddListener(ClickClosetBtn);
+        closetBtn = GameObject.Find("ClosetBtn").GetComponent<Button>();
+        closetBtn.onClick.AddListener(ClickClosetBtn);
 
-        setting_btn = GameObject.Find("SettingBtn").GetComponent<Button>();
-        setting_btn.onClick.AddListener(ClickSettingBtn);
+        settingBtn = GameObject.Find("SettingBtn").GetComponent<Button>();
+        settingBtn.onClick.AddListener(ClickSettingBtn);
 
-        chat_btn = GameObject.Find("ChatBtn").GetComponent<Button>();
-        chat_btn.onClick.AddListener(ClickChatBtn);
+        chatBtn = GameObject.Find("ChatBtn").GetComponent<Button>();
+        chatBtn.onClick.AddListener(ClickChatBtn);
 
 
-        logout_btn = GameObject.Find("LogOutBtn").GetComponent<Button>();
-        logout_btn.onClick.AddListener(ClickLogOutBtn);
+        logoutBtn = GameObject.Find("LogOutBtn").GetComponent<Button>();
+        logoutBtn.onClick.AddListener(ClickLogOutBtn);
 
-        setting_content = GameObject.Find("SettingContent");
-        setting_content.SetActive(false);
+        settingPanel = GameObject.Find("SettingPanel");
+        settingCloseBtn = GameObject.Find("SettingCloseBtn").GetComponent<Button>();
+        settingCloseBtn.onClick.AddListener(ClickSettingBtn);
+        settingPanel.SetActive(false);
 
         friendBtn = GameObject.Find("FriendBtn").GetComponent<Button>();
         friendBtn.onClick.AddListener(ClickFriendBtn);
@@ -38,11 +40,13 @@ public class UIManage : MonoBehaviour
         profileBtn = GameObject.Find("ProfileBtn").GetComponent<Button>();
         profileBtn.onClick.AddListener(ClickProfileBtn);
 
+
+
     }
     private void ClickSettingBtn()
     {
-        if (setting_content.activeSelf) setting_content.SetActive(false);
-        else setting_content.SetActive(true);
+        if (settingPanel.activeSelf) settingPanel.SetActive(false);
+        else settingPanel.SetActive(true);
     }
     private void ClickLogOutBtn()
     {

@@ -11,6 +11,7 @@ public class PlayerInfo : MonoBehaviour
     public int eyeCustom = 11; // 캐릭터 커스터마이징 eye 에셋 저장, 기본값 = 아무것도 없는 none이미지 11
     public Dictionary<string, List<Vector3>> funiturePos = new Dictionary<string, List<Vector3>>(); // 방 커스터마이징 가구 종류 및 위치 저장
     public int characterType = 0; // 캐릭터 타입
+    public float volume = 0.5f; // BGM 볼륨
     
     // PlayerInfo 클래스를 싱글 톤으로 생성
     // 단 하나의 인스턴스만을 가지며 어디서든 접근 가능

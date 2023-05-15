@@ -37,8 +37,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     public GameObject nickNameTxt;
     public GameObject nickNamePoint;
 
-    // 나가기 버튼
-    private GameObject exitBtn;
+    // 나가기 버튼, 갤러리 버튼
+    private GameObject exitBtn, galleryBtn;
 
 
     public GameObject ChatPoint;
@@ -68,6 +68,9 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             exitBtn = GameObject.Find("ExitBtn");
             exitBtn.GetComponent<Button>().onClick.AddListener(Exit);
             exitBtn.SetActive(false);
+
+            galleryBtn = GameObject.Find("GalleryBtn");
+            galleryBtn.SetActive(false);
         }
 
         // if (서버 내에서 내 캐릭터 AND 현재 씬이 기숙사&&옷장&&프로필이 아님)
@@ -135,17 +138,29 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         // if (서버 내에서 내 캐릭터 OR 현재 씬이 로컬 기숙사)
         if (PV.IsMine || SceneManager.GetActiveScene().name == "DormScene")
         {
-            //움직이기
+            // ** 움직이기 **
+            // 키보드 입력
             float axis_x = Input.GetAxisRaw("Horizontal");
             float axis_y = Input.GetAxisRaw("Vertical");
+
+            // 터치 입력
+            if (Input.GetMouseButton(0))
+            {
+                Vector2 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                axis_x = (touchPos.x > transform.position.x) ? 1 : -1;
+                axis_y = (touchPos.y > transform.position.y) ? 1 : -1;
+            }
             RB.velocity = new Vector2(speed * axis_x, speed * axis_y);
             RB.AddForce(RB.velocity * Time.deltaTime, ForceMode2D.Impulse);
+            // ** 움직이기 **
 
-            //걷기 애니메이션 설정
-            if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0) AN.SetBool("isWalking", true);
-            else AN.SetBool("isWalking", false);
+            // 걷기 애니메이션 설정
+            if (axis_x != 0 || axis_y != 0)
+                AN.SetBool("isWalking", true);
+            else
+                AN.SetBool("isWalking", false);
 
-            //x축 반전
+            // x축 반전
             if (axis_x < 0)
             {
                 transform.localScale = new Vector3(-1 * playerScale, playerScale, playerScale);
@@ -179,6 +194,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         if (PV.IsMine)
         {
             if (collision.tag == "Door") exitBtn.SetActive(true);
+            if (collision.tag == "MainDesk") galleryBtn.SetActive(true);
         }
         
     }
@@ -188,8 +204,9 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         if (PV.IsMine)
         {
             if (collision.tag == "Door") exitBtn.SetActive(false);
+            if (collision.tag == "MainDesk") galleryBtn.SetActive(false);
         }
-        
+
     }
     // 나가기 버튼 클릭시
     public void Exit()
