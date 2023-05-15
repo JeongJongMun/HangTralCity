@@ -766,7 +766,7 @@ MonoBehaviour:
     SynchronizeType: 1
     Name: isWalking
   - Type: 3
-    SynchronizeType: 0
+    SynchronizeType: 2
     Name: type
   m_SynchronizeLayers:
   - SynchronizeType: 0

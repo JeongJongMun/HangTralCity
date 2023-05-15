@@ -143,7 +143,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             // 키보드 입력
             float axis_x = Input.GetAxisRaw("Horizontal");
             float axis_y = Input.GetAxisRaw("Vertical");
-
+            
             // 터치 입력
             if (Input.GetMouseButton(0))
             {
@@ -164,6 +164,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             // x축 반전
             if (axis_x < 0)
             {
+                PV.RPC("FlipXRPC", RpcTarget.AllBuffered, axis_x);
                 transform.localScale = new Vector3(-1 * playerScale, playerScale, playerScale);
                 // 닉네임은 x축 반전 X
                 Transform rt = nickNamePoint.transform;
@@ -174,6 +175,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             }
             else if (axis_x > 0)
             {
+                PV.RPC("FlipXRPC", RpcTarget.AllBuffered, axis_x);
                 transform.localScale = new Vector3(1 * playerScale, playerScale, playerScale);
                 // 닉네임은 x축 반전 X
                 Transform rt = nickNamePoint.transform;
@@ -182,6 +184,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                 Transform rr = ChatPoint.transform;
                 rr.localScale = new Vector3(1, 1, 1);
             }
+
 
         }
         //ismine이 아닌경우 위치동기화 (다른 사람이 움직이는걸 내가 볼 수 있게)
@@ -243,6 +246,12 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     {
         AN = GetComponent<Animator>();
         AN.SetInteger("type", PlayerInfo.playerInfo.characterType);
+    }
+
+    [PunRPC]
+    void FlipXRPC(float axis)
+    {
+        SR.flipX = (axis == -1);
     }
 }
 
