@@ -3,12 +3,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 using ExitGames.Client.Photon;
+using Photon.Pun;
+using Photon.Realtime;
 
 public class LoadGallery : MonoBehaviour
 {
     public GameObject img; // 오른쪽 위에 UI로 작게 뜨는 이미지
     public GameObject img2; // 강의동 칠판에 대문짝만하게 뜨는 이미지
     public Button galleryBtn;
+    public PhotonView PV;
     void Start()
     {
         img.SetActive(false);
@@ -26,11 +29,20 @@ public class LoadGallery : MonoBehaviour
             if (seleted.Length > 50000000) return;
 
             // 파일이 존재한다면 불러오기
-            if (!string.IsNullOrEmpty(file)) StartCoroutine(LoadImage(file));
-
+            if (!string.IsNullOrEmpty(file))
+            {
+                StartCoroutine(LoadImage(file));
+                Updating(file);
+            }
         });
     }
 
+    private void Updating(string file)
+    {
+        PV.RPC("LoadImage", RpcTarget.All, file);
+    }
+
+    [PunRPC]
     IEnumerator LoadImage(string path)
     {
         yield return null;

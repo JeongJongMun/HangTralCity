@@ -44,8 +44,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     public GameObject ChatPoint;
     public GameObject ChatText;
     private Button sendBtn; // 채팅 보내기 버튼 UI
-    private InputField inputfield; // 채팅 입력창 UI
-
+    private InputField inputfield; // 채팅 입력창 UI 
 
     //public GameObject chatBoxPrefab; // 말풍선 프리팹
     //public Transform chatTr; // 말풍선 위치
@@ -60,34 +59,36 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
 
         RB = GetComponent<Rigidbody2D>();
 
-        
-
-        // 나가기 버튼 (강의동일 경우에만 찾음)
-        if (SceneManager.GetActiveScene().name == "GangScene")
+        // 캐릭터 커스텀 씬에서 작동
+        if(PV.IsMine && SceneManager.GetActiveScene().name == "ClosetScene")
         {
+            SetCharacterType();
+            SetCharacterCustom();
+        }
+
+        // 강의동에서 작동
+        if (PV.IsMine && SceneManager.GetActiveScene().name == "GangScene")
+        {
+            //나가기 버튼
             exitBtn = GameObject.Find("ExitBtn");
             exitBtn.GetComponent<Button>().onClick.AddListener(Exit);
             exitBtn.SetActive(false);
 
             galleryBtn = GameObject.Find("GalleryBtn");
             galleryBtn.SetActive(false);
-        }
 
-        // if (서버 내에서 내 캐릭터 AND 현재 씬이 기숙사&&옷장&&프로필이 아님)
-        if (PV.IsMine && SceneManager.GetActiveScene().name != "DormScene" && SceneManager.GetActiveScene().name != "ClosetScene" && SceneManager.GetActiveScene().name != "ProfileScene")
-        {
+            //카메라
             var CM = GameObject.Find("CMCamera").GetComponent<CinemachineVirtualCamera>();
             CM.Follow = transform;
             CM.LookAt = transform;
-        }
-        AN = GetComponent<Animator>();
-        SR = GetComponent<SpriteRenderer>();
 
-        // 캐릭터 생성시 타입/커스텀/닉네임 설정
-        AN.SetInteger("type", PlayerInfo.playerInfo.characterType);
-        SetCharacterCustom();
-        Chat();
-        //SetCharacterName();
+            //캐릭터 세팅
+            PV.RPC("SetCharacterCustom", RpcTarget.All);
+            PV.RPC("SetCharacterType", RpcTarget.All);
+
+            //채팅
+            Chat();
+        }
     }
 
     // Update is called once per frame
@@ -136,7 +137,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Move() {
         // if (서버 내에서 내 캐릭터 OR 현재 씬이 로컬 기숙사)
-        if (PV.IsMine || SceneManager.GetActiveScene().name == "DormScene")
+        if (PV.IsMine && (SceneManager.GetActiveScene().name == "GangScene" || SceneManager.GetActiveScene().name == "DormScene"))
         {
             // ** 움직이기 **
             // 키보드 입력
@@ -217,15 +218,31 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) // 변수동기화
     {
-        if (stream.IsWriting) stream.SendNext(transform.position);
-        else curPos = (Vector3)stream.ReceiveNext();
+        if (stream.IsWriting)
+        {
+            stream.SendNext(transform.position);
+            stream.SendNext(AN);
+        }
+        else
+        {
+            curPos = (Vector3)stream.ReceiveNext();
+            this.AN = (Animator)stream.ReceiveNext();
+        }
     }
 
+    [PunRPC]
     public void SetCharacterCustom()
     {
         Debug.LogFormat("플레이어 커스텀 모자:{0}, 눈:{1}", PlayerInfo.playerInfo.hatCustom, PlayerInfo.playerInfo.eyeCustom);
         hatPoint.GetComponent<SpriteRenderer>().sprite = hatSprites[PlayerInfo.playerInfo.hatCustom];
         eyePoint.GetComponent<SpriteRenderer>().sprite = eyeSprites[PlayerInfo.playerInfo.eyeCustom];
+    }
+
+    [PunRPC]
+    void SetCharacterType()
+    {
+        AN = GetComponent<Animator>();
+        AN.SetInteger("type", PlayerInfo.playerInfo.characterType);
     }
 }
 

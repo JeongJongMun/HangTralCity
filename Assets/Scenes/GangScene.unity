@@ -190,6 +190,7 @@ GameObject:
   m_Component:
   - component: {fileID: 36469618}
   - component: {fileID: 36469617}
+  - component: {fileID: 36469619}
   m_Layer: 0
   m_Name: GalleryController
   m_TagString: Untagged
@@ -212,6 +213,7 @@ MonoBehaviour:
   img: {fileID: 804696403}
   img2: {fileID: 696288861}
   galleryBtn: {fileID: 627581002}
+  PV: {fileID: 36469619}
 --- !u!4 &36469618
 Transform:
   m_ObjectHideFlags: 0
@@ -227,6 +229,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &36469619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 36469616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 2
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &61113797
 GameObject:
   m_ObjectHideFlags: 0
@@ -11879,7 +11903,7 @@ MonoBehaviour:
   m_Follow: {fileID: 3770448723398332557, guid: f24830e3694e3b74dbd1a020e9b6c3c3, type: 3}
   m_Lens:
     FieldOfView: 60
-    OrthographicSize: 9
+    OrthographicSize: 12
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
@@ -13005,7 +13029,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 9
+  orthographic size: 12
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -13029,7 +13053,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1891873805}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 12.839609, y: -9.803839, z: -9.841141}
+  m_LocalPosition: {x: 12.847776, y: -7.840804, z: -9.841141}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
