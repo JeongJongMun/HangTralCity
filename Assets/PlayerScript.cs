@@ -1,10 +1,10 @@
-using UnityEngine;
-using Photon.Pun;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using Cinemachine;
-using TMPro;
+using Photon.Pun;
 using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -51,16 +51,20 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
 
     void Awake()
     {
-        //nameText.text = PV.IsMine ? PhotonNetwork.NickName : PV.Owner.NickName;
-        nickNameTxt.GetComponent<TMP_Text>().text = PV.IsMine? PhotonNetwork.NickName : PV.Owner.NickName;
-        nickNameTxt.GetComponent<TMP_Text>().color = PV.IsMine ? Color.green : Color.blue;
+        if(SceneManager.GetActiveScene().name != "ClosetScene")
+        {
+            nickNameTxt.GetComponent<TMP_Text>().text = PV.IsMine ? PhotonNetwork.NickName : PV.Owner.NickName;
+            nickNameTxt.GetComponent<TMP_Text>().color = PV.IsMine ? Color.green : Color.blue;
+        }
 
         ChatText.GetComponent<TMP_Text>().text = "";
 
         RB = GetComponent<Rigidbody2D>();
+        SR = GetComponent<SpriteRenderer>();
+        AN = GetComponent<Animator>();
 
         // 캐릭터 커스텀 씬에서 작동
-        if(PV.IsMine && SceneManager.GetActiveScene().name == "ClosetScene")
+        if (PV.IsMine && SceneManager.GetActiveScene().name == "ClosetScene")
         {
             SetCharacterType();
             SetCharacterCustom();
@@ -84,7 +88,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
 
             //캐릭터 세팅
             PV.RPC("SetCharacterCustom", RpcTarget.All);
-            PV.RPC("SetCharacterType", RpcTarget.All);
+            PV.RPC("SetCharacterType", RpcTarget.AllBuffered);
 
             //채팅
             Chat();
@@ -156,16 +160,13 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             // ** 움직이기 **
 
             // 걷기 애니메이션 설정
-            if (axis_x != 0 || axis_y != 0)
-                AN.SetBool("isWalking", true);
-            else
-                AN.SetBool("isWalking", false);
+            if (axis_x != 0 || axis_y != 0) AN.SetBool("isWalking", true);
+            else AN.SetBool("isWalking", false);
 
             // x축 반전
             if (axis_x < 0)
             {
-                PV.RPC("FlipXRPC", RpcTarget.AllBuffered, axis_x);
-                transform.localScale = new Vector3(-1 * playerScale, playerScale, playerScale);
+                PV.RPC("FlipXxRPC", RpcTarget.AllBuffered, axis_x);
                 // 닉네임은 x축 반전 X
                 Transform rt = nickNamePoint.transform;
                 rt.localScale = new Vector3(-1, 1, 1);
@@ -176,7 +177,6 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             else if (axis_x > 0)
             {
                 PV.RPC("FlipXRPC", RpcTarget.AllBuffered, axis_x);
-                transform.localScale = new Vector3(1 * playerScale, playerScale, playerScale);
                 // 닉네임은 x축 반전 X
                 Transform rt = nickNamePoint.transform;
                 rt.localScale = new Vector3(1, 1, 1);
@@ -221,16 +221,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) // 변수동기화
     {
-        if (stream.IsWriting)
-        {
-            stream.SendNext(transform.position);
-            stream.SendNext(AN);
-        }
-        else
-        {
-            curPos = (Vector3)stream.ReceiveNext();
-            this.AN = (Animator)stream.ReceiveNext();
-        }
+        if (stream.IsWriting) stream.SendNext(transform.position);
+        else curPos = (Vector3)stream.ReceiveNext();
     }
 
     [PunRPC]
@@ -241,17 +233,26 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         eyePoint.GetComponent<SpriteRenderer>().sprite = eyeSprites[PlayerInfo.playerInfo.eyeCustom];
     }
 
+    void setting()
+    {
+
+    }
+
     [PunRPC]
     void SetCharacterType()
     {
-        AN = GetComponent<Animator>();
         AN.SetInteger("type", PlayerInfo.playerInfo.characterType);
     }
 
     [PunRPC]
     void FlipXRPC(float axis)
     {
-        SR.flipX = (axis == -1);
+        transform.localScale = new Vector3(1 * playerScale, playerScale, playerScale);
+    }
+    [PunRPC]
+    void FlipXxRPC(float axis)
+    {
+        transform.localScale = new Vector3(-1 * playerScale, playerScale, playerScale);
     }
 }
 
