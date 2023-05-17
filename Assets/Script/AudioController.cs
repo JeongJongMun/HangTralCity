@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -25,6 +24,7 @@ public class AudioController : MonoBehaviour
         if (mainBGMList.Contains(SceneManager.GetActiveScene().name)) audioSource.clip = clips[2];
         else if (dormBGMList.Contains(SceneManager.GetActiveScene().name)) audioSource.clip = clips[0];
         else if (miniGameBGMList.Contains(SceneManager.GetActiveScene().name)) audioSource.clip = clips[3];
+        else audioSource.clip = null;
 
         // 씬 시작시 저장된 볼륨 값을 가져오기
         audioSource.volume = PlayerInfo.playerInfo.volume;

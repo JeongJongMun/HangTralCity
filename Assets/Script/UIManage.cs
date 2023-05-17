@@ -8,7 +8,7 @@ using Photon.Pun;
 public class UIManage : MonoBehaviour
 {
     // Canvas의 TopBar, BottomBar UI 관리
-    private Button homeBtn, closetBtn, settingBtn, logoutBtn, chatBtn, friendBtn, profileBtn, settingCloseBtn;
+    private Button homeBtn, closetBtn, settingBtn, logoutBtn, chatBtn, friendBtn, profileBtn, settingCloseBtn, arBtn;
     private GameObject settingPanel;
     void Start()
     {
@@ -40,15 +40,17 @@ public class UIManage : MonoBehaviour
         profileBtn = GameObject.Find("ProfileBtn").GetComponent<Button>();
         profileBtn.onClick.AddListener(ClickProfileBtn);
 
+        arBtn = GameObject.Find("ARBtn").GetComponent<Button>();
+        arBtn.onClick.AddListener(ClickARBtn);
 
 
     }
-    private void ClickSettingBtn()
+    void ClickSettingBtn()
     {
         if (settingPanel.activeSelf) settingPanel.SetActive(false);
         else settingPanel.SetActive(true);
     }
-    private void ClickLogOutBtn()
+    void ClickLogOutBtn()
     {
         // 로그아웃시 자동 로그인된 정보를 삭제
         PlayerPrefs.DeleteKey("LastLoggedInUserId");
@@ -56,27 +58,31 @@ public class UIManage : MonoBehaviour
         SceneManager.LoadScene("SignInScene");
     }
 
-    private void ClickClosetBtn()
+    void ClickClosetBtn()
     {
         PhotonNetwork.Disconnect();
         SceneManager.LoadScene("ClosetScene");
     }
-    private void ClickHomeBtn()
+    void ClickHomeBtn()
     {
         PhotonNetwork.Disconnect();
         SceneManager.LoadScene("MainScene");
     }
 
-    private void ClickChatBtn()
+    void ClickChatBtn()
     {
         if (SceneManager.GetActiveScene().name != "MainChatScene") SceneManager.LoadScene("MainChatScene");
     }
-    private void ClickFriendBtn()
+    void ClickFriendBtn()
     {
         SceneManager.LoadScene("FriendScene");
     }
-    private void ClickProfileBtn()
+    void ClickProfileBtn()
     {
         SceneManager.LoadScene("ProfileScene");
+    }
+    void ClickARBtn()
+    {
+        SceneManager.LoadScene("ARScene");
     }
 }
