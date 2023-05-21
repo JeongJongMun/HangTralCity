@@ -37,7 +37,7 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    private void SetCharacter()
+    void SetCharacter()
     {
         AN.SetInteger("type", PlayerInfo.playerInfo.characterType);
     }

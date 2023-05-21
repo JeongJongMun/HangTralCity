@@ -1,5 +1,6 @@
 using Cinemachine;
 using Photon.Pun;
+using Photon.Realtime;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -22,8 +23,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     private SpriteRenderer SR;
     private Animator AN;
 
-    private List<string> animators = new List<string> {"puppy", "cat", "bear", "dino", "rabbit" }; 
-    private List<string> sprites = new List<string> {"puppy_ridle", "cat_ridle", "bear_ridle", "dino_ridle", "rabbit_ridle" }; 
+    //private List<string> animators = new List<string> {"puppy", "cat", "bear", "dino", "rabbit" }; 
+    //private List<string> sprites = new List<string> {"puppy_ridle", "cat_ridle", "bear_ridle", "dino_ridle", "rabbit_ridle" }; 
 
     // 캐릭터 커스텀 변경 변수
     public GameObject hatPoint;
@@ -51,47 +52,47 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
 
     void Awake()
     {
-        if(SceneManager.GetActiveScene().name != "ClosetScene")
-        {
-            nickNameTxt.GetComponent<TMP_Text>().text = PV.IsMine ? PhotonNetwork.NickName : PV.Owner.NickName;
-            nickNameTxt.GetComponent<TMP_Text>().color = PV.IsMine ? Color.green : Color.blue;
-        }
-
-        ChatText.GetComponent<TMP_Text>().text = "";
-
         RB = GetComponent<Rigidbody2D>();
         SR = GetComponent<SpriteRenderer>();
         AN = GetComponent<Animator>();
 
-        // 캐릭터 커스텀 씬에서 작동
-        if (PV.IsMine && SceneManager.GetActiveScene().name == "ClosetScene")
+        if (SceneManager.GetActiveScene().name == "ClosetScene") // closet scene일때
         {
-            SetCharacterType();
-            SetCharacterCustom();
+            nickNameTxt.GetComponent<TMP_Text>().text = "";
+            if (PV.IsMine)
+            {
+                transform.localPosition = new Vector3(0, 2, -1);
+                SetCharacterType();
+                SetCharacterCustom();
+            }
         }
-
-        // 강의동에서 작동
-        if (PV.IsMine && SceneManager.GetActiveScene().name == "GangScene")
+        else // 그 외의 모든 씬에서 nickname 표시
         {
-            //나가기 버튼
-            exitBtn = GameObject.Find("ExitBtn");
-            exitBtn.GetComponent<Button>().onClick.AddListener(Exit);
-            exitBtn.SetActive(false);
+            nickNameTxt.GetComponent<TMP_Text>().text = PV.IsMine ? PhotonNetwork.NickName : PV.Owner.NickName;
+            nickNameTxt.GetComponent<TMP_Text>().color = PV.IsMine ? Color.green : Color.blue;
 
-            galleryBtn = GameObject.Find("GalleryBtn");
-            galleryBtn.SetActive(false);
+            if (PV.IsMine && SceneManager.GetActiveScene().name == "GangScene") // Gang scene일때
+            {
+                //나가기 버튼
+                exitBtn = GameObject.Find("ExitBtn");
+                exitBtn.GetComponent<Button>().onClick.AddListener(Exit);
+                exitBtn.SetActive(false);
 
-            //카메라
-            var CM = GameObject.Find("CMCamera").GetComponent<CinemachineVirtualCamera>();
-            CM.Follow = transform;
-            CM.LookAt = transform;
+                galleryBtn = GameObject.Find("GalleryBtn");
+                galleryBtn.SetActive(false);
 
-            //캐릭터 세팅
-            PV.RPC("SetCharacterCustom", RpcTarget.All);
-            PV.RPC("SetCharacterType", RpcTarget.AllBuffered);
+                //카메라
+                var CM = GameObject.Find("CMCamera").GetComponent<CinemachineVirtualCamera>();
+                CM.Follow = transform;
+                CM.LookAt = transform;
 
-            //채팅
-            Chat();
+                //캐릭터 세팅
+                //PV.RPC("SetCharacterCustom", RpcTarget.AllBuffered);
+                PV.RPC("SetCharacterType", RpcTarget.AllBuffered);
+
+                //채팅
+                Chat();
+            }
         }
     }
 
@@ -99,16 +100,16 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     void Update()
     {
         Move();
+        if (SceneManager.GetActiveScene().name == "GangScene"){
+            PV.RPC("SetCharacterCustom", RpcTarget.All);
+        }
     }
 
     private void Chat()
     {
-        if (SceneManager.GetActiveScene().name == "GangScene")
-        {
-            inputfield = GameObject.Find("ChatInputfield").GetComponent<InputField>();
-            sendBtn = GameObject.Find("ChatSendBtn").GetComponent<Button>();
-            sendBtn.onClick.AddListener(Send);
-        }
+        inputfield = GameObject.Find("ChatInputfield").GetComponent<InputField>();
+        sendBtn = GameObject.Find("ChatSendBtn").GetComponent<Button>();
+        sendBtn.onClick.AddListener(Send);
     }
 
     public void Send()
@@ -141,55 +142,58 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Move() {
         // if (서버 내에서 내 캐릭터 OR 현재 씬이 로컬 기숙사)
-        if (PV.IsMine && (SceneManager.GetActiveScene().name == "GangScene" || SceneManager.GetActiveScene().name == "DormScene"))
+        if (SceneManager.GetActiveScene().name == "GangScene" || SceneManager.GetActiveScene().name == "DormScene")
         {
-            // ** 움직이기 **
-            // 키보드 입력
-            float axis_x = Input.GetAxisRaw("Horizontal");
-            float axis_y = Input.GetAxisRaw("Vertical");
-            
-            // 터치 입력
-            if (Input.GetMouseButton(0))
+            if (PV.IsMine)
             {
-                Vector2 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                axis_x = (touchPos.x > transform.position.x) ? 1 : -1;
-                axis_y = (touchPos.y > transform.position.y) ? 1 : -1;
+                // ** 움직이기 **
+                // 키보드 입력
+                float axis_x = Input.GetAxisRaw("Horizontal");
+                float axis_y = Input.GetAxisRaw("Vertical");
+
+                // 터치 입력
+                if (Input.GetMouseButton(0))
+                {
+                    Vector2 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    axis_x = (touchPos.x > transform.position.x) ? 1 : -1;
+                    axis_y = (touchPos.y > transform.position.y) ? 1 : -1;
+                }
+                RB.velocity = new Vector2(speed * axis_x, speed * axis_y);
+                RB.AddForce(RB.velocity * Time.deltaTime, ForceMode2D.Impulse);
+                // ** 움직이기 **
+
+                // 걷기 애니메이션 설정
+                if (axis_x != 0 || axis_y != 0) AN.SetBool("isWalking", true);
+                else AN.SetBool("isWalking", false);
+
+                // x축 반전
+                if (axis_x < 0)
+                {
+                    PV.RPC("FlipXxRPC", RpcTarget.AllBuffered, axis_x);
+                    // 닉네임은 x축 반전 X
+                    Transform rt = nickNamePoint.transform;
+                    rt.localScale = new Vector3(-1, 1, 1);
+                    //채팅은 x축 반전 X
+                    Transform rr = ChatPoint.transform;
+                    rr.localScale = new Vector3(-1, 1, 1);
+                }
+                else if (axis_x > 0)
+                {
+                    PV.RPC("FlipXRPC", RpcTarget.AllBuffered, axis_x);
+                    // 닉네임은 x축 반전 X
+                    Transform rt = nickNamePoint.transform;
+                    rt.localScale = new Vector3(1, 1, 1);
+                    //채팅은 x축 반전 X
+                    Transform rr = ChatPoint.transform;
+                    rr.localScale = new Vector3(1, 1, 1);
+                }
+
+
             }
-            RB.velocity = new Vector2(speed * axis_x, speed * axis_y);
-            RB.AddForce(RB.velocity * Time.deltaTime, ForceMode2D.Impulse);
-            // ** 움직이기 **
-
-            // 걷기 애니메이션 설정
-            if (axis_x != 0 || axis_y != 0) AN.SetBool("isWalking", true);
-            else AN.SetBool("isWalking", false);
-
-            // x축 반전
-            if (axis_x < 0)
-            {
-                PV.RPC("FlipXxRPC", RpcTarget.AllBuffered, axis_x);
-                // 닉네임은 x축 반전 X
-                Transform rt = nickNamePoint.transform;
-                rt.localScale = new Vector3(-1, 1, 1);
-                //채팅은 x축 반전 X
-                Transform rr = ChatPoint.transform;
-                rr.localScale = new Vector3(-1, 1, 1);
-            }
-            else if (axis_x > 0)
-            {
-                PV.RPC("FlipXRPC", RpcTarget.AllBuffered, axis_x);
-                // 닉네임은 x축 반전 X
-                Transform rt = nickNamePoint.transform;
-                rt.localScale = new Vector3(1, 1, 1);
-                //채팅은 x축 반전 X
-                Transform rr = ChatPoint.transform;
-                rr.localScale = new Vector3(1, 1, 1);
-            }
-
-
+            //ismine이 아닌경우 위치동기화 (다른 사람이 움직이는걸 내가 볼 수 있게)
+            else if ((transform.position - curPos).sqrMagnitude >= 100) transform.position = curPos; // 멀리 떨어졌다면
+            else transform.position = Vector3.Lerp(transform.position, curPos, Time.deltaTime * 10); // 근처라면
         }
-        //ismine이 아닌경우 위치동기화 (다른 사람이 움직이는걸 내가 볼 수 있게)
-        else if ((transform.position - curPos).sqrMagnitude >= 100) transform.position = curPos; // 멀리 떨어졌다면
-        else transform.position = Vector3.Lerp(transform.position, curPos, Time.deltaTime * 10); // 근처라면
     }
 
     // 문에 닿아있을 경우 나가기 버튼 활성화
@@ -228,9 +232,12 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void SetCharacterCustom()
     {
-        Debug.LogFormat("플레이어 커스텀 모자:{0}, 눈:{1}", PlayerInfo.playerInfo.hatCustom, PlayerInfo.playerInfo.eyeCustom);
-        hatPoint.GetComponent<SpriteRenderer>().sprite = hatSprites[PlayerInfo.playerInfo.hatCustom];
-        eyePoint.GetComponent<SpriteRenderer>().sprite = eyeSprites[PlayerInfo.playerInfo.eyeCustom];
+        if (PV.IsMine)
+        {
+            Debug.LogFormat("플레이어 커스텀 모자:{0}, 눈:{1}", PlayerInfo.playerInfo.hatCustom, PlayerInfo.playerInfo.eyeCustom);
+            hatPoint.GetComponent<SpriteRenderer>().sprite = hatSprites[PlayerInfo.playerInfo.hatCustom];
+            eyePoint.GetComponent<SpriteRenderer>().sprite = eyeSprites[PlayerInfo.playerInfo.eyeCustom];
+        }
     }
 
     void setting()
