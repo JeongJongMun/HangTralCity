@@ -1,7 +1,5 @@
 using Cinemachine;
 using Photon.Pun;
-using Photon.Realtime;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,19 +10,14 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     public Rigidbody2D RB;
     public PhotonView PV;
 
-    AudioSource dooropenEffect;
-
     Vector3 curPos;
+    int currentHatCustom, currentEyeCustom;
 
     private float playerScale = 0.1f; // 플레이어 크기 비율
     private float speed = 10f; // 플레이어 이동 속도
 
     // 캐릭터 타입 변경 변수
-    private SpriteRenderer SR;
     private Animator AN;
-
-    //private List<string> animators = new List<string> {"puppy", "cat", "bear", "dino", "rabbit" }; 
-    //private List<string> sprites = new List<string> {"puppy_ridle", "cat_ridle", "bear_ridle", "dino_ridle", "rabbit_ridle" }; 
 
     // 캐릭터 커스텀 변경 변수
     public GameObject hatPoint;
@@ -47,13 +40,10 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     private Button sendBtn; // 채팅 보내기 버튼 UI
     private InputField inputfield; // 채팅 입력창 UI 
 
-    //public GameObject chatBoxPrefab; // 말풍선 프리팹
-    //public Transform chatTr; // 말풍선 위치
 
     void Awake()
     {
         RB = GetComponent<Rigidbody2D>();
-        SR = GetComponent<SpriteRenderer>();
         AN = GetComponent<Animator>();
 
         if (SceneManager.GetActiveScene().name == "ClosetScene") // closet scene일때
@@ -63,7 +53,6 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             {
                 transform.localPosition = new Vector3(0, 2, -1);
                 SetCharacterType();
-                SetCharacterCustom();
             }
         }
         else // 그 외의 모든 씬에서 nickname 표시
@@ -86,8 +75,10 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                 CM.Follow = transform;
                 CM.LookAt = transform;
 
-                //캐릭터 세팅
-                //PV.RPC("SetCharacterCustom", RpcTarget.AllBuffered);
+                // 캐릭터 세팅
+                currentHatCustom = PlayerInfo.playerInfo.hatCustom; // 초기값 설정
+                currentEyeCustom = PlayerInfo.playerInfo.eyeCustom;
+                PV.RPC("SetCharacterCustom", RpcTarget.AllBuffered); // 다른 플레이어에게 내 커스텀 정보 및 캐릭터 타입 전달
                 PV.RPC("SetCharacterType", RpcTarget.AllBuffered);
 
                 //채팅
@@ -95,14 +86,45 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             }
         }
     }
-
-    // Update is called once per frame
     void Update()
     {
         Move();
-        if (SceneManager.GetActiveScene().name == "GangScene"){
-            PV.RPC("SetCharacterCustom", RpcTarget.All);
+    }
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) // 변수동기화
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(transform.position);
+            // 다른 플레이어에게 내 현재 커스텀 데이터 전달
+            stream.SendNext(currentHatCustom);
+            stream.SendNext(currentEyeCustom);
         }
+        else
+        {
+            curPos = (Vector3)stream.ReceiveNext();
+            // 다른 플레이어에게 커스텀 데이터 받기
+            currentHatCustom = (int)stream.ReceiveNext();
+            currentEyeCustom = (int)stream.ReceiveNext();
+            // 다른 플레이어의 커스텀 스프라이트 변경
+            hatPoint.GetComponent<SpriteRenderer>().sprite = hatSprites[currentHatCustom];
+            eyePoint.GetComponent<SpriteRenderer>().sprite = eyeSprites[currentEyeCustom];
+        }
+    }
+    [PunRPC]
+    public void SetCharacterCustom()
+    {
+        // 플레이어의 자신 캐릭터 커스텀 변경
+        if (PV.IsMine)
+        {
+            hatPoint.GetComponent<SpriteRenderer>().sprite = hatSprites[PlayerInfo.playerInfo.hatCustom];
+            eyePoint.GetComponent<SpriteRenderer>().sprite = eyeSprites[PlayerInfo.playerInfo.eyeCustom];
+        }
+    }
+
+    [PunRPC]
+    void SetCharacterType()
+    {
+        AN.SetInteger("type", PlayerInfo.playerInfo.characterType);
     }
 
     private void Chat()
@@ -170,22 +192,12 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                 if (axis_x < 0)
                 {
                     PV.RPC("FlipXxRPC", RpcTarget.AllBuffered, axis_x);
-                    // 닉네임은 x축 반전 X
-                    Transform rt = nickNamePoint.transform;
-                    rt.localScale = new Vector3(-1, 1, 1);
-                    //채팅은 x축 반전 X
-                    Transform rr = ChatPoint.transform;
-                    rr.localScale = new Vector3(-1, 1, 1);
+
                 }
                 else if (axis_x > 0)
                 {
                     PV.RPC("FlipXRPC", RpcTarget.AllBuffered, axis_x);
-                    // 닉네임은 x축 반전 X
-                    Transform rt = nickNamePoint.transform;
-                    rt.localScale = new Vector3(1, 1, 1);
-                    //채팅은 x축 반전 X
-                    Transform rr = ChatPoint.transform;
-                    rr.localScale = new Vector3(1, 1, 1);
+
                 }
 
 
@@ -223,43 +235,27 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         PhotonNetwork.Disconnect();
     }
 
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) // 변수동기화
-    {
-        if (stream.IsWriting) stream.SendNext(transform.position);
-        else curPos = (Vector3)stream.ReceiveNext();
-    }
-
-    [PunRPC]
-    public void SetCharacterCustom()
-    {
-        if (PV.IsMine)
-        {
-            Debug.LogFormat("플레이어 커스텀 모자:{0}, 눈:{1}", PlayerInfo.playerInfo.hatCustom, PlayerInfo.playerInfo.eyeCustom);
-            hatPoint.GetComponent<SpriteRenderer>().sprite = hatSprites[PlayerInfo.playerInfo.hatCustom];
-            eyePoint.GetComponent<SpriteRenderer>().sprite = eyeSprites[PlayerInfo.playerInfo.eyeCustom];
-        }
-    }
-
-    void setting()
-    {
-
-    }
-
-    [PunRPC]
-    void SetCharacterType()
-    {
-        AN.SetInteger("type", PlayerInfo.playerInfo.characterType);
-    }
-
     [PunRPC]
     void FlipXRPC(float axis)
     {
         transform.localScale = new Vector3(1 * playerScale, playerScale, playerScale);
+        // 닉네임은 x축 반전 X
+        Transform rt = nickNamePoint.transform;
+        rt.localScale = new Vector3(1, 1, 1);
+        //채팅은 x축 반전 X
+        Transform rr = ChatPoint.transform;
+        rr.localScale = new Vector3(1, 1, 1);
     }
     [PunRPC]
     void FlipXxRPC(float axis)
     {
         transform.localScale = new Vector3(-1 * playerScale, playerScale, playerScale);
+        // 닉네임은 x축 반전 X
+        Transform rt = nickNamePoint.transform;
+        rt.localScale = new Vector3(-1, 1, 1);
+        //채팅은 x축 반전 X
+        Transform rr = ChatPoint.transform;
+        rr.localScale = new Vector3(-1, 1, 1);
     }
 }
 

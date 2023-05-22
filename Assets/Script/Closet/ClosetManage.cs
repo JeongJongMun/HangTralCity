@@ -42,7 +42,7 @@ public class ClosetManage : MonoBehaviour
 
     private IEnumerator GetCustomInfo(string nickname)
     {
-        string apiGatewayUrl = "https://q4xm6p11e1.execute-api.ap-northeast-2.amazonaws.com/test1/ch-custom"; 
+        string apiGatewayUrl = "https://q4xm6p11e1.execute-api.ap-northeast-2.amazonaws.com/test1/ch-custom";
         apiGatewayUrl += $"?nickname={nickname}";
         Debug.Log(apiGatewayUrl);
 
