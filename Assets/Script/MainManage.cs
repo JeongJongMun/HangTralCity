@@ -6,22 +6,22 @@ public class MainManage : MonoBehaviour
 {
 
     // 메인 화면 건물과 입장하기 버튼 누르면 이벤트 관리
-    public Button building_gang, building_hack, building_dorm, building_playground;
-    public Button enter_btn_gang, enter_btn_hack, enter_btn_dorm, enter_btn_playground;
+    public Button buildingGang, buildingHack, buildingDorm, buildingPlayground;
+    public Button gangBtn, hackBtn, dormBtn, playgroundBtn;
 
     void Start()
     {
-        building_gang.GetComponent<Button>().onClick.AddListener(EnterGang);
-        enter_btn_gang.GetComponent<Button>().onClick.AddListener(EnterGang);
+        buildingGang.GetComponent<Button>().onClick.AddListener(EnterGang);
+        gangBtn.GetComponent<Button>().onClick.AddListener(EnterGang);
 
-        building_dorm.GetComponent<Button>().onClick.AddListener(EnterDorm);
-        enter_btn_dorm.GetComponent<Button>().onClick.AddListener(EnterDorm);
+        buildingDorm.GetComponent<Button>().onClick.AddListener(EnterDorm);
+        dormBtn.GetComponent<Button>().onClick.AddListener(EnterDorm);
 
-        building_hack.GetComponent<Button>().onClick.AddListener(EnterHack);
-        enter_btn_hack.GetComponent<Button>().onClick.AddListener(EnterHack);
+        buildingHack.GetComponent<Button>().onClick.AddListener(EnterHack);
+        hackBtn.GetComponent<Button>().onClick.AddListener(EnterHack);
 
-        building_playground.GetComponent<Button>().onClick.AddListener(EnterPlayground);
-        enter_btn_playground.GetComponent<Button>().onClick.AddListener(EnterPlayground);
+        buildingPlayground.GetComponent<Button>().onClick.AddListener(EnterPlayground);
+        playgroundBtn.GetComponent<Button>().onClick.AddListener(EnterPlayground);
     }
 
     void EnterGang()
@@ -34,13 +34,10 @@ public class MainManage : MonoBehaviour
     }
     void EnterHack()
     {
-
+        SceneManager.LoadScene("HackScene");
     }
-
     void EnterPlayground()
     {
         SceneManager.LoadScene("MiniGameScene");
     }
-
-
 }

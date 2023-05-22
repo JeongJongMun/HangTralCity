@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 690c7adcf8bcd44279eefcbad1ea4d7b
+guid: 0d9a6fd20e3207a4486c24289cb78fb7
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -63,7 +63,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
-  cookieLightType: 1
+  cookieLightType: 0
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -129,13 +129,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Btn_Basic_Square_White_0
+      name: kakaoImage_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 126
-        height: 126
+        x: 6
+        y: 95
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -143,29 +143,155 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9e815fc27f9e3fe4f910156292aee34b
-      internalID: 653513672
+      spriteID: 50c7c39d75bdfc3469c67ed8f59ed516
+      internalID: -960401097
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Btn_Basic_Square_White_1
+      name: kakaoImage_1
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 126
-        height: 126
+        x: 39
+        y: 95
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
-      border: {x: 46, y: 48, z: 50, w: 49}
+      border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0b6fc3fcb3b45ad40bb7ee75f796b791
-      internalID: -1173164660
+      spriteID: fec4bca4d41a8c04eadad7d79bd1718e
+      internalID: 899424225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kakaoImage_2
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 95
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 719fd29d419f11047a7f2c084f64a7b8
+      internalID: 591481200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kakaoImage_3
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 76
+        width: 92
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b99f67930f4da8b45b7754c021246cc6
+      internalID: 1668266188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kakaoImage_4
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 69
+        width: 4
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c68a4597809b5a42a917137759b93cc
+      internalID: -31277257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kakaoImage_5
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 48
+        width: 112
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 639aac60a0f515847b6469c636ed5a34
+      internalID: 709126548
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kakaoImage_6
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 20
+        width: 112
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4728330231c6c3e4fb1df4bc3da2d385
+      internalID: 2076302071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kakaoImage_7
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 40
+        width: 4
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 643a5d8258f8caa4d89161eb646c2f76
+      internalID: -844186660
       vertices: []
       indices: 
       edges: []
@@ -181,8 +307,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Btn_Basic_Square_White_0: 653513672
-      Btn_Basic_Square_White_1: -1173164660
+      kakaoImage_0: -960401097
+      kakaoImage_1: 899424225
+      kakaoImage_2: 591481200
+      kakaoImage_3: 1668266188
+      kakaoImage_4: -31277257
+      kakaoImage_5: 709126548
+      kakaoImage_6: 2076302071
+      kakaoImage_7: -844186660
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -47,6 +47,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ARScene.unity
     guid: b79abbfabc6a78c4fb947cc167d00e65
+  - enabled: 1
+    path: Assets/Scenes/ChatbotScene.unity
+    guid: 9db8d3297a85f1e44a929520459cde65
+  - enabled: 1
+    path: Assets/Scenes/HackScene.unity
+    guid: 0d359e85dce70be49a8c6a80c60f97ee
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: da0c42a07331ff540aa436f5f1c1e91a, type: 2}
     UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: 21c7f2c679594a94fb0505d86748c065, type: 2}

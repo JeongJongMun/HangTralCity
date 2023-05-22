@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class MiniGameManage : MonoBehaviour
 {
     // UI
-    public GameObject settingBtn, exitBtn, soundBtn, lobbyBtn, rankingBtn, startBtn;
+    public GameObject settingBtn, exitBtn, soundBtn, lobbyBtn, rankingBtn, startBtn, settingPanel;
     // UI
 
     // lobby, playing, ending
@@ -39,6 +39,7 @@ public class MiniGameManage : MonoBehaviour
         startBtn.GetComponent<Button>().onClick.AddListener(ClickStartBtn);
         exitBtn.SetActive(false);
         soundBtn.SetActive(false);
+        settingPanel.SetActive(false);
         // UI
 
         time.GetComponent<TMP_Text>().text = "남은시간 : " + timer.ToString() + "초";
@@ -143,7 +144,8 @@ public class MiniGameManage : MonoBehaviour
 
     void ClickSoundBtn()
     {
-        // 음량 버튼 클릭시
+        if (settingPanel.activeSelf) settingPanel.SetActive(false);
+        else settingPanel.SetActive(true);
     }
     void ClickRankBtn()
     {

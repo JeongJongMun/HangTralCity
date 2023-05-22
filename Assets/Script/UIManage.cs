@@ -1,14 +1,12 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using TMPro;
-using Photon.Realtime;
 using Photon.Pun;
 
 public class UIManage : MonoBehaviour
 {
     // CanvasÀÇ TopBar, BottomBar UI °ü¸®
-    private Button homeBtn, closetBtn, settingBtn, logoutBtn, chatBtn, friendBtn, profileBtn, settingCloseBtn, arBtn;
+    private Button homeBtn, closetBtn, settingBtn, logoutBtn, chatBtn, friendBtn, profileBtn, settingCloseBtn, arBtn, chatbotBtn;
     private GameObject settingPanel;
     void Start()
     {
@@ -42,6 +40,9 @@ public class UIManage : MonoBehaviour
 
         arBtn = GameObject.Find("ARBtn").GetComponent<Button>();
         arBtn.onClick.AddListener(ClickARBtn);
+
+        chatbotBtn = GameObject.Find("ChatbotBtn").GetComponent<Button>();
+        chatbotBtn.onClick.AddListener(ClickChatbotBtn);
 
 
     }
@@ -84,5 +85,9 @@ public class UIManage : MonoBehaviour
     void ClickARBtn()
     {
         SceneManager.LoadScene("ARScene");
+    }
+    void ClickChatbotBtn()
+    {
+        SceneManager.LoadScene("ChatbotScene");
     }
 }

@@ -9,6 +9,9 @@ using Amazon;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Net.Http;
+using Newtonsoft.Json;
+using System.Text;
 
 public class CognitoSignUp : MonoBehaviour
 {
@@ -57,6 +60,26 @@ public class CognitoSignUp : MonoBehaviour
             if (response.HttpStatusCode == HttpStatusCode.OK)
             {
                 Debug.Log("Sign-Up Successful.");
+                var apiGatewayUrl = "https://q4xm6p11e1.execute-api.ap-northeast-2.amazonaws.com/test1/user-singup";
+                var httpClient = new HttpClient();
+                var requestBody = new
+                {
+                    data = new
+                    {
+                        PK = sign_up_nickname.text.ToString(),
+
+                    }
+                };
+                var requestContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+                var apiGatewayResponse = await httpClient.PostAsync(apiGatewayUrl, requestContent);
+                if (apiGatewayResponse.StatusCode == HttpStatusCode.OK)
+                {
+                    Debug.Log("Lambda function invoked successfully.");
+                }
+                else
+                {
+                    Debug.Log("Failed to invoke Lambda function. Response: " + apiGatewayResponse.StatusCode);
+                }
                 SceneManager.LoadScene("SignInScene");
             }
             else

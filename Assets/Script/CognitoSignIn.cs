@@ -9,6 +9,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Diagnostics.Eventing.Reader;
 
 public class CognitoSignIn : MonoBehaviour
 {
@@ -55,13 +56,22 @@ public class CognitoSignIn : MonoBehaviour
 
             if (authResponse.AuthenticationResult != null)
             {
-                // 인증 성공시 Access Token 반환
+                // 인증 성공시 Access Token 반환, 닉네임 반환
                 PlayerInfo.playerInfo.access_token = authResponse.AuthenticationResult.AccessToken;
+                PlayerInfo.playerInfo.nickname = sign_in_nickname.text;
 
                 // 로그인 성공 후 PlayerPrefs에 사용자 ID와 비밀번호 저장
                 PlayerPrefs.SetString("LastLoggedInUserId", sign_in_nickname.text);
                 PlayerPrefs.SetString("LastLoggedInPassword", sign_in_password.text);
                 PlayerPrefs.Save();
+
+                //if (캐릭터를 생성한 적이 있다면) {
+                //    SceneManager.LoadScene("MainScene");
+                //}
+                //else
+                //{
+                //    SceneManager.LoadScene("CharacterCreateScene");
+                //}
 
                 SceneManager.LoadScene("CharacterCreateScene");
                 return authResponse.AuthenticationResult.AccessToken;
