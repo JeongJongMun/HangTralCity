@@ -12,8 +12,8 @@ public class ARPlaceOnPlane : MonoBehaviour
 
     void Update()
     {
-        UpdateCenterObject();
-        //PlaceObjectByTouch();
+        //UpdateCenterObject();
+        PlaceObjectByTouch();
     }
     void PlaceObjectByTouch()
     {
