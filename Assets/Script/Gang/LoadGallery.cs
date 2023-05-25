@@ -5,6 +5,7 @@ using System.IO;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.SceneManagement;
 
 public class LoadGallery : MonoBehaviour
 {
@@ -12,9 +13,10 @@ public class LoadGallery : MonoBehaviour
     public GameObject img2; // 강의동 칠판에 대문짝만하게 뜨는 이미지
     public Button galleryBtn;
     public PhotonView PV;
-    void Start()
+    void Awake()
     {
         img.SetActive(false);
+        Debug.Log("run");
         galleryBtn.onClick.AddListener(ClickImageLoad);
         //if (File.Exists(Application.persistentDataPath + "/Image")) File.ReadAllBytes(Application.persistentDataPath + "/Image"); // 저장된 파일이 있다면 읽어오기
     }
@@ -57,6 +59,9 @@ public class LoadGallery : MonoBehaviour
 
         File.WriteAllBytes(savePath + fileName + ".png", fileData); // png로 저장
 
+        //S3Manage.s3Manage.UploadToS3(savePath + fileName + ".png", PlayerInfo.playerInfo.nickname);
+        //System.Threading.Tasks.Task task = S3Manage.s3Manage.UploadToS3(savePath + fileName + ".png", PlayerInfo.playerInfo.nickname);
+
         var tempImage = File.ReadAllBytes(savePath + fileName + ".png"); // 저장한 png 불러오기
 
         // Byte를 Image로 전환
@@ -92,6 +97,7 @@ public class LoadGallery : MonoBehaviour
             img.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, imgY * (x / imgX));
         }
     }
+
 
     void SpriteSizeSetting(SpriteRenderer spriteRenderer, float x, float y) // 스프라이트 렌더러, 최대 너비, 최대 높이
     {

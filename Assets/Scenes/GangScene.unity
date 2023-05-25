@@ -191,13 +191,14 @@ GameObject:
   - component: {fileID: 36469618}
   - component: {fileID: 36469617}
   - component: {fileID: 36469619}
+  - component: {fileID: 36469620}
   m_Layer: 0
   m_Name: GalleryController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &36469617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,6 +252,20 @@ MonoBehaviour:
   sceneViewId: 2
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &36469620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 36469616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 327a702b2e12e084bb70f87bb0edd68a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  accessKey: AKIA4SLVEG5W3BBNELIJ
+  secretKey: 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
 --- !u!1 &61113797
 GameObject:
   m_ObjectHideFlags: 0
@@ -12718,6 +12733,9 @@ MonoBehaviour:
   UserInPanel: {fileID: 203946067}
   UserOutPanel: {fileID: 375693158}
   ChatInput: {fileID: 359526227}
+  img: {fileID: 804696403}
+  img2: {fileID: 696288861}
+  galleryBtn: {fileID: 627581002}
   PV: {fileID: 1549667391}
   AN: {fileID: 3770448723398332663, guid: f24830e3694e3b74dbd1a020e9b6c3c3, type: 3}
 --- !u!4 &1549667389
