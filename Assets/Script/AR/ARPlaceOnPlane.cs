@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
@@ -27,7 +26,13 @@ public class ARPlaceOnPlane : MonoBehaviour
                 Pose hitPose = hits[0].pose;
 
                 // spawnObject가 없다면 생성
-                if (!spawnObject) spawnObject = Instantiate(placeObject, hitPose.position, hitPose.rotation);
+                if (!spawnObject)
+                {
+                    spawnObject = Instantiate(placeObject, hitPose.position, hitPose.rotation);
+                    // 그림자 삭제
+                    //spawnObject.transform.GetChild(0).GetComponent<MeshRenderer>().receiveShadows = false;
+                    //spawnObject.transform.GetChild(0).GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                }
                 // spawnObject가 있다면 위치만 바꿔줌
                 else
                 {

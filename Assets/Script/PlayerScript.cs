@@ -46,7 +46,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         RB = GetComponent<Rigidbody2D>();
         AN = GetComponent<Animator>();
 
-        if (SceneManager.GetActiveScene().name == "ClosetScene") // closet scene일때
+        // 옷장 또는 프로필 씬 일때
+        if (SceneManager.GetActiveScene().name == "ClosetScene" || SceneManager.GetActiveScene().name == "ProfileScene") 
         {
             nickNameTxt.GetComponent<TMP_Text>().text = "";
             if (PV.IsMine)
@@ -55,34 +56,43 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                 SetCharacterType();
             }
         }
-        else // 그 외의 모든 씬에서 nickname 표시
+        // 그 외의 모든 씬에서 nickname 표시
+        else 
         {
             nickNameTxt.GetComponent<TMP_Text>().text = PV.IsMine ? PhotonNetwork.NickName : PV.Owner.NickName;
             nickNameTxt.GetComponent<TMP_Text>().color = PV.IsMine ? Color.green : Color.blue;
 
-            if (PV.IsMine && SceneManager.GetActiveScene().name == "GangScene") // Gang scene일때
+            if (PV.IsMine) 
             {
-                //나가기 버튼
-                exitBtn = GameObject.Find("ExitBtn");
-                exitBtn.GetComponent<Button>().onClick.AddListener(Exit);
-                exitBtn.SetActive(false);
+                // 강의동일때
+                if (SceneManager.GetActiveScene().name == "GangScene")
+                {
+                    // 나가기 버튼
+                    exitBtn = GameObject.Find("ExitBtn");
+                    exitBtn.GetComponent<Button>().onClick.AddListener(Exit);
+                    exitBtn.SetActive(false);
 
-                galleryBtn = GameObject.Find("GalleryBtn");
-                galleryBtn.SetActive(false);
+                    // 갤러리 버튼
+                    galleryBtn = GameObject.Find("GalleryBtn");
+                    galleryBtn.SetActive(false);
 
-                //카메라
-                var CM = GameObject.Find("CMCamera").GetComponent<CinemachineVirtualCamera>();
-                CM.Follow = transform;
-                CM.LookAt = transform;
+                    // 카메라
+                    var CM = GameObject.Find("CMCamera").GetComponent<CinemachineVirtualCamera>();
+                    CM.Follow = transform;
+                    CM.LookAt = transform;
+                }
+                // 강의동 or 운동장일때
+                if (SceneManager.GetActiveScene().name == "GangScene" || SceneManager.GetActiveScene().name == "MiniGameScene")
+                {
+                    // 캐릭터 세팅
+                    currentHatCustom = PlayerInfo.playerInfo.hatCustom; // 초기값 설정
+                    currentEyeCustom = PlayerInfo.playerInfo.eyeCustom;
+                    PV.RPC("SetCharacterCustom", RpcTarget.AllBuffered); // 다른 플레이어에게 내 커스텀 정보 및 캐릭터 타입 전달
+                    PV.RPC("SetCharacterType", RpcTarget.AllBuffered);
 
-                // 캐릭터 세팅
-                currentHatCustom = PlayerInfo.playerInfo.hatCustom; // 초기값 설정
-                currentEyeCustom = PlayerInfo.playerInfo.eyeCustom;
-                PV.RPC("SetCharacterCustom", RpcTarget.AllBuffered); // 다른 플레이어에게 내 커스텀 정보 및 캐릭터 타입 전달
-                PV.RPC("SetCharacterType", RpcTarget.AllBuffered);
-
-                //채팅
-                Chat();
+                    // 채팅
+                    Chat();
+                }
             }
         }
     }
@@ -136,7 +146,6 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Send()
     {
-        string msg = GameObject.Find("ChatInputfield").GetComponent<InputField>().ToString();
         PV.RPC("ChatRPC", RpcTarget.All, inputfield.text);
         inputfield.text = "";
     }
@@ -163,8 +172,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     private void Move() {
-        // if (서버 내에서 내 캐릭터 OR 현재 씬이 로컬 기숙사)
-        if (SceneManager.GetActiveScene().name == "GangScene" || SceneManager.GetActiveScene().name == "DormScene")
+        // 강의동, 운동장에서 움직임
+        if (SceneManager.GetActiveScene().name == "GangScene" || SceneManager.GetActiveScene().name == "MiniGameScene")
         {
             if (PV.IsMine)
             {
@@ -189,22 +198,41 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                 else AN.SetBool("isWalking", false);
 
                 // x축 반전
-                if (axis_x < 0)
-                {
-                    PV.RPC("FlipXxRPC", RpcTarget.AllBuffered, axis_x);
-
-                }
-                else if (axis_x > 0)
-                {
-                    PV.RPC("FlipXRPC", RpcTarget.AllBuffered, axis_x);
-
-                }
+                if (axis_x < 0) PV.RPC("FlipXxRPC", RpcTarget.AllBuffered, axis_x);
+                else if (axis_x > 0) PV.RPC("FlipXRPC", RpcTarget.AllBuffered, axis_x);
 
 
             }
             //ismine이 아닌경우 위치동기화 (다른 사람이 움직이는걸 내가 볼 수 있게)
             else if ((transform.position - curPos).sqrMagnitude >= 100) transform.position = curPos; // 멀리 떨어졌다면
             else transform.position = Vector3.Lerp(transform.position, curPos, Time.deltaTime * 10); // 근처라면
+        }
+        // 기숙사에서 움직임
+        else if (SceneManager.GetActiveScene().name == "DormScene")
+        {
+            // ** 움직이기 **
+            // 키보드 입력
+            float axis_x = Input.GetAxisRaw("Horizontal");
+            float axis_y = Input.GetAxisRaw("Vertical");
+
+            // 터치 입력
+            if (Input.GetMouseButton(0))
+            {
+                Vector2 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                axis_x = (touchPos.x > transform.position.x) ? 1 : -1;
+                axis_y = (touchPos.y > transform.position.y) ? 1 : -1;
+            }
+            RB.velocity = new Vector2(speed * axis_x, speed * axis_y);
+            RB.AddForce(RB.velocity * Time.deltaTime, ForceMode2D.Impulse);
+            // ** 움직이기 **
+
+            // 걷기 애니메이션 설정
+            if (axis_x != 0 || axis_y != 0) AN.SetBool("isWalking", true);
+            else AN.SetBool("isWalking", false);
+
+            // x축 반전
+            if (axis_x < 0) FlipXxRPC(axis_x);
+            else if (axis_x > 0) FlipXRPC(axis_x);
         }
     }
 

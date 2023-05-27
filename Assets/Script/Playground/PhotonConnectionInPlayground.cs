@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
-using UnityEngine.UI;
 
 public class PhotonConnectionInPlayground : MonoBehaviourPunCallbacks
 {
@@ -11,13 +8,9 @@ public class PhotonConnectionInPlayground : MonoBehaviourPunCallbacks
     public GameObject UserInPanel;
     public GameObject UserOutPanel;
 
-    //[Header("ChatPanel")]
-    //private Text ChatText;
-    //public InputField ChatInput;
-
-    //[Header("ETC")]
-    //public PhotonView PV;
-    //public Animator AN;
+    [Header("ETC")]
+    public PhotonView PV;
+    public Animator AN;
 
     void Awake()
     {
@@ -30,35 +23,25 @@ public class PhotonConnectionInPlayground : MonoBehaviourPunCallbacks
 
             UserInPanel.SetActive(true);
             UserOutPanel.SetActive(false);
-
-            //PV.RPC("SetCharacter", RpcTarget.All);
         }
     }
-
-    //[PunRPC]
-    //private void SetCharacter()
-    //{
-    //    AN.SetInteger("type", PlayerInfo.playerInfo.characterType);
-    //}
 
     public override void OnConnectedToMaster()
     {
         Debug.Log("OnConnectedToMaster\n");
 
         PhotonNetwork.LocalPlayer.NickName = PlayerInfo.playerInfo.nickname; // 닉네임 가져오기
-
-
-        PhotonNetwork.JoinOrCreateRoom("MiniGameRoom", new RoomOptions { MaxPlayers = 5 }, null);
+        PhotonNetwork.JoinOrCreateRoom("PlaygroundRoom", new RoomOptions { MaxPlayers = 5 }, null); // 방에 참가하거나, 방이 없다면 생성 후 참가
     }
 
     public override void OnJoinedRoom()
     {
-        PhotonNetwork.Instantiate("Player", new Vector3(0, 0, 0), Quaternion.identity);
+        PhotonNetwork.Instantiate("Player", new Vector3(0, 0, -1), Quaternion.identity);
         Debug.LogFormat("{0}님이 방에 참가하였습니다.", PlayerInfo.playerInfo.nickname);
-        Invoke("Panel_", 1f);
+        Invoke("UserIn", 1f);
     }
 
-    private void Panel_()
+    private void UserIn()
     {
         UserInPanel.SetActive(false);
     }

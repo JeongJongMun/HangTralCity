@@ -1,8 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
-using System.Text;
 using System.Collections;
+using System.Collections.Generic;
+using System.Text;
+
 
 public class ClosetManage : MonoBehaviour
 {
@@ -17,7 +19,11 @@ public class ClosetManage : MonoBehaviour
         public int hatCustom;
     }
 
-
+    public class CustomInfoResponseWrapper
+    {
+        public int statusCode;
+        public string body;
+    }
 
     void Start()
     {
@@ -36,47 +42,60 @@ public class ClosetManage : MonoBehaviour
             int index = i;
             hatToggle[i].GetComponent<Toggle>().onValueChanged.AddListener(delegate { ToggleHat(index); });
         }
+
         StartCoroutine(GetCustomInfo(PlayerInfo.playerInfo.nickname));
+
 
     }
 
-    private IEnumerator GetCustomInfo(string nickname)
+    private void ToggleEye(int n)
     {
-        string apiGatewayUrl = "https://q4xm6p11e1.execute-api.ap-northeast-2.amazonaws.com/test1/ch-custom";
-        apiGatewayUrl += $"?nickname={nickname}";
-        Debug.Log(apiGatewayUrl);
-
-        // Create a request object
-        var request = new UnityWebRequest(apiGatewayUrl, "GET");
-        request.downloadHandler = new DownloadHandlerBuffer();
-
-        // Send the request and wait for a response
-        yield return request.SendWebRequest();
-
-        if (request.result == UnityWebRequest.Result.Success)
+        if (eyeToggle[n].GetComponent<Toggle>().isOn)
         {
-            Debug.Log("Load successful!");
-
-            // Parse the JSON response
-            string jsonString = request.downloadHandler.text;
-            var response = JsonUtility.FromJson<CustomInfoResponse>(jsonString);
-
-            // Apply the custom info to the player
-            PlayerInfo.playerInfo.eyeCustom = response.eyeCustom;
-            PlayerInfo.playerInfo.hatCustom = response.hatCustom;
+            // 다른 토글들 OFF
+            for (int i = 0; i < eyeToggle.Length; i++) if (i != n) eyeToggle[i].GetComponent<Toggle>().isOn = false;
+            // 정보 저장
+            PlayerInfo.playerInfo.eyeCustom = n;
+            // 선택한 토글 이미지 적용
             character.GetComponent<PlayerScript>().SetCharacterCustom();
         }
         else
         {
-            Debug.Log($"Load failed: {request.error}");
+            // null 이미지로 설정
+            PlayerInfo.playerInfo.eyeCustom = 11;
+            // 이미지 적용
+            character.GetComponent<PlayerScript>().SetCharacterCustom();
         }
-        request.Dispose(); // 메모리 누수 방지를 위해 추가
+        // DB 업데이트 시작
+        StartCoroutine(UpdateCustomInfo(PlayerInfo.playerInfo.nickname, "eyeCustom", PlayerInfo.playerInfo.eyeCustom));
 
     }
+    private void ToggleHat(int n)
+    {
+        if (hatToggle[n].GetComponent<Toggle>().isOn)
+        {
+            // 다른 토글들 OFF
+            for (int i = 0; i < hatToggle.Length; i++) if (i != n) hatToggle[i].GetComponent<Toggle>().isOn = false;
+            // 정보 저장
+            PlayerInfo.playerInfo.hatCustom = n;
+            // 선택한 토글 이미지 적용
+            character.GetComponent<PlayerScript>().SetCharacterCustom();
+        }
+        else
+        {
+            // null 이미지로 설정
+            PlayerInfo.playerInfo.hatCustom = 8;
+            // 이미지 적용
+            character.GetComponent<PlayerScript>().SetCharacterCustom();
+        }
+        // DB 업데이트 시작
+        StartCoroutine(UpdateCustomInfo(PlayerInfo.playerInfo.nickname, "hatCustom", PlayerInfo.playerInfo.hatCustom));
 
+
+    }
     private IEnumerator UpdateCustomInfo(string nickname, string attribute, int value)
     {
-        string apiGatewayUrl = "https://q4xm6p11e1.execute-api.ap-northeast-2.amazonaws.com/test1/ch-custom"; 
+        string apiGatewayUrl = "https://q4xm6p11e1.execute-api.ap-northeast-2.amazonaws.com/test1/ch-custom";
 
         // Create a request object
         var request = new UnityWebRequest(apiGatewayUrl, "PUT");
@@ -102,52 +121,51 @@ public class ClosetManage : MonoBehaviour
             Debug.Log($"Update failed: {request.error}");
         }
         request.Dispose(); // 메모리 누수 방지를 위해 추가
-
     }
 
-    private void ToggleEye(int n)
+    private IEnumerator GetCustomInfo(string nickname)
     {
-        if (eyeToggle[n].GetComponent<Toggle>().isOn)
+        string apiGatewayUrl2 = "https://q4xm6p11e1.execute-api.ap-northeast-2.amazonaws.com/test1/ch-custom";
+
+        var request = new UnityWebRequest(apiGatewayUrl2, "POST");
+        request.downloadHandler = new DownloadHandlerBuffer();
+
+        string jsonBody = $"{{\"nickname\":\"{nickname}\"}}";
+        Debug.LogFormat("jsonBody : {0}", jsonBody);
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonBody);
+
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        request.SetRequestHeader("Content-Type", "application/json");
+
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
         {
-            // 다른 토글들 OFF
-            for (int i = 0; i < eyeToggle.Length; i++) if (i != n) eyeToggle[i].GetComponent<Toggle>().isOn = false;
-            // 정보 저장
-            PlayerInfo.playerInfo.eyeCustom = n;
-            // 선택한 토글 이미지 적용
+            Debug.Log("GetCustomInfo successful!");
+
+            Debug.Log("GetCustomInfo Response: " + request.downloadHandler.text);
+
+
+            // Parse the outer JSON
+            var wrapper = JsonUtility.FromJson<CustomInfoResponseWrapper>(request.downloadHandler.text);
+            // Then parse the inner JSON
+            var response = JsonUtility.FromJson<CustomInfoResponse>(wrapper.body);
+
+            // Update the customization in your game
+            PlayerInfo.playerInfo.eyeCustom = response.eyeCustom;
+            PlayerInfo.playerInfo.hatCustom = response.hatCustom;
             character.GetComponent<PlayerScript>().SetCharacterCustom();
         }
         else
         {
-            // null 이미지로 설정
-            PlayerInfo.playerInfo.eyeCustom = 11;
-            // 이미지 적용
-            character.GetComponent<PlayerScript>().SetCharacterCustom();
-
+            Debug.Log($"GetCustomInfo failed: {request.error}");
+            Debug.Log($"GetCustomInfo Response Code: {(int)request.responseCode}");
+            Debug.Log($"GetCustomInfo Response: {request.downloadHandler.text}");
         }
-        StartCoroutine(UpdateCustomInfo(PlayerInfo.playerInfo.nickname, "eyeCustom", PlayerInfo.playerInfo.eyeCustom));
-
+        request.Dispose(); // 메모리 누수 방지를 위해 추가
     }
-    private void ToggleHat(int n)
-    {
-        if (hatToggle[n].GetComponent<Toggle>().isOn)
-        {
-            // 다른 토글들 OFF
-            for (int i = 0; i < hatToggle.Length; i++) if (i != n) hatToggle[i].GetComponent<Toggle>().isOn = false;
-            // 정보 저장
-            PlayerInfo.playerInfo.hatCustom = n;
-            // 선택한 토글 이미지 적용
-            character.GetComponent<PlayerScript>().SetCharacterCustom();
-        }
-        else
-        {
-            // null 이미지로 설정
-            PlayerInfo.playerInfo.hatCustom = 8;
-            // 이미지 적용
-            character.GetComponent<PlayerScript>().SetCharacterCustom();
-        }
-        StartCoroutine(UpdateCustomInfo(PlayerInfo.playerInfo.nickname, "hatCustom", PlayerInfo.playerInfo.hatCustom));
 
-    }
+
     private void ClickEyeCategory()
     {
         eyeScrollView.SetActive(true);
@@ -158,4 +176,7 @@ public class ClosetManage : MonoBehaviour
         eyeScrollView.SetActive(false);
         hatScrollView.SetActive(true);
     }
+
+
+
 }

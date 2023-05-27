@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class MiniGameManage : MonoBehaviour
 {
     // UI
-    public GameObject settingBtn, exitBtn, soundBtn, lobbyBtn, rankingBtn, startBtn, settingPanel;
+    public GameObject settingBtn, exitBtn, _settingBtn, lobbyBtn, rankingBtn, startBtn, settingPanel;
     // UI
 
     // lobby, playing, ending
@@ -33,12 +33,12 @@ public class MiniGameManage : MonoBehaviour
         // UI
         settingBtn.GetComponent<Button>().onClick.AddListener(ClickSettingBtn);
         exitBtn.GetComponent<Button>().onClick.AddListener(ClickExitBtn);
-        soundBtn.GetComponent<Button>().onClick.AddListener(ClickSoundBtn);
+        _settingBtn.GetComponent<Button>().onClick.AddListener(ClickSoundBtn);
         lobbyBtn.GetComponent<Button>().onClick.AddListener(ClickExitBtn);
         rankingBtn.GetComponent<Button>().onClick.AddListener(ClickRankBtn);
         startBtn.GetComponent<Button>().onClick.AddListener(ClickStartBtn);
         exitBtn.SetActive(false);
-        soundBtn.SetActive(false);
+        _settingBtn.SetActive(false);
         settingPanel.SetActive(false);
         // UI
 
@@ -155,15 +155,15 @@ public class MiniGameManage : MonoBehaviour
     // 설정 버튼 클릭시
     void ClickSettingBtn()
     {
-        if (!exitBtn.activeSelf && !soundBtn.activeSelf)
+        if (!exitBtn.activeSelf && !_settingBtn.activeSelf)
         {
             exitBtn.SetActive(true);
-            soundBtn.SetActive(true);
+            _settingBtn.SetActive(true);
         }
         else
         {
             exitBtn.SetActive(false);
-            soundBtn.SetActive(false);
+            _settingBtn.SetActive(false);
         }
     }
     // UI
