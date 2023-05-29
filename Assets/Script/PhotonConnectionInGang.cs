@@ -43,7 +43,6 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
     void Start()
     {
         img.SetActive(false);
-        Debug.Log("run");
         galleryBtn.onClick.AddListener(ClickImageLoad);
     }
     public override void OnConnectedToMaster()
@@ -62,9 +61,6 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
         Debug.LogFormat("{0}님이 방에 참가하였습니다.", PlayerInfo.playerInfo.nickname);
 
         Invoke("Panel_", 1f);
-
-        string url = S3Manage.s3Manage.Finding(); // url 가져오기
-        StartCoroutine(GetImage(url));
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -112,31 +108,7 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
 
         File.WriteAllBytes(savePath + fileName + ".png", fileData); // png로 저장
 
-        S3Manage.s3Manage.UploadToS3(savePath + fileName + ".png", PlayerInfo.playerInfo.nickname);
-
-        //-----업로드 완료-----//
-
-        
-
-        //var tempImage = Fi le.ReadAllBytes(savePath + fileName + ".png"); // 저장한 png 불러오기
-
-        //Debug.LogFormat(image);
-        // Byte를 Image로 전환
-        //Texture2D tex = new Texture2D(0, 0);
-        //tex.LoadImage(request.url);
-
-        // Byte를 Sprite로 전환
-        //Sprite tempSprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.one * 0.5f);
-
-        // 오른쪽 위 UI로 작게 뜨는 이미지
-         // 활성화
-        //img.GetComponent<RawImage>().texture = tex; // 이미지 적용
-        //ImageSizeSetting(img.GetComponent<RawImage>(), 500, 500); // 사이즈 조절
-        
-        // 강의동 칠판에 대문짝만하게 뜨는 이미지
-        /*img2.GetComponent<SpriteRenderer>().sprite = tempSprite;
-        img2.transform.localScale = Vector3.one;
-        SpriteSizeSetting(img2.GetComponent<SpriteRenderer>(), 1000, 1000);*/
+        S3Manage.s3Manage.UploadToS3(savePath + fileName + ".png", PlayerInfo.playerInfo.nickname); // S3에 업로드
     }
 
     IEnumerator GetImage(string url)
