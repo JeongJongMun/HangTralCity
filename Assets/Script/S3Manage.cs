@@ -87,9 +87,9 @@ public class S3Manage : MonoBehaviour
         }
     }
 
-    public String Finding()
+    public string Finding()
     {
-        String imgPath = "https://gang-whiteboard.s3.ap-northeast-2.amazonaws.com/picture";
+        string imgPath = "https://gang-whiteboard.s3.ap-northeast-2.amazonaws.com/picture";
         return imgPath;
     }
 }

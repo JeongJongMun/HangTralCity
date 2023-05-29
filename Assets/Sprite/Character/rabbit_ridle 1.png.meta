@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 7d2ceb71b0c7936428a3b11d1f17740e
+guid: 4efbfb7483c5c2d40b01d05360a0b04e
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -42,7 +42,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -127,7 +127,28 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: rabbit_ridle_0
+      rect:
+        serializedVersion: 2
+        x: 563
+        y: 85
+        width: 1835
+        height: 2789
+      alignment: 9
+      pivot: {x: 0.45768923, y: 0.43308944}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f8619606cd070f04b8c3db9815f7a261
+      internalID: -2111476247
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -138,7 +159,23 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      rabbit_ridle_0: -2111476247
+      rabbit_ridle_1: 1472325631
+      rabbit_ridle_10: -328666270
+      rabbit_ridle_11: -101582994
+      rabbit_ridle_12: -1341497663
+      rabbit_ridle_13: 2045241919
+      rabbit_ridle_14: 2085799688
+      rabbit_ridle_15: -1187545308
+      rabbit_ridle_16: 934684129
+      rabbit_ridle_2: 285828001
+      rabbit_ridle_3: 1291991571
+      rabbit_ridle_4: 672851062
+      rabbit_ridle_5: 1059574824
+      rabbit_ridle_7: 523710205
+      rabbit_ridle_8: 1316164669
+      rabbit_ridle_9: 292255507
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

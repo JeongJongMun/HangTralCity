@@ -9,9 +9,9 @@ TagManager:
   - Point
   - Custom_Dorm
   - Wall
-  - Tile
   - Door
   - MainDesk
+  - Feet
   layers:
   - Default
   - TransparentFX

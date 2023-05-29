@@ -16,7 +16,7 @@ public class AudioController : MonoBehaviour
     void Awake()
     {
         // 시작 시 VolumeSlider 찾기
-        volumeSlider = GameObject.Find("VolumeSlider").GetComponent<Slider>();
+        if (SceneManager.GetActiveScene().name != "MiniGameScene") volumeSlider = GameObject.Find("VolumeSlider").GetComponent<Slider>();
     }
     void Start()
     {
@@ -26,12 +26,16 @@ public class AudioController : MonoBehaviour
         else if (miniGameBGMList.Contains(SceneManager.GetActiveScene().name)) audioSource.clip = clips[3];
         else audioSource.clip = null;
 
-        // 씬 시작시 저장된 볼륨 값을 가져오기
-        audioSource.volume = PlayerInfo.playerInfo.volume;
-        volumeSlider.value = PlayerInfo.playerInfo.volume;
+        if (SceneManager.GetActiveScene().name != "MiniGameScene")
+        {
+            // 씬 시작시 저장된 볼륨 값을 가져오기
+            audioSource.volume = PlayerInfo.playerInfo.volume;
+            volumeSlider.value = PlayerInfo.playerInfo.volume;
 
-        // 슬라이더의 값에 따라 배경음악의 볼륨을 조정하는 이벤트를 추가
-        volumeSlider.onValueChanged.AddListener(ChangeVolume);
+            // 슬라이더의 값에 따라 배경음악의 볼륨을 조정하는 이벤트를 추가
+            volumeSlider.onValueChanged.AddListener(ChangeVolume);
+        }
+
     }
 
     private void ChangeVolume(float volume)

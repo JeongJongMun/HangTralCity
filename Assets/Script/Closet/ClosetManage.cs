@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections;
-using System.Collections.Generic;
 using System.Text;
 
 
@@ -42,10 +41,7 @@ public class ClosetManage : MonoBehaviour
             int index = i;
             hatToggle[i].GetComponent<Toggle>().onValueChanged.AddListener(delegate { ToggleHat(index); });
         }
-
-        StartCoroutine(GetCustomInfo(PlayerInfo.playerInfo.nickname));
-
-
+        character.GetComponent<PlayerScript>().SetCharacterCustom();
     }
 
     private void ToggleEye(int n)
@@ -123,47 +119,7 @@ public class ClosetManage : MonoBehaviour
         request.Dispose(); // 메모리 누수 방지를 위해 추가
     }
 
-    private IEnumerator GetCustomInfo(string nickname)
-    {
-        string apiGatewayUrl2 = "https://q4xm6p11e1.execute-api.ap-northeast-2.amazonaws.com/test1/ch-custom";
 
-        var request = new UnityWebRequest(apiGatewayUrl2, "POST");
-        request.downloadHandler = new DownloadHandlerBuffer();
-
-        string jsonBody = $"{{\"nickname\":\"{nickname}\"}}";
-        Debug.LogFormat("jsonBody : {0}", jsonBody);
-        byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonBody);
-
-        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
-        request.SetRequestHeader("Content-Type", "application/json");
-
-        yield return request.SendWebRequest();
-
-        if (request.result == UnityWebRequest.Result.Success)
-        {
-            Debug.Log("GetCustomInfo successful!");
-
-            Debug.Log("GetCustomInfo Response: " + request.downloadHandler.text);
-
-
-            // Parse the outer JSON
-            var wrapper = JsonUtility.FromJson<CustomInfoResponseWrapper>(request.downloadHandler.text);
-            // Then parse the inner JSON
-            var response = JsonUtility.FromJson<CustomInfoResponse>(wrapper.body);
-
-            // Update the customization in your game
-            PlayerInfo.playerInfo.eyeCustom = response.eyeCustom;
-            PlayerInfo.playerInfo.hatCustom = response.hatCustom;
-            character.GetComponent<PlayerScript>().SetCharacterCustom();
-        }
-        else
-        {
-            Debug.Log($"GetCustomInfo failed: {request.error}");
-            Debug.Log($"GetCustomInfo Response Code: {(int)request.responseCode}");
-            Debug.Log($"GetCustomInfo Response: {request.downloadHandler.text}");
-        }
-        request.Dispose(); // 메모리 누수 방지를 위해 추가
-    }
 
 
     private void ClickEyeCategory()

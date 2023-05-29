@@ -1,13 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
 using System.IO;
 using UnityEngine.Networking;
-using UnityEngine.XR.ARSubsystems;
-using static System.Net.Mime.MediaTypeNames;
 
 public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
 {
@@ -16,7 +13,6 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
     public GameObject UserOutPanel;
 
     [Header("ChatPanel")]
-    private UnityEngine.UI.Text ChatText;
     public InputField ChatInput;
 
     [Header("WhiteBoard")]
@@ -43,14 +39,13 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
     void Start()
     {
         img.SetActive(false);
-        galleryBtn.onClick.AddListener(ClickImageLoad);
+        galleryBtn.onClick.AddListener(ClickGalleryBtn);
     }
     public override void OnConnectedToMaster()
     {
         Debug.Log("OnConnectedToMaster\n");
 
         PhotonNetwork.LocalPlayer.NickName = PlayerInfo.playerInfo.nickname; // 닉네임 가져오기
-
 
         PhotonNetwork.JoinOrCreateRoom("Room1", new RoomOptions { MaxPlayers = 5 }, null);
     }
@@ -66,7 +61,6 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
         PhotonNetwork.LoadLevel("MainScene");
-        Debug.Log("Move\n");
     }
 
     private void Panel_()
@@ -74,7 +68,7 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
         UserInPanel.SetActive(false);
     }
 
-    public void ClickImageLoad()
+    public void ClickGalleryBtn()
     {
         NativeGallery.GetImageFromGallery((file) =>
         {
@@ -86,32 +80,41 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
             // 파일이 존재한다면 불러오기
             if (!string.IsNullOrEmpty(file))
             {
-                StartCoroutine(UploadImage(file));
+                StartCoroutine(UploadImageToS3(file));
                 img.SetActive(true);
-                string url = S3Manage.s3Manage.Finding(); // url 가져오기
-                PV.RPC("Upload", RpcTarget.AllBuffered, url);
+
             }
         });
     }
 
-    IEnumerator UploadImage(string path)
+    IEnumerator UploadImageToS3(string path)
     {
         yield return null;
 
         byte[] fileData = File.ReadAllBytes(path);
         string fileName = Path.GetFileName(path).Split('.')[0]; // 확장자를 자르기 위해 . 기준으로 나눔
-        string savePath = UnityEngine.Application.persistentDataPath + "/Image"; // 불러오고 내부에 저장하기
-        Debug.Log(UnityEngine.Application.persistentDataPath);
+        string savePath = Application.persistentDataPath + "/Image"; // 불러오고 내부에 저장하기
 
         // 아직 한번도 저장하지 않았다면
         if (!Directory.Exists(savePath)) Directory.CreateDirectory(savePath);
 
         File.WriteAllBytes(savePath + fileName + ".png", fileData); // png로 저장
 
-        S3Manage.s3Manage.UploadToS3(savePath + fileName + ".png", PlayerInfo.playerInfo.nickname); // S3에 업로드
+        _ = S3Manage.s3Manage.UploadToS3(savePath + fileName + ".png", PlayerInfo.playerInfo.nickname); // S3에 업로드
+
+        // 0.5초 동안 대기 -> S3에 이미지가 올라갈 시간을 줌
+        yield return new WaitForSeconds(0.5f);
+
+        string url = S3Manage.s3Manage.Finding(); // url 가져오기
+        PV.RPC("GetImage", RpcTarget.AllBuffered, url);
+    }
+    [PunRPC]
+    void GetImage(string url)
+    {
+        StartCoroutine(GetImageFromS3(url));
     }
 
-    IEnumerator GetImage(string url)
+    IEnumerator GetImageFromS3(string url)
     {
         using (UnityWebRequest www = UnityWebRequestTexture.GetTexture(url))
         {
@@ -164,7 +167,6 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
         var sprite = spriteRenderer.sprite;
         var imgX = sprite.bounds.size.x * 100;
         var imgY = sprite.bounds.size.y * 100;
-        Debug.LogFormat("{0},{1}", imgX, imgY);
 
         if (x / y > imgX / imgY) // 이미지의 세로 길이가 더 길다
         {
@@ -174,13 +176,7 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
         {
             spriteRenderer.transform.localScale = new Vector3(y / imgY, y / imgY, 1f);
         }
-        Debug.Log(sprite.bounds.size.x * 100);
-        Debug.Log(sprite.bounds.size.y * 100);
     }
 
-    [PunRPC]
-    private void Upload(string url)
-    {
-        StartCoroutine(GetImage(url));
-    }
+
 }

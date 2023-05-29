@@ -48,6 +48,7 @@ GameObject:
   - component: {fileID: 7592626592479690902}
   - component: {fileID: 7592626592479690904}
   - component: {fileID: 7592626592479690903}
+  - component: {fileID: 996754755919208572}
   m_Layer: 5
   m_Name: SettingPanel
   m_TagString: Untagged
@@ -118,6 +119,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &996754755919208572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7592626592479690901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 3, y: 3}
+  m_UseGraphicAlpha: 1
 --- !u!1 &7592626592606733719
 GameObject:
   m_ObjectHideFlags: 0
@@ -860,6 +876,7 @@ GameObject:
   - component: {fileID: 7592626593790271183}
   - component: {fileID: 7592626593790271182}
   - component: {fileID: 7592626593790271181}
+  - component: {fileID: 3306265583286120661}
   m_Layer: 5
   m_Name: LogOutBtn
   m_TagString: Untagged
@@ -970,6 +987,21 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3306265583286120661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7592626593790271179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 3, y: 3}
+  m_UseGraphicAlpha: 1
 --- !u!1 &7592626594165694560
 GameObject:
   m_ObjectHideFlags: 0

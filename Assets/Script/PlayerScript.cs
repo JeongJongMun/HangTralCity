@@ -67,11 +67,6 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                 // 강의동일때
                 if (SceneManager.GetActiveScene().name == "GangScene")
                 {
-                    // 나가기 버튼
-                    exitBtn = GameObject.Find("ExitBtn");
-                    exitBtn.GetComponent<Button>().onClick.AddListener(Exit);
-                    exitBtn.SetActive(false);
-
                     // 갤러리 버튼
                     galleryBtn = GameObject.Find("GalleryBtn");
                     galleryBtn.SetActive(false);
@@ -84,6 +79,10 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                 // 강의동 or 운동장일때
                 if (SceneManager.GetActiveScene().name == "GangScene" || SceneManager.GetActiveScene().name == "MiniGameScene")
                 {
+                    // 나가기 버튼
+                    exitBtn = GameObject.Find("ExitBtn");
+                    exitBtn.GetComponent<Button>().onClick.AddListener(Exit);
+
                     // 캐릭터 세팅
                     currentHatCustom = PlayerInfo.playerInfo.hatCustom; // 초기값 설정
                     currentEyeCustom = PlayerInfo.playerInfo.eyeCustom;

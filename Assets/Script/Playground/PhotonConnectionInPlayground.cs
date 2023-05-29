@@ -4,13 +4,8 @@ using Photon.Realtime;
 
 public class PhotonConnectionInPlayground : MonoBehaviourPunCallbacks
 {
-    [Header("User In and Out")]
+    [Header("User In")]
     public GameObject UserInPanel;
-    public GameObject UserOutPanel;
-
-    [Header("ETC")]
-    public PhotonView PV;
-    public Animator AN;
 
     void Awake()
     {
@@ -22,7 +17,6 @@ public class PhotonConnectionInPlayground : MonoBehaviourPunCallbacks
             PhotonNetwork.SerializationRate = 30;
 
             UserInPanel.SetActive(true);
-            UserOutPanel.SetActive(false);
         }
     }
 

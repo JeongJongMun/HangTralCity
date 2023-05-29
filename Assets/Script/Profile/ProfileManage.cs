@@ -7,6 +7,7 @@ public class ProfileManage : MonoBehaviour
 {
     public TMP_Text nickname, email;
     public Button characterChangeBtn;
+    public GameObject character;
 
     void Start()
     {
@@ -15,6 +16,7 @@ public class ProfileManage : MonoBehaviour
         email.text = PlayerInfo.playerInfo.email;
         // 캐릭터 변경 버튼 클릭 시
         characterChangeBtn.onClick.AddListener(ClickCharacterChangeBtn);
+        character.GetComponent<PlayerScript>().SetCharacterCustom();
     }
 
     void ClickCharacterChangeBtn()

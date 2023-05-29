@@ -50,9 +50,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ProfileScene.unity
     guid: faaee0ef280f48c47b80b68925a37d2c
-  - enabled: 1
-    path: Assets/Scenes/RankingScene.unity
-    guid: c1ae399570bbdbf42918c6c783eb7270
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: da0c42a07331ff540aa436f5f1c1e91a, type: 2}
     UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: 21c7f2c679594a94fb0505d86748c065, type: 2}

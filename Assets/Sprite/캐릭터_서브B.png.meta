@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b36777ce680c8c84caefe1c02985f0a9
+guid: 0586dcf3657487349bdcb1bae1433551
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -129,13 +129,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: dino_ridle_0
+      name: "\uCE90\uB9AD\uD130_\uC11C\uBE0CB_0"
       rect:
         serializedVersion: 2
-        x: 579
-        y: 307
-        width: 2067
-        height: 2559
+        x: 356
+        y: 396
+        width: 470
+        height: 396
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -143,8 +143,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 770d52eb257a37e4aafd278ef5c3f3e0
-      internalID: 1765783740
+      spriteID: e612049e89f8b144487d594f01a0b3e4
+      internalID: -21506662
       vertices: []
       indices: 
       edges: []
@@ -160,13 +160,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      dino_ridle_0: 1765783740
-      dino_ridle_2: -1978650749
-      dino_ridle_3: 133538707
-      dino_ridle_4: 78070966
-      dino_ridle_5: -1288388946
-      dino_ridle_6: -14440363
-      dino_ridle_7: -1957161407
+      "\uCE90\uB9AD\uD130_\uC11C\uBE0CB_0": -21506662
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

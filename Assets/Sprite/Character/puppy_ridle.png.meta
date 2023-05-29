@@ -42,7 +42,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -127,7 +127,28 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: puppy_ridle_0
+      rect:
+        serializedVersion: 2
+        x: 501
+        y: 308
+        width: 2083
+        height: 2381
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6109c421feaade643b4daa092acd7261
+      internalID: -1921702380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -138,7 +159,40 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      puppy_ridle_0: -1921702380
+      puppy_ridle_10: 208922292
+      puppy_ridle_11: -1861293620
+      puppy_ridle_12: 265670701
+      puppy_ridle_13: -189114678
+      puppy_ridle_14: -37158087
+      puppy_ridle_16: 1700708407
+      puppy_ridle_17: 453174595
+      puppy_ridle_18: 602165071
+      puppy_ridle_19: -1784392927
+      puppy_ridle_2: -1383571964
+      puppy_ridle_20: -1905247172
+      puppy_ridle_21: 1111870821
+      puppy_ridle_22: 477992628
+      puppy_ridle_23: -945293321
+      puppy_ridle_24: 356330604
+      puppy_ridle_25: 234858424
+      puppy_ridle_26: -1192494493
+      puppy_ridle_27: 1872540130
+      puppy_ridle_28: -1900696305
+      puppy_ridle_29: -787245493
+      puppy_ridle_3: 1515470786
+      puppy_ridle_30: -604169080
+      puppy_ridle_31: 1033075581
+      puppy_ridle_32: -1905613293
+      puppy_ridle_33: 680543226
+      puppy_ridle_34: 897915891
+      puppy_ridle_4: -1376992227
+      puppy_ridle_5: -1464251490
+      puppy_ridle_6: 134521728
+      puppy_ridle_7: 126972715
+      puppy_ridle_8: -2043361441
+      puppy_ridle_9: -1673048946
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
