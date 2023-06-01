@@ -2,6 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Android;
 using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
+using System.Collections;
+using System.IO;
 
 public class CameraManage : MonoBehaviour
 {
@@ -9,15 +12,59 @@ public class CameraManage : MonoBehaviour
 
     public RawImage cameraViewImage; // 카메라가 보여질 화면
 
-    public Button take_picture_btn, back_btn;
+    public Button takePictureBtn, backBtn;
 
     private void Start()
     {
-        take_picture_btn.onClick.AddListener(TakePicture);
-        back_btn.onClick.AddListener(BackToCharacterCreateScene);
+        takePictureBtn.onClick.AddListener(TakePicture);
+        backBtn.onClick.AddListener(BackToCharacterCreateScene);
         CameraOn();
 
     }
+    //AWS EC2에 닉네임 업로드를 위한 함수
+    IEnumerator UploadToEC2(string URL, string nickname)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("nickname", nickname);
+
+        UnityWebRequest www = UnityWebRequest.Post(URL, form);
+        yield return www.SendWebRequest();
+
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            UnityEngine.Debug.Log(www.error);
+        }
+        else
+        {
+            UnityEngine.Debug.Log("Nickname Upload to EC2 Complete!");
+        }
+        www.Dispose();
+    }
+    IEnumerator GetFromEC2(string URL)
+    {
+        UnityWebRequest www = UnityWebRequest.Get(URL);
+        yield return www.SendWebRequest();
+
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            UnityEngine.Debug.Log(www.error);
+        }
+        else
+        {
+            int value;
+            if (int.TryParse(www.downloadHandler.text, out value))
+            {
+                UnityEngine.Debug.Log("Received value from EC2: " + value);
+            }
+            else
+            {
+                UnityEngine.Debug.LogError("Failed to parse int value from response: " + www.downloadHandler.text);
+            }
+        }
+        www.Dispose();
+    }
+
+
 
     public void CameraOn() //카메라 켜기
     {
@@ -30,7 +77,7 @@ public class CameraManage : MonoBehaviour
         // 카메라가 없다면
         if (WebCamTexture.devices.Length == 0)
         {
-            Debug.Log("No Camera!");
+            UnityEngine.Debug.Log("No Camera!");
             return;
         }
 
@@ -82,24 +129,25 @@ public class CameraManage : MonoBehaviour
         picture.Apply();
 
         // 동물상 학습에 적합하게 224x224 사이즈로 조정
-        Texture2D resizePicture = ScaleTexture(picture, 224, 224);
-
-        Debug.LogFormat("ResizedPhoto width:{0}, height{1}", resizePicture.width, resizePicture.height);
+        //Texture2D resizePicture = ScaleTexture(picture, 224, 224);
 
         // 이미지를 파일로 저장
-        byte[] bytes = resizePicture.EncodeToPNG();
+        byte[] bytes = picture.EncodeToPNG();
         string fileName = "picture.png";
-        System.IO.File.WriteAllBytes(Application.persistentDataPath + "/" + fileName, bytes);
+        File.WriteAllBytes(Application.persistentDataPath + "/" + fileName, bytes);
 
         // 저장한 파일 경로 출력
-        Debug.Log("Picture saved at " + Application.persistentDataPath + "/" + fileName);
+        UnityEngine.Debug.Log("Picture saved at " + Application.persistentDataPath + "/" + fileName);
 
         // S3 버킷에 촬영한 사진 업로드
         _ = S3Manage.s3Manage.UploadToS3(Application.persistentDataPath + "/" + fileName, PlayerInfo.playerInfo.nickname);
 
-        CharacterCreateManage.isPredicted = true;
-        CameraOff();
-        SceneManager.LoadScene("CharacterCreateScene");
+        // EC2 인스턴스에서 실행된 Flask 웹 서버에 닉네임 업로드
+        StartCoroutine(UploadToEC2("http://13.124.0.232:5000/", "JJM"));
+
+        //CharacterCreateManage.isPredicted = true;
+        //CameraOff();
+        //SceneManager.LoadScene("CharacterCreateScene");
     }
 
     private Texture2D ScaleTexture(Texture2D source, int targetWidth, int targetHeight)
@@ -122,5 +170,6 @@ public class CameraManage : MonoBehaviour
         CameraOff();
         SceneManager.LoadScene("CharacterCreateScene");
     }
+
 
 }

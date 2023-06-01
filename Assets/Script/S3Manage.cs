@@ -6,15 +6,13 @@ using Amazon.S3;
 using Amazon.Runtime;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
-using System.IO;
-using static System.Net.WebRequestMethods;
 
 public class S3Manage : MonoBehaviour
 {
     public static S3Manage s3Manage;
 
-    public string accessKey = "AKIA4SLVEG5W3BBNELIJ";
-    public string secretKey = "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";
+    string accessKey = "AKIA4SLVEG5W3BBNELIJ";
+    string secretKey = "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";
 
     public AmazonS3Client s3Client;
 

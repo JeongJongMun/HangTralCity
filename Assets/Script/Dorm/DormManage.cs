@@ -11,34 +11,78 @@ using System;
 
 
 
+[System.Serializable]
+public class ResponseBody
+{
+    public string statusCode;
+    public string body;
+}
+
+[System.Serializable]
+public class Body
+{
+    public Dictionary<string, string> furniture_positions;
+}
+
+
 
 
 public class Vector3JsonConverter : JsonConverter
 {
     public override bool CanConvert(Type objectType)
     {
-        return objectType == typeof(Vector3);
+        return objectType == typeof(List<Vector3>);
     }
 
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
     {
-        JObject obj = JObject.Load(reader);
-        var x = (float)obj["x"];
-        var y = (float)obj["y"];
-        var z = (float)obj["z"];
-        return new Vector3(x, y, z);
+        JArray obj = JArray.Load(reader);
+        List<Vector3> vectors = new List<Vector3>();
+
+        foreach (JObject jObject in obj)
+        {
+            var x = (float)jObject["x"];
+            var y = (float)jObject["y"];
+            var z = (float)jObject["z"];
+            vectors.Add(new Vector3(x, y, z));
+        }
+
+        return vectors;
     }
 
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {
-        Vector3 vector3 = (Vector3)value;
-        JObject obj = new JObject
+        List<Vector3> vectors = (List<Vector3>)value;
+        JArray array = new JArray();
+
+        foreach (Vector3 vector3 in vectors)
         {
-            { "x", vector3.x },
-            { "y", vector3.y },
-            { "z", vector3.z }
-        };
-        serializer.Serialize(writer, obj);
+            JObject obj = new JObject
+            {
+                { "x", vector3.x },
+                { "y", vector3.y },
+                { "z", vector3.z }
+            };
+            array.Add(obj);
+        }
+
+        serializer.Serialize(writer, array);
+    }
+}
+
+public static class JsonHelper
+{
+    public static T[] GetJsonArray<T>(string json)
+    {
+        string newJson = "{ \"array\": " + json + "}";
+        Wrapper<T> wrapper = JsonUtility.FromJson<Wrapper<T>>(newJson);
+        return wrapper.array;
+    }
+
+    [System.Serializable]
+    private class Wrapper<T>
+    {
+        public T[] array;
     }
 }
 
@@ -59,6 +103,7 @@ public class DormManage : MonoBehaviour
         left_btn.GetComponent<Button>().onClick.AddListener(ClickLeftBtn);
         right_btn.GetComponent<Button>().onClick.AddListener(ClickRightBtn);
         reset_btn.GetComponent<Button>().onClick.AddListener(Load);
+
         StartCoroutine(LoadFurniturePositionsFromDynamoDB());
 
 
@@ -66,37 +111,66 @@ public class DormManage : MonoBehaviour
 
     private IEnumerator LoadFurniturePositionsFromDynamoDB()
     {
-        string nickname = PlayerInfo.playerInfo.nickname;
+        // Create the request payload
+        Dictionary<string, object> payloadData = new Dictionary<string, object>
+    {
+        { "nickname", PlayerInfo.playerInfo.nickname }
+    };
+        Dictionary<string, object> payload = new Dictionary<string, object>
+    {
+        { "data", payloadData }
+    };
 
-        UnityWebRequest request = UnityWebRequest.Get(apiGatewayUrl2 + "?nickname=" + UnityWebRequest.EscapeURL(nickname));
+        string payloadJson = JsonConvert.SerializeObject(payload);
+        Debug.Log("Payload JSON: " + payloadJson);
+
+        // Send the request to the API Gateway
+        UnityWebRequest request = new UnityWebRequest(apiGatewayUrl2, "POST");
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(payloadJson);
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+
         yield return request.SendWebRequest();
 
+        // Check for errors
         if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
         {
             Debug.LogError("Error loading furniture positions: " + request.error);
+            yield break;
         }
-        else
+
+        Debug.Log("Furniture positions loaded successfully: " + request.downloadHandler.text);
+
+        ResponseBody responseBody = JsonConvert.DeserializeObject<ResponseBody>(request.downloadHandler.text);
+
+        if (responseBody.body == null)
         {
-            Debug.Log(request.downloadHandler.text);
-
-            // Deserialize the response into a dictionary of string and string
-            Dictionary<string, string> furniturePositionsString = JsonConvert.DeserializeObject<Dictionary<string, string>>(request.downloadHandler.text);
-
-            // Clear the current furniture positions
-            PlayerInfo.playerInfo.funiturePos.Clear();
-
-            // Load the new furniture positions
-            foreach (KeyValuePair<string, string> item in furniturePositionsString)
-            {
-                // Deserialize the string into a List<Vector3>
-                List<Vector3> positions = JsonConvert.DeserializeObject<List<Vector3>>(item.Value, new Vector3JsonConverter());
-                PlayerInfo.playerInfo.funiturePos[item.Key] = positions;
-            }
-
-            // Load the furniture in the scene
-            Load();
+            Debug.LogError("Body is null in the response");
+            yield break;
         }
+
+        Body body = JsonConvert.DeserializeObject<Body>(responseBody.body);
+
+        if (body.furniture_positions == null)
+        {
+            Debug.LogError("Furniture positions not found in the response body");
+            yield break;
+        }
+
+        foreach (KeyValuePair<string, string> furniturePosition in body.furniture_positions)
+        {
+            string furnitureName = furniturePosition.Key;
+            JArray positionsArray = JArray.Parse(furniturePosition.Value);
+            List<Vector3> positionsList = positionsArray.ToObject<List<Vector3>>(new JsonSerializer { Converters = { new Vector3JsonConverter() } });
+            PlayerInfo.playerInfo.funiturePos[furnitureName] = positionsList;
+        }
+
+        Load(); // Now, apply the positions to the scene
+        request.Dispose(); // 메모리 누수 방지를 위해 추가
+
     }
+
 
 
 
@@ -138,6 +212,8 @@ public class DormManage : MonoBehaviour
         request.SetRequestHeader("Content-Type", "application/json");
 
         yield return request.SendWebRequest();
+        request.Dispose();
+
 
         // Check for errors
         if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
@@ -238,6 +314,8 @@ public class DormManage : MonoBehaviour
             else if (kvp.Key.Replace(to_remove, "") == "TrashBin") foreach (Vector3 pos in kvp.Value) Instantiate(trash_bin, pos, Quaternion.identity);
             Debug.Log("Key = " + kvp.Key + ", Value : " + kvp.Value);
         }
+
+
     }
     private void ClickLeftBtn() // 스크롤 바 왼쪽으로 이동
     {
@@ -248,4 +326,5 @@ public class DormManage : MonoBehaviour
         furniture_list.GetComponent<ScrollRect>().normalizedPosition += scroll_amount;
 
     }
+
 }

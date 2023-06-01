@@ -1,8 +1,9 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
-public class MiniGameManage : MonoBehaviour
+public class MiniGameManage : MonoBehaviourPunCallbacks
 {
     [Header("UI")]
     public GameObject exitBtn;
@@ -19,13 +20,11 @@ public class MiniGameManage : MonoBehaviour
     public GameObject penaltyTxt;
     public int penalty = 0;
 
-    [Header("SpawnObject")]
-    public GameObject feet;
-
     [Header("ETC")]
     public GameObject timer; 
     public int time = 60;
     float second = 0;
+    PhotonView PV;
 
 
     bool isWhite = true;
@@ -35,6 +34,7 @@ public class MiniGameManage : MonoBehaviour
 
     void Start()
     {
+        PV = gameObject.GetComponent<PhotonView>();
         startBtn.GetComponent<Button>().onClick.AddListener(ClickStartBtn);
 
         timer.GetComponent<TMP_Text>().text = "남은시간 : " + time.ToString() + "초";
@@ -42,30 +42,35 @@ public class MiniGameManage : MonoBehaviour
 
     void Update()
     {
-        if (mode == "lobby")
-        {
-            // 시작하기 버튼 클릭시 playing으로 전환
-            lobby.SetActive(true);
-            playing.SetActive(false);
-            ending.SetActive(false);
-        }
-        else if (mode == "playing")
-        {
-            // TimeOut 시 ending으로 전환
-            lobby.SetActive(false);
-            playing.SetActive(true);
-            ending.SetActive(false);
-            penaltyTxt.GetComponent<TMP_Text>().text = penalty.ToString();
-            FeetSpawn();
-            SetTimer();
-        }
-        else if (mode == "ending")
-        {
-            lobby.SetActive(true);
-            playing.SetActive(false);
-            ending.SetActive(true);
-        }
+        if (mode == "lobby") PV.RPC("LobbyMode", RpcTarget.All);
+        else if (mode == "playing") PV.RPC("PlayingMode", RpcTarget.All);
+        else if (mode == "ending") PV.RPC("EndingMode", RpcTarget.All);
 
+    }
+    [PunRPC]
+    void LobbyMode()
+    {
+        lobby.SetActive(true);
+        playing.SetActive(false);
+        ending.SetActive(false);
+    }
+    [PunRPC]
+    void PlayingMode()
+    {
+        // TimeOut 시 ending으로 전환
+        lobby.SetActive(false);
+        playing.SetActive(true);
+        ending.SetActive(false);
+        penaltyTxt.GetComponent<TMP_Text>().text = penalty.ToString();
+        FeetSpawn();
+        SetTimer();
+    }
+    [PunRPC]
+    void EndingMode()
+    {
+        lobby.SetActive(true);
+        playing.SetActive(false);
+        ending.SetActive(true);
     }
 
     void SetTimer()
@@ -97,16 +102,20 @@ public class MiniGameManage : MonoBehaviour
         {
             spawnTimer += Time.deltaTime;
 
-            if (spawnTimer > 0.3f)
+            if (spawnTimer > 0.5f)
             {
-                GameObject newTile = Instantiate(feet);
-                newTile.transform.position = new Vector2(Random.Range(-15f, 10f), 21);
+                GameObject newFeet = PhotonNetwork.Instantiate("Feet", new Vector2(Random.Range(-15f, 10f), 21), transform.rotation);
                 spawnTimer = 0;
-                Destroy(newTile, 5.0f);
+                Destroy(newFeet, 3.0f);
             }
         }
     }
     void ClickStartBtn()
+    {
+        PV.RPC("SwitchToPlayingMode", RpcTarget.All);
+    }
+    [PunRPC]
+    void SwitchToPlayingMode()
     {
         penalty = 0;
         time = 60;

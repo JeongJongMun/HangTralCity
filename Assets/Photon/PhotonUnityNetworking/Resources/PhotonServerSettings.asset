@@ -57,6 +57,11 @@ MonoBehaviour:
   - Upload
   - GetImageFromS3
   - GetImage
+  - EndingMode
+  - LobbyMode
+  - PlayingMode
+  - FeetSpawn
+  - SwitchToPlayingMode
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

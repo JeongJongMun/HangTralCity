@@ -10,6 +10,9 @@ public class DragAndDropPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler,
     // 드래그 시작 시 호출되는 콜백
     public void OnBeginDrag(PointerEventData eventData)
     {
+        // 각 가구마다 최대 한개만 배치
+        if (GameObject.Find(prefabToInstantiate.name + "(Clone)")) Destroy(GameObject.Find(prefabToInstantiate.name + "(Clone)"));
+
         // 인스턴스화 할 프리팹 로드
         instantiatedObject = Instantiate(prefabToInstantiate);
 

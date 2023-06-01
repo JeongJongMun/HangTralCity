@@ -455,8 +455,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraViewImage: {fileID: 284685850}
-  take_picture_btn: {fileID: 1687713530}
-  back_btn: {fileID: 1723439671}
+  takePictureBtn: {fileID: 1687713530}
+  backBtn: {fileID: 1723439671}
 --- !u!4 &493838805
 Transform:
   m_ObjectHideFlags: 0
@@ -898,7 +898,7 @@ GameObject:
   - component: {fileID: 1544288451}
   - component: {fileID: 1544288454}
   m_Layer: 5
-  m_Name: Change_Btn
+  m_Name: ChangeBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1154,7 +1154,7 @@ GameObject:
   - component: {fileID: 1687713530}
   - component: {fileID: 1687713533}
   m_Layer: 5
-  m_Name: TakePicture_Btn
+  m_Name: TakePictureBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1304,7 +1304,7 @@ GameObject:
   - component: {fileID: 1723439671}
   - component: {fileID: 1723439674}
   m_Layer: 5
-  m_Name: Back_Btn
+  m_Name: BackBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
