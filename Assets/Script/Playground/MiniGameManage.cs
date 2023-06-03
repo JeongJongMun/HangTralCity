@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
+using System.Collections;
 
 public class MiniGameManage : MonoBehaviourPunCallbacks
 {
@@ -18,17 +19,14 @@ public class MiniGameManage : MonoBehaviourPunCallbacks
     static public string mode = "lobby";
     [Header("Penalty")]
     public GameObject penaltyTxt;
-    public int penalty = 0;
+    public int penaltyScore = 0;
 
     [Header("ETC")]
     public GameObject timer; 
-    public int time = 60;
+    
+    int time = 60;
     float second = 0;
     PhotonView PV;
-
-
-    bool isWhite = true;
-
     float spawnTimer = 0;
 
 
@@ -61,40 +59,54 @@ public class MiniGameManage : MonoBehaviourPunCallbacks
         lobby.SetActive(false);
         playing.SetActive(true);
         ending.SetActive(false);
-        penaltyTxt.GetComponent<TMP_Text>().text = penalty.ToString();
-        FeetSpawn();
+        penaltyTxt.GetComponent<TMP_Text>().text = penaltyScore.ToString();
         SetTimer();
+
+        // 마스터 클라이언트인 경우 피트 스폰, 시간 흐름 관리
+        if (PhotonNetwork.IsMasterClient)
+        {
+            FeetSpawn();
+            TimeFlow();
+            PV.RPC("SyncTime", RpcTarget.All, time);
+        }
     }
     [PunRPC]
     void EndingMode()
     {
         lobby.SetActive(true);
-        playing.SetActive(false);
+        playing.SetActive(true);
         ending.SetActive(true);
     }
 
     void SetTimer()
     {
-        if (second > 1)
+        timer.GetComponent<TMP_Text>().text = "남은시간 : " + time.ToString() + "초";
+
+        if (0 < time && time < 10)
         {
-            time -= 1;
-            timer.GetComponent<TMP_Text>().text = "남은시간 : " + time.ToString() + "초";
-            second = 0;
-
-            if (time < 12 && time > 0)
-            {
-                timer.GetComponent<TMP_Text>().color = isWhite ? Color.red : Color.white;
-                isWhite = !isWhite;
-            }
+            if (time % 2 == 0) timer.GetComponent<TMP_Text>().color = Color.red;
+            if (time % 2 == 1) timer.GetComponent<TMP_Text>().color = Color.white;
         }
-        else second += Time.deltaTime;
-
-
-        if (time == 0)
+        else if (time == 0)
         {
             mode = "ending";
             ending.SetActive(true);
         }
+    }
+    void TimeFlow()
+    {
+        if (second > 1)
+        {
+            time -= 1;
+            second = 0;
+        }
+        else second += Time.deltaTime;
+    }
+    [PunRPC]
+    void SyncTime(int masterTime)
+    {
+        // 마스터 클라이언트가 보낸 시간을 동기화
+        time = masterTime;
     }
     void FeetSpawn()
     {
@@ -104,12 +116,37 @@ public class MiniGameManage : MonoBehaviourPunCallbacks
 
             if (spawnTimer > 0.5f)
             {
-                GameObject newFeet = PhotonNetwork.Instantiate("Feet", new Vector2(Random.Range(-15f, 10f), 21), transform.rotation);
+                GameObject target = PhotonNetwork.Instantiate("Feet", new Vector2(Random.Range(-9, 9), gameObject.transform.position.y), transform.rotation);
                 spawnTimer = 0;
-                Destroy(newFeet, 3.0f);
+                StartCoroutine(DestroyAfter(target, 3f));
+
             }
         }
     }
+    IEnumerator DestroyAfter(GameObject target, float delay)
+    {
+        // Delay 만큼 대기
+        yield return new WaitForSeconds(delay);
+
+        // target이 파괴되지 않았으면 파괴 실행
+        if (target != null) PhotonNetwork.Destroy(target);
+    }
+    public void AddPenaltyScore()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            // 패널티 ++;
+            penaltyScore++;
+            // 변경된 패널티 점수를 모든 플레이어에게 전송
+            photonView.RPC("UpdatePenaltyScoreRPC", RpcTarget.All, penaltyScore);
+        }
+    }
+    [PunRPC]
+    private void UpdatePenaltyScoreRPC(int updatedScore)
+    {
+        penaltyScore = updatedScore;
+    }
+
     void ClickStartBtn()
     {
         PV.RPC("SwitchToPlayingMode", RpcTarget.All);
@@ -117,7 +154,7 @@ public class MiniGameManage : MonoBehaviourPunCallbacks
     [PunRPC]
     void SwitchToPlayingMode()
     {
-        penalty = 0;
+        penaltyScore = 0;
         time = 60;
         mode = "playing";
     }

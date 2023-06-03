@@ -12,6 +12,7 @@ TagManager:
   - Door
   - MainDesk
   - Feet
+  - Deadline
   layers:
   - Default
   - TransparentFX

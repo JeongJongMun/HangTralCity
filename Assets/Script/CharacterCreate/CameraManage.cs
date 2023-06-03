@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 using System.Collections;
 using System.IO;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 public class CameraManage : MonoBehaviour
 {
@@ -32,38 +34,97 @@ public class CameraManage : MonoBehaviour
 
         if (www.result != UnityWebRequest.Result.Success)
         {
-            UnityEngine.Debug.Log(www.error);
+            Debug.Log(www.error);
         }
         else
         {
-            UnityEngine.Debug.Log("Nickname Upload to EC2 Complete!");
+            Debug.Log("Nickname Upload to EC2 Complete!");
         }
         www.Dispose();
     }
-    IEnumerator GetFromEC2(string URL)
+    IEnumerator GetData1(string URL)
     {
+        //yield return new WaitForSeconds(3f);
+
         UnityWebRequest www = UnityWebRequest.Get(URL);
         yield return www.SendWebRequest();
 
         if (www.result != UnityWebRequest.Result.Success)
         {
-            UnityEngine.Debug.Log(www.error);
+            Debug.Log(www.error);
         }
         else
         {
             int value;
             if (int.TryParse(www.downloadHandler.text, out value))
             {
-                UnityEngine.Debug.Log("Received value from EC2: " + value);
+                Debug.Log("Received value from EC2: " + value);
             }
             else
             {
-                UnityEngine.Debug.LogError("Failed to parse int value from response: " + www.downloadHandler.text);
+                Debug.LogError("Failed to parse int value from response: " + www.downloadHandler.text);
             }
         }
         www.Dispose();
     }
 
+    IEnumerator GetData2(string URL)
+    {
+        //yield return new WaitForSeconds(3f);
+
+        using (UnityWebRequest www = UnityWebRequest.Get(URL))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.result == UnityWebRequest.Result.Success)
+            {
+                string jsonResponse = www.downloadHandler.text;
+                Debug.LogFormat("JsonResponse:{0}", jsonResponse);
+
+                // JSON 데이터를 Dictionary 형태로 파싱
+                Dictionary<string, object> responseData = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonResponse);
+
+                // 'nickname' 키를 통해 nickname 값을 추출 (string)
+                string nickname = string.Empty;
+                if (responseData.ContainsKey("nickname"))
+                {
+                    nickname = responseData["nickname"].ToString();
+                }
+
+                // 'label' 키를 통해 label 값을 추출 (int)
+                int label = 0;
+                if (responseData.ContainsKey("label"))
+                {
+                    if (int.TryParse(responseData["label"].ToString(), out int parsedLabel))
+                    {
+                        label = parsedLabel;
+                    }
+                }
+                Debug.LogFormat("Nickname:{0}, Label:{1}", nickname, label);
+            }
+            else
+            {
+                Debug.LogError("Error: " + www.error);
+            }
+        }
+    }
+    IEnumerator GetPredictedCharacterFromS3(string URL)
+    {
+        using (UnityWebRequest www = UnityWebRequest.Get(URL))
+        {
+            // 이미지 로드 완료까지 대기
+            yield return www.SendWebRequest();
+
+            if (www.result == UnityWebRequest.Result.Success)
+            {
+                Debug.LogFormat("Predicted Value: {0}", www.downloadHandler.text);
+            }
+            else
+            {
+                Debug.Log("Image download failed. Error: " + www.error);
+            }
+        }
+    }
 
 
     public void CameraOn() //카메라 켜기
@@ -77,7 +138,7 @@ public class CameraManage : MonoBehaviour
         // 카메라가 없다면
         if (WebCamTexture.devices.Length == 0)
         {
-            UnityEngine.Debug.Log("No Camera!");
+            Debug.Log("No Camera!");
             return;
         }
 
@@ -116,7 +177,7 @@ public class CameraManage : MonoBehaviour
         if (camTexture != null)
         {
             camTexture.Stop(); // 카메라 정지
-            Destroy(camTexture); // 카메라 객체반납
+            Destroy(camTexture); // 카메라 객체 반납
             camTexture = null; // 변수 초기화
         }
     }
@@ -137,13 +198,16 @@ public class CameraManage : MonoBehaviour
         File.WriteAllBytes(Application.persistentDataPath + "/" + fileName, bytes);
 
         // 저장한 파일 경로 출력
-        UnityEngine.Debug.Log("Picture saved at " + Application.persistentDataPath + "/" + fileName);
+        Debug.Log("Picture saved at " + Application.persistentDataPath + "/" + fileName);
 
         // S3 버킷에 촬영한 사진 업로드
-        _ = S3Manage.s3Manage.UploadToS3(Application.persistentDataPath + "/" + fileName, PlayerInfo.playerInfo.nickname);
+        //_ = S3Manage.s3Manage.UploadToS3(Application.persistentDataPath + "/" + fileName, PlayerInfo.playerInfo.nickname);
+        _ = S3Manage.s3Manage.UploadToS3(Application.persistentDataPath + "/" + fileName, "JJM" + ".png");
 
         // EC2 인스턴스에서 실행된 Flask 웹 서버에 닉네임 업로드
-        StartCoroutine(UploadToEC2("http://13.124.0.232:5000/", "JJM"));
+        StartCoroutine(UploadToEC2("http://13.124.0.232/", "0.png"));
+        StartCoroutine(GetData1("http://13.124.0.232/"));
+        //StartCoroutine(GetPredictedCharacterFromS3("https://predicted-character.s3.ap-northeast-2.amazonaws.com/"+ PlayerInfo.playerInfo.nickname));
 
         //CharacterCreateManage.isPredicted = true;
         //CameraOff();

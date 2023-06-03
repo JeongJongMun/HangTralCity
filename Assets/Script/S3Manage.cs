@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Amazon.S3;
 using Amazon.Runtime;
-using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
 public class S3Manage : MonoBehaviour
@@ -15,8 +14,6 @@ public class S3Manage : MonoBehaviour
     string secretKey = "rGfe4OIPVfsai8SUeCo1ugWDkQbdkW49aCzqwse8";
 
     public AmazonS3Client s3Client;
-
-
 
     // S3Manage 클래스를 싱글 톤으로 생성
     // 단 하나의 인스턴스만을 가지며 어디서든 접근 가능
@@ -62,18 +59,6 @@ public class S3Manage : MonoBehaviour
                     ContentType = "image/png" // 파일 형식
                 };
             }
-        }
-        // 업로드 할 obj가 Dictionary (방 커스터마이징 정보)일 경우
-        else if (obj is Dictionary<string, List<Vector3>>)
-        {
-            string json = JsonUtility.ToJson(obj);
-
-            request = new PutObjectRequest
-            {
-                BucketName = "room-customize-info",
-                Key = nickname,
-                ContentBody = json
-            };
         }
         try
         {
