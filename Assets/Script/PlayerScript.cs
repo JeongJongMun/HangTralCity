@@ -20,21 +20,24 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     private Animator AN;
 
     // 캐릭터 커스텀 변경 변수
+    [Header("CustomPoint")]
     public GameObject hatPoint;
     public GameObject eyePoint;
 
     // 캐릭터 커스텀 에셋 리스트
+    [Header("CustomSprite")]
     public Sprite[] hatSprites;
     public Sprite[] eyeSprites;
 
     // 캐릭터 닉네임 변경 변수
+    [Header("Nickname")]
     public GameObject nickNameTxt;
     public GameObject nickNamePoint;
 
     // 나가기 버튼, 갤러리 버튼
     private GameObject exitBtn, galleryBtn;
 
-
+    [Header("Chatting")]
     public GameObject ChatPoint;
     public GameObject ChatText;
     private Button sendBtn; // 채팅 보내기 버튼 UI
@@ -95,7 +98,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             }
         }
     }
-    void Update()
+    void FixedUpdate()
     {
         Move();
     }
@@ -153,16 +156,9 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     void ChatRPC(string msg)
     {
-        if (ChatText.GetComponent<TMP_Text>().text == "")
-        {
-            ChatText.GetComponent<TMP_Text>().text = msg;
-        }
-        else
-        {
-            ChatText.GetComponent<TMP_Text>().text = "";
-            ChatText.GetComponent<TMP_Text>().text = msg;
-        }
-        Invoke("Delay", 5); // 2초뒤 0.3초주기로 LaunchProjectile함수 반복 호출
+        ChatText.GetComponent<TMP_Text>().text = "";
+        ChatText.GetComponent<TMP_Text>().text = msg;
+        Invoke("Delay", 5); // 5초 뒤 채팅 삭제
     }
 
     void Delay()

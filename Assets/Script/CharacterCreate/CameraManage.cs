@@ -7,14 +7,21 @@ using System.Collections;
 using System.IO;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using TMPro;
 
 public class CameraManage : MonoBehaviour
 {
-    WebCamTexture camTexture;
-
+    [Header("RawImage")]
     public RawImage cameraViewImage; // 카메라가 보여질 화면
 
-    public Button takePictureBtn, backBtn;
+    [Header("Button")]
+    public Button takePictureBtn;
+    public Button backBtn;
+
+    public TMP_Text debug;
+    // 카메라
+    WebCamDevice[] devices;
+    WebCamTexture frontCameraTexture = null;
 
     private void Start()
     {
@@ -23,9 +30,13 @@ public class CameraManage : MonoBehaviour
         CameraOn();
 
     }
-    //AWS EC2에 닉네임 업로드를 위한 함수
-    IEnumerator UploadToEC2(string URL, string nickname)
+
+    // AWS EC2 웹서버에 모델이 S3에서 가져올 사진 이름(닉네임) 업로드를 위한 함수
+    IEnumerator PostNicknameToEC2(string URL, string nickname)
     {
+        // S3에 사진이 업로드 될 시간 1초 정도 대기
+        yield return new WaitForSeconds(1f);
+
         WWWForm form = new WWWForm();
         form.AddField("nickname", nickname);
 
@@ -34,64 +45,52 @@ public class CameraManage : MonoBehaviour
 
         if (www.result != UnityWebRequest.Result.Success)
         {
-            Debug.Log(www.error);
+            Debug.Log("Post Nickname To EC2 Failed : " + www.error);
+            debug.text += "Post Nickname To EC2 Failed : " + www.error;
         }
         else
         {
-            Debug.Log("Nickname Upload to EC2 Complete!");
+            Debug.Log("Post Nickname to EC2 Successful");
+            debug.text += "Post Nickname to EC2 Successful";
         }
         www.Dispose();
     }
-    IEnumerator GetData1(string URL)
+    // 모델이 예측한 동물상 데이터를 S3에 저장 -> S3에서 예측값 가져오기
+    IEnumerator GetPredictedCharacterFromS3(string URL)
     {
-        //yield return new WaitForSeconds(3f);
-
-        UnityWebRequest www = UnityWebRequest.Get(URL);
-        yield return www.SendWebRequest();
-
-        if (www.result != UnityWebRequest.Result.Success)
-        {
-            Debug.Log(www.error);
-        }
-        else
-        {
-            int value;
-            if (int.TryParse(www.downloadHandler.text, out value))
-            {
-                Debug.Log("Received value from EC2: " + value);
-            }
-            else
-            {
-                Debug.LogError("Failed to parse int value from response: " + www.downloadHandler.text);
-            }
-        }
-        www.Dispose();
-    }
-
-    IEnumerator GetData2(string URL)
-    {
-        //yield return new WaitForSeconds(3f);
+        // 모델이 돌아갈 시간 3초 정도 대기
+        yield return new WaitForSeconds(3f);
 
         using (UnityWebRequest www = UnityWebRequest.Get(URL))
         {
+            // 이미지 로드 완료까지 대기
             yield return www.SendWebRequest();
 
             if (www.result == UnityWebRequest.Result.Success)
             {
                 string jsonResponse = www.downloadHandler.text;
-                Debug.LogFormat("JsonResponse:{0}", jsonResponse);
 
                 // JSON 데이터를 Dictionary 형태로 파싱
                 Dictionary<string, object> responseData = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonResponse);
 
-                // 'nickname' 키를 통해 nickname 값을 추출 (string)
+                // 닉네임 추출
                 string nickname = string.Empty;
                 if (responseData.ContainsKey("nickname"))
                 {
                     nickname = responseData["nickname"].ToString();
                 }
 
-                // 'label' 키를 통해 label 값을 추출 (int)
+                // 확률 값 추출
+                int percentage = 0;
+                if (responseData.ContainsKey("percentage"))
+                {
+                    if (int.TryParse(responseData["percentage"].ToString(), out int parsedPercentage))
+                    {
+                        percentage = parsedPercentage;
+                    }
+                }
+
+                // 레이블 추출
                 int label = 0;
                 if (responseData.ContainsKey("label"))
                 {
@@ -100,40 +99,29 @@ public class CameraManage : MonoBehaviour
                         label = parsedLabel;
                     }
                 }
-                Debug.LogFormat("Nickname:{0}, Label:{1}", nickname, label);
+                Debug.LogFormat("Nickname:{0}, Label:{1}, Percentage:{2}", nickname, label, percentage);
+                debug.text += "Nickname:" + nickname + ", Label:" + label + ", Percentage:" + percentage;
+                // Label로 Character Type 적용
+                CharacterCreateManage.predictedType = label;
+                CharacterCreateManage.percentage = percentage;
             }
             else
             {
-                Debug.LogError("Error: " + www.error);
+                Debug.Log("GET Predicted Character failed. Error: " + www.error);
+                debug.text += "GET Predicted Character failed. Error: " + www.error;
             }
         }
-    }
-    IEnumerator GetPredictedCharacterFromS3(string URL)
-    {
-        using (UnityWebRequest www = UnityWebRequest.Get(URL))
-        {
-            // 이미지 로드 완료까지 대기
-            yield return www.SendWebRequest();
 
-            if (www.result == UnityWebRequest.Result.Success)
-            {
-                Debug.LogFormat("Predicted Value: {0}", www.downloadHandler.text);
-            }
-            else
-            {
-                Debug.Log("Image download failed. Error: " + www.error);
-            }
-        }
+        CharacterCreateManage.isPredicted = true;
+        CameraOff();
+        SceneManager.LoadScene("CharacterCreateScene");
     }
 
 
-    public void CameraOn() //카메라 켜기
+    public void CameraOn() // 카메라 켜기
     {
         // 카메라 권한 확인
-        if (!Permission.HasUserAuthorizedPermission(Permission.Camera))
-        {
-            Permission.RequestUserPermission(Permission.Camera);
-        }
+        if (!Permission.HasUserAuthorizedPermission(Permission.Camera)) Permission.RequestUserPermission(Permission.Camera);
 
         // 카메라가 없다면
         if (WebCamTexture.devices.Length == 0)
@@ -142,91 +130,58 @@ public class CameraManage : MonoBehaviour
             return;
         }
 
-        WebCamDevice[] devices = WebCamTexture.devices; // 스마트폰의 카메라 정보를 모두 가져옴.
-        int selectedCameraIndex = -1;
+        // 스마트폰의 카메라 정보를 모두 가져옴.
+        devices = WebCamTexture.devices;
 
-        //후면 카메라 찾기
+        // 전면 카메라 찾기
         for (int i = 0; i < devices.Length; i++)
         {
-
-            //if (devices[i].isFrontFacing == false) // 후면 카메라
-            if (devices[i].isFrontFacing) // 전면 카메라
+            if (devices[i].isFrontFacing)
             {
-                selectedCameraIndex = i;
-                break;
+                // 전면 카메라를 가져옴
+                frontCameraTexture = new WebCamTexture(devices[i].name);
+                frontCameraTexture.requestedFPS = 60;
+
+                // 전면 카메라 영상을 raw Image에 할당.
+                cameraViewImage.texture = frontCameraTexture;
+
+                // 카메라 시작하기
+                frontCameraTexture.Play();
             }
         }
-
-        //카메라 켜기
-        if (selectedCameraIndex >= 0)
-        {
-            // 선택된 카메라를 가져옴.
-            camTexture = new WebCamTexture(devices[selectedCameraIndex].name);
-
-            camTexture.requestedFPS = 30;
-
-            cameraViewImage.texture = camTexture; // 영상을 raw Image에 할당.
-
-            camTexture.Play(); // 카메라 시작하기
-        }
-
     }
 
     public void CameraOff() // 카메라 끄기
     {
-        if (camTexture != null)
+        if (frontCameraTexture != null)
         {
-            camTexture.Stop(); // 카메라 정지
-            Destroy(camTexture); // 카메라 객체 반납
-            camTexture = null; // 변수 초기화
+            frontCameraTexture.Stop(); // 카메라 정지
+            Destroy(frontCameraTexture); // 카메라 객체 반납
+            frontCameraTexture = null; // 변수 초기화
         }
     }
 
-
     public void TakePicture() // 사진 촬영하기
     {
-        Texture2D picture = new Texture2D(camTexture.width, camTexture.height);
-        picture.SetPixels(camTexture.GetPixels());
+        Texture2D picture = new Texture2D(frontCameraTexture.width, frontCameraTexture.height);
+        picture.SetPixels(frontCameraTexture.GetPixels());
         picture.Apply();
-
-        // 동물상 학습에 적합하게 224x224 사이즈로 조정
-        //Texture2D resizePicture = ScaleTexture(picture, 224, 224);
 
         // 이미지를 파일로 저장
         byte[] bytes = picture.EncodeToPNG();
-        string fileName = "picture.png";
+        string fileName = PlayerInfo.playerInfo.nickname;
         File.WriteAllBytes(Application.persistentDataPath + "/" + fileName, bytes);
 
         // 저장한 파일 경로 출력
         Debug.Log("Picture saved at " + Application.persistentDataPath + "/" + fileName);
 
         // S3 버킷에 촬영한 사진 업로드
-        //_ = S3Manage.s3Manage.UploadToS3(Application.persistentDataPath + "/" + fileName, PlayerInfo.playerInfo.nickname);
-        _ = S3Manage.s3Manage.UploadToS3(Application.persistentDataPath + "/" + fileName, "JJM" + ".png");
+        _ = S3Manage.s3Manage.UploadToS3(Application.persistentDataPath + "/" + fileName, PlayerInfo.playerInfo.nickname);
 
         // EC2 인스턴스에서 실행된 Flask 웹 서버에 닉네임 업로드
-        StartCoroutine(UploadToEC2("http://13.124.0.232/", "0.png"));
-        StartCoroutine(GetData1("http://13.124.0.232/"));
-        //StartCoroutine(GetPredictedCharacterFromS3("https://predicted-character.s3.ap-northeast-2.amazonaws.com/"+ PlayerInfo.playerInfo.nickname));
-
-        //CharacterCreateManage.isPredicted = true;
-        //CameraOff();
-        //SceneManager.LoadScene("CharacterCreateScene");
-    }
-
-    private Texture2D ScaleTexture(Texture2D source, int targetWidth, int targetHeight)
-    {
-        Texture2D result = new Texture2D(targetWidth, targetHeight, source.format, true);
-        Color[] rpixels = result.GetPixels(0);
-        float incX = (1.0f / (float)targetWidth);
-        float incY = (1.0f / (float)targetHeight);
-        for (int px = 0; px < rpixels.Length; px++)
-        {
-            rpixels[px] = source.GetPixelBilinear(incX * ((float)px % targetWidth), incY * ((float)Mathf.Floor(px / targetWidth)));
-        }
-        result.SetPixels(rpixels, 0);
-        result.Apply();
-        return result;
+        StartCoroutine(PostNicknameToEC2("http://43.202.19.142:5000", PlayerInfo.playerInfo.nickname));
+        // 모델에서 예측된 값과 닉네임이 S3에 저장 -> S3에서 닉네임과 레이블 가져오기
+        StartCoroutine(GetPredictedCharacterFromS3("https://predicted-character.s3.ap-northeast-2.amazonaws.com/" + PlayerInfo.playerInfo.nickname));
     }
 
     public void BackToCharacterCreateScene()
@@ -234,6 +189,4 @@ public class CameraManage : MonoBehaviour
         CameraOff();
         SceneManager.LoadScene("CharacterCreateScene");
     }
-
-
 }

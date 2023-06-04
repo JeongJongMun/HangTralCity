@@ -449,8 +449,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC800\uC7A5"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
-  m_sharedMaterial: {fileID: -6262507259396665765, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1cce464cb9459ec419666861b53a238e, type: 2}
+  m_sharedMaterial: {fileID: -3655811875962430564, guid: 1cce464cb9459ec419666861b53a238e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5290,10 +5290,10 @@ RectTransform:
   m_Father: {fileID: 439196320}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.27}
-  m_AnchorMax: {x: 1, y: 0.27}
+  m_AnchorMin: {x: 0, y: 0.2}
+  m_AnchorMax: {x: 1, y: 0.35}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 300}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &677316829
 MonoBehaviour:
@@ -5314,11 +5314,11 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 30
   m_Viewport: {fileID: 1501494261}
   m_HorizontalScrollbar: {fileID: 2126748888}
   m_VerticalScrollbar: {fileID: 0}
-  m_HorizontalScrollbarVisibility: 2
+  m_HorizontalScrollbarVisibility: 1
   m_VerticalScrollbarVisibility: 2
   m_HorizontalScrollbarSpacing: -3
   m_VerticalScrollbarSpacing: -3
@@ -6041,8 +6041,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uCD08\uAE30\uD654"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
-  m_sharedMaterial: {fileID: -6262507259396665765, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1cce464cb9459ec419666861b53a238e, type: 2}
+  m_sharedMaterial: {fileID: -3655811875962430564, guid: 1cce464cb9459ec419666861b53a238e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -6176,8 +6176,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uAFB8\uBBF8\uAE30"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
-  m_sharedMaterial: {fileID: -6262507259396665765, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1cce464cb9459ec419666861b53a238e, type: 2}
+  m_sharedMaterial: {fileID: -3655811875962430564, guid: 1cce464cb9459ec419666861b53a238e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

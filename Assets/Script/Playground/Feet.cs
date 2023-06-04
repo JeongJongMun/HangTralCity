@@ -29,6 +29,19 @@ public class Feet : MonoBehaviour
                 DestroyGameObject(gameObject.GetPhotonView().ViewID);
             }
         }
+        else if (collision.gameObject.tag == "Deadline") 
+        {
+            // 삭제를 MasterClient에게 위임
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                photonView.RPC("DestroyGameObjectRPC", RpcTarget.MasterClient, gameObject.GetPhotonView().ViewID);
+            }
+            else
+            {
+                // MasterClient가 삭제 작업 수행
+                DestroyGameObject(gameObject.GetPhotonView().ViewID);
+            }
+        }
     }
     [PunRPC]
     private void DestroyGameObjectRPC(int viewID)

@@ -194,7 +194,7 @@ GameObject:
   - component: {fileID: 255169658}
   - component: {fileID: 255169661}
   m_Layer: 5
-  m_Name: Right_Btn
+  m_Name: RightBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -699,8 +699,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uCE90\uB9AD\uD130 \uC0DD\uC131"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
-  m_sharedMaterial: {fileID: -6262507259396665765, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1cce464cb9459ec419666861b53a238e, type: 2}
+  m_sharedMaterial: {fileID: -3655811875962430564, guid: 1cce464cb9459ec419666861b53a238e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -784,7 +784,7 @@ GameObject:
   m_Component:
   - component: {fileID: 579555759}
   m_Layer: 5
-  m_Name: Before_Prediction
+  m_Name: BeforePrediction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -804,7 +804,7 @@ RectTransform:
   m_Children:
   - {fileID: 447856953}
   m_Father: {fileID: 1030597836}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0.8}
@@ -909,7 +909,7 @@ GameObject:
   - component: {fileID: 873133024}
   - component: {fileID: 873133027}
   m_Layer: 5
-  m_Name: Create_Btn
+  m_Name: CreateBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1105,8 +1105,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uCE90\uB9AD\uD130 \uC0DD\uC131"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
-  m_sharedMaterial: {fileID: -6262507259396665765, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1cce464cb9459ec419666861b53a238e, type: 2}
+  m_sharedMaterial: {fileID: -3655811875962430564, guid: 1cce464cb9459ec419666861b53a238e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1347,8 +1347,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1864411849}
-  - {fileID: 1493130562}
   - {fileID: 579555759}
+  - {fileID: 1493130562}
   m_Father: {fileID: 419941865}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1409,7 +1409,7 @@ GameObject:
   - component: {fileID: 1040664711}
   - component: {fileID: 1040664714}
   m_Layer: 5
-  m_Name: Left_Btn
+  m_Name: LeftBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1557,7 +1557,7 @@ GameObject:
   - component: {fileID: 1152316662}
   - component: {fileID: 1152316664}
   m_Layer: 5
-  m_Name: Character
+  m_Name: PredictedCharacter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1646,7 +1646,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1493130562}
   m_Layer: 5
-  m_Name: After_Prediction
+  m_Name: AfterPrediction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1668,7 +1668,7 @@ RectTransform:
   - {fileID: 1011114644}
   - {fileID: 1799687562}
   m_Father: {fileID: 1030597836}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0.8}
@@ -1735,8 +1735,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uB3D9\uBB3C\uC0C1 \uC778\uC2DD\uD558\uAE30"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
-  m_sharedMaterial: {fileID: -6262507259396665765, guid: 6a5bab8dfa0070f4ca8e8beeb17c5406, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1cce464cb9459ec419666861b53a238e, type: 2}
+  m_sharedMaterial: {fileID: -3655811875962430564, guid: 1cce464cb9459ec419666861b53a238e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2328,7 +2328,7 @@ GameObject:
   - component: {fileID: 2082369402}
   - component: {fileID: 2082369405}
   m_Layer: 5
-  m_Name: Camera_Btn
+  m_Name: CameraBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2583,14 +2583,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41feff55f72c56b4fbf84c330bcb2085, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera_btn: {fileID: 2082369402}
-  create_btn: {fileID: 873133024}
-  left_btn: {fileID: 1040664711}
-  right_btn: {fileID: 255169658}
+  type: 0
+  sprites:
+  - {fileID: -1921702380, guid: 62c623be56d1aa241ba1f628a4e598ae, type: 3}
+  - {fileID: 1352956629, guid: 1699b91e44b575345bb9784998baf548, type: 3}
+  - {fileID: 590678578, guid: f0eb6cc8d592b67479385fb196cfcc4c, type: 3}
+  - {fileID: 1765783740, guid: b36777ce680c8c84caefe1c02985f0a9, type: 3}
+  - {fileID: -2111476247, guid: 51f6aff0b857d8541a643cc80bdc1304, type: 3}
+  cameraBtn: {fileID: 2082369402}
+  createBtn: {fileID: 873133024}
+  leftBtn: {fileID: 1040664711}
+  rightBtn: {fileID: 255169658}
   checkBtn: {fileID: 1799687563}
   prediction: {fileID: 419941864}
   afterPrediction: {fileID: 1493130561}
   beforePrediction: {fileID: 579555758}
+  predictedCharacter: {fileID: 1152316660}
+  description: {fileID: 1011114645}
 --- !u!1001 &5290899643741220125
 PrefabInstance:
   m_ObjectHideFlags: 0

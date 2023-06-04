@@ -9,23 +9,27 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System.Diagnostics.Eventing.Reader;
 
 public class CognitoSignIn : MonoBehaviour
 {
     private string _clientId = "1luokqrq9t4j8gag5kbnphunvu"; // 클라이언트 ID
 
-    public TMP_InputField sign_in_nickname;
-    public TMP_InputField sign_in_password;
-    public Button sign_in_sign_in_btn;
-    public Button sign_in_sign_up_btn;
+    [Header("InputField")]
+    public TMP_InputField nicknameInputField;
+    public TMP_InputField passwordInputField;
 
+    [Header("Button")]
+    public Button signInBtn;
+    public Button signUpBtn;
+
+    [Header("AutoLogin")]
     static public string lastLoggedInUserId;
     static public string lastLoggedInPassword;
+
     private void Start()
     {
-        sign_in_sign_in_btn.onClick.AddListener(ClickSignInBtn);
-        sign_in_sign_up_btn.onClick.AddListener(ClickSignUpBtn);
+        signInBtn.onClick.AddListener(ClickSignInBtn);
+        signUpBtn.onClick.AddListener(ClickSignUpBtn);
 
         // 앱 시작 시 PlayerPrefs에서 마지막으로 로그인 한 사용자 ID와 비밀번호 가져오기
         lastLoggedInUserId = PlayerPrefs.GetString("LastLoggedInUserId");
@@ -45,7 +49,6 @@ public class CognitoSignIn : MonoBehaviour
         using var provider = new AmazonCognitoIdentityProviderClient(new Amazon.Runtime.AnonymousAWSCredentials(), RegionEndpoint.APNortheast2);
         try
         {
-            Debug.Log("SignInAsync Function Called");
             var authRequest = new InitiateAuthRequest
             {
                 AuthFlow = AuthFlowType.USER_PASSWORD_AUTH,
@@ -58,11 +61,11 @@ public class CognitoSignIn : MonoBehaviour
             {
                 // 인증 성공시 Access Token 반환, 닉네임 반환
                 PlayerInfo.playerInfo.access_token = authResponse.AuthenticationResult.AccessToken;
-                PlayerInfo.playerInfo.nickname = sign_in_nickname.text;
+                PlayerInfo.playerInfo.nickname = username;
 
                 // 로그인 성공 후 PlayerPrefs에 사용자 ID와 비밀번호 저장
-                PlayerPrefs.SetString("LastLoggedInUserId", sign_in_nickname.text);
-                PlayerPrefs.SetString("LastLoggedInPassword", sign_in_password.text);
+                PlayerPrefs.SetString("LastLoggedInUserId", nicknameInputField.text);
+                PlayerPrefs.SetString("LastLoggedInPassword", passwordInputField.text);
                 PlayerPrefs.Save();
 
                 //if (캐릭터를 생성한 적이 있다면) {
@@ -72,13 +75,14 @@ public class CognitoSignIn : MonoBehaviour
                 //{
                 //    SceneManager.LoadScene("CharacterCreateScene");
                 //}
+                Debug.Log("SignIn Successful");
 
                 SceneManager.LoadScene("CharacterCreateScene");
                 return authResponse.AuthenticationResult.AccessToken;
             }
             else
             {
-                throw new Exception("Authentication failed.");
+                throw new Exception("SignIn Failed.");
             }
         }
         catch (Exception e)
@@ -91,7 +95,7 @@ public class CognitoSignIn : MonoBehaviour
     // 로그인 함수를 비동기식으로 실행
     private IEnumerator SignInCoroutine()
     {
-        yield return SignInAsync(sign_in_nickname.text, sign_in_password.text);
+        yield return SignInAsync(nicknameInputField.text, passwordInputField.text);
         
         yield break;
     }

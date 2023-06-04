@@ -1,73 +1,111 @@
-using Amazon.EC2.Model;
-using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class CharacterCreateManage : MonoBehaviour
 {
-    // 동물상 예측을 통한 결과 값
-    // 0 = puppy
-    // 1 = cat
-    // 2 = bear
-    // 3 = dino
-    // 4 = rabbit
-    private int type = 0;
-
-    public Button camera_btn, create_btn, left_btn, right_btn, checkBtn;
+    public int type = 0;
     private Animator animator;
-    static public bool isPredicted;
-    public GameObject prediction, afterPrediction, beforePrediction;
-    
 
-    private void Start()
+    [Header("Character Sprite")]
+    public Sprite[] sprites;
+    Dictionary<int, string> predictedAnimalName = new Dictionary<int, string>()
     {
-        create_btn.onClick.AddListener(ClickCreateBtn);
-        camera_btn.onClick.AddListener(ClickCameraBtn);
-        left_btn.onClick.AddListener(ClickLeftBtn);
-        right_btn.onClick.AddListener(ClickRightBtn);
+        {0, "강아지"},
+        {1, "고양이"},
+        {2, "곰"},
+        {3, "공룡"},
+        {4, "토끼"}
+    };
+
+    [Header("Button")]
+    public Button cameraBtn;
+    public Button createBtn;
+    public Button leftBtn;
+    public Button rightBtn;
+    public Button checkBtn;
+
+    [Header("Panel")]
+    public GameObject prediction;
+    public GameObject afterPrediction;
+    public GameObject beforePrediction;
+
+    [Header("Predict")]
+    static public bool isPredicted;
+    static public int predictedType = 0; // Default 값 0
+    static public int percentage = 100; // Default 값 100%
+    public GameObject predictedCharacter;
+    public TMP_Text description;
+
+
+    void Start()
+    {
+        createBtn.onClick.AddListener(ClickCreateBtn);
+        cameraBtn.onClick.AddListener(ClickCameraBtn);
+        leftBtn.onClick.AddListener(ClickLeftBtn);
+        rightBtn.onClick.AddListener(ClickRightBtn);
         checkBtn.onClick.AddListener(ClickCheckBtn);
 
         animator = GetComponent<Animator>();
 
         if (isPredicted) Predicting();
     }
-    private void Predicting()
+    // 예측 값 적용
+    void Predicting()
     {
         prediction.SetActive(true);
         afterPrediction.SetActive(false);
+        // 얼굴 인식 실패
+        if (predictedType == -1)
+        {
+            predictedCharacter.GetComponent<Image>().sprite = sprites[0];
+            description.text = "얼굴 인식에 실패하였습니다! 다시 촬영해주세요.";
+        }
+        else
+        {
+            // 보여주기 캐릭터에 예측된 값 적용
+            predictedCharacter.GetComponent<Image>().sprite = sprites[predictedType];
+            // 설명에 어떤 캐릭터가 어느정도 % 정확도인지 알림
+            description.text = "당신은 " + percentage + "%의 정확도로 " + predictedAnimalName[predictedType] + " 상입니다!";
+
+            // 애니메이션 캐릭터에 예측된 값 적용
+            type = predictedType;
+            animator.SetInteger("type", type);
+            PlayerInfo.playerInfo.characterType = type;
+        }
 
         Invoke("Predicted", 3);
     }
-    private void Predicted()
+    void Predicted()
     {
         beforePrediction.SetActive(false);
         afterPrediction.SetActive(true);
     }
-    private void ClickCheckBtn()
+    void ClickCheckBtn()
     {
         prediction.SetActive(false);
         isPredicted = false;
     }
 
-    private void ClickCreateBtn() {
+    void ClickCreateBtn() {
         PlayerInfo.playerInfo.characterType = type;
         SceneManager.LoadScene("MainScene");
     }
 
-    private void ClickCameraBtn() {
+    void ClickCameraBtn() {
         SceneManager.LoadScene("CameraScene");
     }
 
-    private void ClickLeftBtn() {
+    void ClickLeftBtn() {
         type--;
         if (type == -1) type = 4;
         animator.SetInteger("type", type);
         PlayerInfo.playerInfo.characterType = type;
     }
 
-    private void ClickRightBtn() {
+    void ClickRightBtn() {
         type++;
         if (type == 5) type = 0;
         animator.SetInteger("type", type);
