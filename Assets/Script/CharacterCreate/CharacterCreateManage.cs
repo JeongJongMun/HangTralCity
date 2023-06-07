@@ -28,9 +28,7 @@ public class CharacterCreateManage : MonoBehaviour
     public Button checkBtn;
 
     [Header("Panel")]
-    public GameObject prediction;
-    public GameObject afterPrediction;
-    public GameObject beforePrediction;
+    public GameObject predictionPanel;
 
     [Header("Predict")]
     static public bool isPredicted;
@@ -50,19 +48,19 @@ public class CharacterCreateManage : MonoBehaviour
 
         animator = GetComponent<Animator>();
 
-        if (isPredicted) Predicting();
+        if (isPredicted) Prediction();
     }
     // 예측 값 적용
-    void Predicting()
+    void Prediction()
     {
-        prediction.SetActive(true);
-        afterPrediction.SetActive(false);
+        predictionPanel.SetActive(true);
         // 얼굴 인식 실패
         if (predictedType == -1)
         {
             predictedCharacter.GetComponent<Image>().sprite = sprites[0];
             description.text = "얼굴 인식에 실패하였습니다! 다시 촬영해주세요.";
         }
+        // 얼굴 인식 성공
         else
         {
             // 보여주기 캐릭터에 예측된 값 적용
@@ -75,17 +73,10 @@ public class CharacterCreateManage : MonoBehaviour
             animator.SetInteger("type", type);
             PlayerInfo.playerInfo.characterType = type;
         }
-
-        Invoke("Predicted", 3);
-    }
-    void Predicted()
-    {
-        beforePrediction.SetActive(false);
-        afterPrediction.SetActive(true);
     }
     void ClickCheckBtn()
     {
-        prediction.SetActive(false);
+        predictionPanel.SetActive(false);
         isPredicted = false;
     }
 

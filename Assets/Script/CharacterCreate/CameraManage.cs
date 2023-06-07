@@ -18,6 +18,9 @@ public class CameraManage : MonoBehaviour
     public Button takePictureBtn;
     public Button backBtn;
 
+    [Header("Panel")]
+    public GameObject predictionPanel;
+
     public TMP_Text debug;
     // 카메라
     WebCamDevice[] devices;
@@ -163,6 +166,9 @@ public class CameraManage : MonoBehaviour
 
     public void TakePicture() // 사진 촬영하기
     {
+        // 동물상 예측중.. 판넬 ON
+        predictionPanel.SetActive(true);
+
         Texture2D picture = new Texture2D(frontCameraTexture.width, frontCameraTexture.height);
         picture.SetPixels(frontCameraTexture.GetPixels());
         picture.Apply();
@@ -176,11 +182,11 @@ public class CameraManage : MonoBehaviour
         Debug.Log("Picture saved at " + Application.persistentDataPath + "/" + fileName);
 
         // S3 버킷에 촬영한 사진 업로드
-        _ = S3Manage.s3Manage.UploadToS3(Application.persistentDataPath + "/" + fileName, PlayerInfo.playerInfo.nickname);
+        _ = S3Manage.s3Manage.PostPictureToS3(Application.persistentDataPath + "/" + fileName, PlayerInfo.playerInfo.nickname);
 
         // EC2 인스턴스에서 실행된 Flask 웹 서버에 닉네임 업로드
-        StartCoroutine(PostNicknameToEC2("http://43.202.19.142:5000", PlayerInfo.playerInfo.nickname));
-        // 모델에서 예측된 값과 닉네임이 S3에 저장 -> S3에서 닉네임과 레이블 가져오기
+        StartCoroutine(PostNicknameToEC2("http://43.202.19.142", PlayerInfo.playerInfo.nickname));
+        // 모델에서 예측된 값과 닉네임이 S3에 저장 -> S3에서 닉네임, 레이블, 확률 가져오기
         StartCoroutine(GetPredictedCharacterFromS3("https://predicted-character.s3.ap-northeast-2.amazonaws.com/" + PlayerInfo.playerInfo.nickname));
     }
 

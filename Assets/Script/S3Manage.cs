@@ -32,14 +32,14 @@ public class S3Manage : MonoBehaviour
         else if (s3Manage != this) Destroy(gameObject);
     }
 
-    public async Task UploadToS3(object obj, string nickname)
+    public async Task PostPictureToS3(object obj, string nickname)
     {
         PutObjectRequest request = null; // request 변수를 null로 초기화
         
         // 업로드 할 obj가 사진일 경우
         if (obj is string)
         {
-            if(SceneManager.GetActiveScene().name == "GangScene")
+            if (SceneManager.GetActiveScene().name == "GangScene")
             {
                 request = new PutObjectRequest
                 {
@@ -49,7 +49,7 @@ public class S3Manage : MonoBehaviour
                     ContentType = "image/png" // 파일 형식
                 };
             }
-            else
+            else if (SceneManager.GetActiveScene().name == "CameraScene")
             {
                 request = new PutObjectRequest
                 {

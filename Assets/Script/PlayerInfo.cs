@@ -4,8 +4,8 @@ using UnityEngine;
 public class PlayerInfo : MonoBehaviour
 {
     public static PlayerInfo playerInfo;
-    public string nickname;
-    public string email;
+    public string nickname = "Unknown";
+    public string email = "Unknown@naver.com";
     public string access_token; // Cognito 로그인시 받는 토큰
     public int hatCustom = 8; // 캐릭터 커스터마이징 hat 에셋 저장, 기본값 = 아무것도 없는 none이미지 8
     public int eyeCustom = 11; // 캐릭터 커스터마이징 eye 에셋 저장, 기본값 = 아무것도 없는 none이미지 11
