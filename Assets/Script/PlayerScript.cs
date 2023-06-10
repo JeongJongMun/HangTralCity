@@ -49,14 +49,15 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         RB = GetComponent<Rigidbody2D>();
         AN = GetComponent<Animator>();
 
-        // 옷장 또는 프로필 씬 일때
-        if (SceneManager.GetActiveScene().name == "ClosetScene" || SceneManager.GetActiveScene().name == "ProfileScene") 
+        // 옷장,프로필,기숙사 씬 : 닉네임 X, 캐릭터 타입, 커스텀 적용
+        if (SceneManager.GetActiveScene().name == "ClosetScene" || SceneManager.GetActiveScene().name == "ProfileScene" || SceneManager.GetActiveScene().name == "DormScene") 
         {
             nickNameTxt.GetComponent<TMP_Text>().text = "";
             if (PV.IsMine)
             {
                 transform.localPosition = new Vector3(0, 2, -1);
                 SetCharacterType();
+                SetCharacterCustom();
             }
         }
         // 그 외의 모든 씬에서 nickname 표시
@@ -170,9 +171,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         // 강의동, 운동장에서 움직임
         if (SceneManager.GetActiveScene().name == "GangScene" || SceneManager.GetActiveScene().name == "MiniGameScene")
         {
-            if (PV.IsMine)
+            if (PV.IsMine || SceneManager.GetActiveScene().name == "DormScene")
             {
-                // ** 움직이기 **
                 // 키보드 입력
                 float axis_x = Input.GetAxisRaw("Horizontal");
                 float axis_y = Input.GetAxisRaw("Vertical");
@@ -186,7 +186,6 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                 }
                 RB.velocity = new Vector2(speed * axis_x, speed * axis_y);
                 RB.AddForce(RB.velocity * Time.deltaTime, ForceMode2D.Impulse);
-                // ** 움직이기 **
 
                 // 걷기 애니메이션 설정
                 if (axis_x != 0 || axis_y != 0) AN.SetBool("isWalking", true);
@@ -195,17 +194,14 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                 // x축 반전
                 if (axis_x < 0) PV.RPC("FlipXxRPC", RpcTarget.AllBuffered, axis_x);
                 else if (axis_x > 0) PV.RPC("FlipXRPC", RpcTarget.AllBuffered, axis_x);
-
-
             }
-            //ismine이 아닌경우 위치동기화 (다른 사람이 움직이는걸 내가 볼 수 있게)
+            // ismine이 아닌경우 위치동기화 (다른 사람이 움직이는걸 내가 볼 수 있게)
             else if ((transform.position - curPos).sqrMagnitude >= 100) transform.position = curPos; // 멀리 떨어졌다면
             else transform.position = Vector3.Lerp(transform.position, curPos, Time.deltaTime * 10); // 근처라면
         }
         // 기숙사에서 움직임
         else if (SceneManager.GetActiveScene().name == "DormScene")
         {
-            // ** 움직이기 **
             // 키보드 입력
             float axis_x = Input.GetAxisRaw("Horizontal");
             float axis_y = Input.GetAxisRaw("Vertical");
@@ -219,7 +215,6 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             }
             RB.velocity = new Vector2(speed * axis_x, speed * axis_y);
             RB.AddForce(RB.velocity * Time.deltaTime, ForceMode2D.Impulse);
-            // ** 움직이기 **
 
             // 걷기 애니메이션 설정
             if (axis_x != 0 || axis_y != 0) AN.SetBool("isWalking", true);

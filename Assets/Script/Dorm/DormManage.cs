@@ -1,4 +1,3 @@
-using Amazon.Runtime.Internal.Transform;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,8 +7,6 @@ using UnityEngine.Networking;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-
-
 
 [System.Serializable]
 public class ResponseBody
@@ -23,9 +20,6 @@ public class Body
 {
     public Dictionary<string, string> furniture_positions;
 }
-
-
-
 
 public class Vector3JsonConverter : JsonConverter
 {
@@ -86,8 +80,6 @@ public static class JsonHelper
     }
 }
 
-
-
 public class DormManage : MonoBehaviour
 {
     private string apiGatewayUrl = "https://q4xm6p11e1.execute-api.ap-northeast-2.amazonaws.com/test1/dorm-custom";
@@ -105,21 +97,19 @@ public class DormManage : MonoBehaviour
         reset_btn.GetComponent<Button>().onClick.AddListener(Load);
 
         StartCoroutine(LoadFurniturePositionsFromDynamoDB());
-
-
     }
 
     private IEnumerator LoadFurniturePositionsFromDynamoDB()
     {
         // Create the request payload
         Dictionary<string, object> payloadData = new Dictionary<string, object>
-    {
-        { "nickname", PlayerInfo.playerInfo.nickname }
-    };
+        {
+            { "nickname", PlayerInfo.playerInfo.nickname }
+        };
         Dictionary<string, object> payload = new Dictionary<string, object>
-    {
-        { "data", payloadData }
-    };
+        {
+            { "data", payloadData }
+        };
 
         string payloadJson = JsonConvert.SerializeObject(payload);
         Debug.Log("Payload JSON: " + payloadJson);
@@ -140,6 +130,7 @@ public class DormManage : MonoBehaviour
             yield break;
         }
 
+
         Debug.Log("Furniture positions loaded successfully: " + request.downloadHandler.text);
 
         ResponseBody responseBody = JsonConvert.DeserializeObject<ResponseBody>(request.downloadHandler.text);
@@ -149,6 +140,7 @@ public class DormManage : MonoBehaviour
             Debug.LogError("Body is null in the response");
             yield break;
         }
+
 
         Body body = JsonConvert.DeserializeObject<Body>(responseBody.body);
 
@@ -165,17 +157,12 @@ public class DormManage : MonoBehaviour
             List<Vector3> positionsList = positionsArray.ToObject<List<Vector3>>(new JsonSerializer { Converters = { new Vector3JsonConverter() } });
             PlayerInfo.playerInfo.funiturePos[furnitureName] = positionsList;
         }
-
-        Load(); // Now, apply the positions to the scene
         request.Dispose(); // 메모리 누수 방지를 위해 추가
 
+        Load(); // Now, apply the positions to the scene
+
+
     }
-
-
-
-
-
-
 
     private IEnumerator SaveFurniturePositionsToDynamoDB()
     {
@@ -190,14 +177,14 @@ public class DormManage : MonoBehaviour
 
         // Create the request payload
         Dictionary<string, object> payloadData = new Dictionary<string, object>
-    {
-        { "nickname", PlayerInfo.playerInfo.nickname },
-        { "furniture_positions", furniturePositionsJson }
-    };
+        {
+            { "nickname", PlayerInfo.playerInfo.nickname },
+            { "furniture_positions", furniturePositionsJson }
+        };
         Dictionary<string, object> payload = new Dictionary<string, object>
-    {
-        { "data", payloadData }
-    };
+        {
+            { "data", payloadData }
+        };
 
 
         string payloadJson = JsonConvert.SerializeObject(payload);
@@ -212,8 +199,6 @@ public class DormManage : MonoBehaviour
         request.SetRequestHeader("Content-Type", "application/json");
 
         yield return request.SendWebRequest();
-        request.Dispose();
-
 
         // Check for errors
         if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
@@ -224,11 +209,9 @@ public class DormManage : MonoBehaviour
         {
             Debug.Log("Furniture positions saved successfully: " + request.downloadHandler.text);
         }
+
+        request.Dispose();  // 메모리 누수 방지를 위해 추가
     }
-
-
-
-
 
     private void Edit()
     {
@@ -314,8 +297,6 @@ public class DormManage : MonoBehaviour
             else if (kvp.Key.Replace(to_remove, "") == "TrashBin") foreach (Vector3 pos in kvp.Value) Instantiate(trash_bin, pos, Quaternion.identity);
             Debug.Log("Key = " + kvp.Key + ", Value : " + kvp.Value);
         }
-
-
     }
     private void ClickLeftBtn() // 스크롤 바 왼쪽으로 이동
     {
@@ -324,7 +305,5 @@ public class DormManage : MonoBehaviour
     private void ClickRightBtn() // 스크롤 바 오른쪽으로 이동
     {
         furniture_list.GetComponent<ScrollRect>().normalizedPosition += scroll_amount;
-
     }
-
 }
