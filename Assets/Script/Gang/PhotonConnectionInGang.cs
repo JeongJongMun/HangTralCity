@@ -100,7 +100,7 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
 
         File.WriteAllBytes(savePath + fileName + ".png", fileData); // png로 저장
 
-        _ = S3Manage.s3Manage.PostPictureToS3(savePath + fileName + ".png", PlayerInfo.playerInfo.nickname); // S3에 업로드
+        _ = S3Manage.s3Manage.PostToS3(savePath + fileName + ".png", PlayerInfo.playerInfo.nickname); // S3에 업로드
 
         // 0.5초 동안 대기 -> S3에 이미지가 올라갈 시간을 줌
         yield return new WaitForSeconds(0.5f);

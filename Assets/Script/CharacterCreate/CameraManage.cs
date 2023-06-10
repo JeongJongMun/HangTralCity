@@ -182,7 +182,7 @@ public class CameraManage : MonoBehaviour
         Debug.Log("Picture saved at " + Application.persistentDataPath + "/" + fileName);
 
         // S3 버킷에 촬영한 사진 업로드
-        _ = S3Manage.s3Manage.PostPictureToS3(Application.persistentDataPath + "/" + fileName, PlayerInfo.playerInfo.nickname);
+        _ = S3Manage.s3Manage.PostToS3(Application.persistentDataPath + "/" + fileName, PlayerInfo.playerInfo.nickname);
 
         // EC2 인스턴스에서 실행된 Flask 웹 서버에 닉네임 업로드
         StartCoroutine(PostNicknameToEC2("http://43.202.19.142", PlayerInfo.playerInfo.nickname));

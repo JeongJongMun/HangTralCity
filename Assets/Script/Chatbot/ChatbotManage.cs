@@ -45,10 +45,13 @@ public class ChatbotManage : MonoBehaviour
             // 스크롤을 최하단으로 설정
             Invoke("ScrollDown", 0.1f);
 
+            // 질문 데이터 수집을 위해 S3에 질문을 저장
+            _ = S3Manage.s3Manage.PostToS3(question, PlayerInfo.playerInfo.nickname);
             // EC2 인스턴스에서 실행된 Flask 웹 서버에 질문 업로드
             StartCoroutine(PostQuestionToEC2("http://15.164.130.22:5000", question, PlayerInfo.playerInfo.nickname));
             // 모델이 생성한 응답 데이터를 S3에 저장 -> S3에서 응답 데이터 가져오기
             StartCoroutine(GetChatBotSentenceFromS3("https://chatting-serivce.s3.ap-northeast-2.amazonaws.com/" + PlayerInfo.playerInfo.nickname));
+
         }
     }
     void Response(string response)

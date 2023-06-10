@@ -5,6 +5,7 @@ using UnityEngine;
 using Amazon.S3;
 using Amazon.Runtime;
 using UnityEngine.SceneManagement;
+using System.Net;
 
 public class S3Manage : MonoBehaviour
 {
@@ -32,10 +33,10 @@ public class S3Manage : MonoBehaviour
         else if (s3Manage != this) Destroy(gameObject);
     }
 
-    public async Task PostPictureToS3(object obj, string nickname)
+    public async Task PostToS3(object obj, string nickname)
     {
         PutObjectRequest request = null; // request 변수를 null로 초기화
-        
+
         // 업로드 할 obj가 사진일 경우
         if (obj is string)
         {
@@ -59,6 +60,15 @@ public class S3Manage : MonoBehaviour
                     ContentType = "image/png" // 파일 형식
                 };
             }
+            else if (SceneManager.GetActiveScene().name == "ChatbotScene")
+            {
+                request = new PutObjectRequest
+                {
+                    BucketName = "question-database", // S3 버킷 이름
+                    Key = await GetUniqueKey("Question"), // 중복을 피하기 위한 유니크한 Key 가져오기
+                    ContentBody = obj.ToString(), // Json Value
+                };
+            }
         }
         try
         {
@@ -69,6 +79,49 @@ public class S3Manage : MonoBehaviour
             Debug.LogError($"Error uploading file to S3: {e.Message}");
         }
     }
+
+    public async Task<string> GetUniqueKey(string baseKey)
+    {
+        string uniqueKey = baseKey;
+        int count = 1;
+
+        // Key가 이미 존재하는지 확인하고, 중복이 발생하는 경우에는 숫자를 추가하여 유니크한 Key 생성
+        while (await CheckKeyExists(uniqueKey))
+        {
+            uniqueKey = $"{baseKey}{count}";
+            count++;
+        }
+
+        return uniqueKey;
+    }
+
+    public async Task<bool> CheckKeyExists(string key)
+    {
+        var request = new GetObjectMetadataRequest
+        {
+            BucketName = "question-database", // S3 버킷 이름
+            Key = key // 체크할 Key
+        };
+
+        try
+        {
+            var response = await s3Client.GetObjectMetadataAsync(request);
+            return true; // Key가 존재하는 경우
+        }
+        catch (AmazonS3Exception ex)
+        {
+            if (ex.StatusCode == HttpStatusCode.NotFound)
+                return false; // Key가 존재하지 않는 경우
+            else
+                throw; // 예외를 다시 던집니다.
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error checking if key exists: {e.Message}");
+            throw; // 예외를 다시 던집니다.
+        }
+    }
+
 
     public string Finding()
     {
