@@ -516,6 +516,7 @@ GameObject:
   - component: {fileID: 1526496340029939432}
   - component: {fileID: 1526496340029939433}
   - component: {fileID: 1526496340029939435}
+  - component: {fileID: 619856431264245281}
   m_Layer: 5
   m_Name: TopBar
   m_TagString: Untagged
@@ -609,6 +610,21 @@ MonoBehaviour:
   m_Spacing: {x: 50, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!114 &619856431264245281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1526496340029939439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: -3, y: -3}
+  m_UseGraphicAlpha: 1
 --- !u!1 &4858839548382141756
 GameObject:
   m_ObjectHideFlags: 0

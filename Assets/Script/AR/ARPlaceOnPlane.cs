@@ -7,6 +7,8 @@ public class ARPlaceOnPlane : MonoBehaviour
 {
     public ARRaycastManager arRaycaster;
     public GameObject placeObject;
+    public MeshRenderer arDefaultPlane;
+    public ParticleSystem arDefaultPointCloud;
     GameObject spawnObject;
 
     void Update()
@@ -19,7 +21,8 @@ public class ARPlaceOnPlane : MonoBehaviour
         // 터치가 하나라도 일어났다면
         if (Input.touchCount > 0)
         {
-            Touch touch = Input.GetTouch(0); // 만약 4개의 손가락으로 터치를 한다면 가장 먼저 터지가 일어난 터치를 반환
+            // 여러 터치 중 가장 먼저 터지가 일어난 터치를 반환
+            Touch touch = Input.GetTouch(0); 
             List<ARRaycastHit> hits = new List<ARRaycastHit>();
             if (arRaycaster.Raycast(touch.position, hits, TrackableType.Planes))
             {
@@ -29,9 +32,7 @@ public class ARPlaceOnPlane : MonoBehaviour
                 if (!spawnObject)
                 {
                     spawnObject = Instantiate(placeObject, hitPose.position, hitPose.rotation);
-                    // 그림자 삭제
-                    //spawnObject.transform.GetChild(0).GetComponent<MeshRenderer>().receiveShadows = false;
-                    //spawnObject.transform.GetChild(0).GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                    spawnObject.GetComponent<MeshRenderer>().receiveShadows = false;
                 }
                 // spawnObject가 있다면 위치만 바꿔줌
                 else
@@ -39,7 +40,8 @@ public class ARPlaceOnPlane : MonoBehaviour
                     spawnObject.transform.position = hitPose.position;
                     spawnObject.transform.rotation = hitPose.rotation;
                 }
-
+                // 투명도를 0으로 설정
+                SetTransparencyValue(0f);
             }
         }
     }
@@ -56,5 +58,22 @@ public class ARPlaceOnPlane : MonoBehaviour
             placeObject.SetActive(true);
             placeObject.transform.SetPositionAndRotation(placementPose.position, placementPose.rotation);
         }
+    }
+    void SetTransparencyValue(float value)
+    {
+        // ArDefaultPlane의 Material 배열 가져오기
+        Material[] materials = arDefaultPlane.materials;
+
+        foreach (Material material in materials)
+        {
+            // 기존에 있는 Material의 투명도를 0으로 설정
+            Color materialColor = material.color;
+            materialColor.a = value;
+            material.color = materialColor;
+        }
+        // ArDefaultPointCloud의 Point 투명도를 0으로 설정
+        Color pointColor = arDefaultPointCloud.startColor;
+        pointColor.a = value;
+        arDefaultPointCloud.startColor = pointColor;
     }
 }

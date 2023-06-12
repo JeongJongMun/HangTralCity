@@ -22,10 +22,8 @@ public class PhotonConnectionInPlayground : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log("OnConnectedToMaster\n");
-
-        PhotonNetwork.LocalPlayer.NickName = PlayerInfo.playerInfo.nickname; // 닉네임 가져오기
-        PhotonNetwork.JoinOrCreateRoom("PlaygroundRoom", new RoomOptions { MaxPlayers = 5 }, null); // 방에 참가하거나, 방이 없다면 생성 후 참가
+        PhotonNetwork.LocalPlayer.NickName = PlayerInfo.playerInfo.nickname;
+        PhotonNetwork.JoinOrCreateRoom("PlaygroundRoom", new RoomOptions { MaxPlayers = 5 }, null); 
     }
 
     public override void OnJoinedRoom()
@@ -34,14 +32,13 @@ public class PhotonConnectionInPlayground : MonoBehaviourPunCallbacks
         Debug.LogFormat("{0}님이 방에 참가하였습니다.", PlayerInfo.playerInfo.nickname);
         Invoke("UserIn", 1f);
     }
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        PhotonNetwork.LoadLevel("MainScene");
+    }
 
     private void UserIn()
     {
         UserInPanel.SetActive(false);
-    }
-
-    public override void OnDisconnected(DisconnectCause cause)
-    {
-        PhotonNetwork.LoadLevel("MainScene");
     }
 }

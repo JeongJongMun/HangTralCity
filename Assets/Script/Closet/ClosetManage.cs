@@ -7,9 +7,19 @@ using System.Text;
 
 public class ClosetManage : MonoBehaviour
 {
-    public GameObject eyeScrollView, hatScrollView; // hat, eye 스크롤 뷰 오브젝트
-    public Button eyeScrollViewBtn, hatScrollViewBtn; // hat, eye 스크롤 뷰 선택 버튼
-    public GameObject[] eyeToggle, hatToggle; // hat, eye 카테고리의 커마 에셋 토글들
+    [Header("ScrollView")]
+    public GameObject eyeScrollView;
+    public GameObject hatScrollView;
+
+    [Header("Button")]
+    public Button eyeScrollViewBtn;
+    public Button hatScrollViewBtn;
+
+    [Header("Toggle")]
+    public GameObject[] eyeToggle;
+    public GameObject[] hatToggle;
+
+    [Header("Character")]
     public GameObject character;
 
     public class CustomInfoResponse

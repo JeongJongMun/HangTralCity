@@ -7,7 +7,6 @@ using System.Collections;
 using System.IO;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using TMPro;
 
 public class CameraManage : MonoBehaviour
 {
@@ -15,13 +14,12 @@ public class CameraManage : MonoBehaviour
     public RawImage cameraViewImage; // 카메라가 보여질 화면
 
     [Header("Button")]
-    public Button takePictureBtn;
-    public Button backBtn;
+    public Button takePictureBtn; // 사진 촬영 버튼
+    public Button backBtn; // 뒤로가기 버튼
 
     [Header("Panel")]
-    public GameObject predictionPanel;
+    public GameObject predictionPanel; // 동물상 예측 중 UI 패널
 
-    public TMP_Text debug;
     // 카메라
     WebCamDevice[] devices;
     WebCamTexture frontCameraTexture = null;
@@ -49,12 +47,10 @@ public class CameraManage : MonoBehaviour
         if (www.result != UnityWebRequest.Result.Success)
         {
             Debug.Log("Post Nickname To EC2 Failed : " + www.error);
-            debug.text += "Post Nickname To EC2 Failed : " + www.error;
         }
         else
         {
             Debug.Log("Post Nickname to EC2 Successful");
-            debug.text += "Post Nickname to EC2 Successful";
         }
         www.Dispose();
     }
@@ -102,8 +98,7 @@ public class CameraManage : MonoBehaviour
                         label = parsedLabel;
                     }
                 }
-                Debug.LogFormat("Nickname:{0}, Label:{1}, Percentage:{2}", nickname, label, percentage);
-                debug.text += "Nickname:" + nickname + ", Label:" + label + ", Percentage:" + percentage;
+                Debug.LogFormat("Get Predicted Character Successful \nNickname:{0}, Label:{1}, Percentage:{2}", nickname, label, percentage);
                 // Label로 Character Type 적용
                 CharacterCreateManage.predictedType = label;
                 CharacterCreateManage.percentage = percentage;
@@ -111,7 +106,6 @@ public class CameraManage : MonoBehaviour
             else
             {
                 Debug.Log("GET Predicted Character failed. Error: " + www.error);
-                debug.text += "GET Predicted Character failed. Error: " + www.error;
             }
         }
 
@@ -129,7 +123,7 @@ public class CameraManage : MonoBehaviour
         // 카메라가 없다면
         if (WebCamTexture.devices.Length == 0)
         {
-            Debug.Log("No Camera!");
+            Debug.Log("No Camera");
             return;
         }
 
@@ -166,9 +160,10 @@ public class CameraManage : MonoBehaviour
 
     public void TakePicture() // 사진 촬영하기
     {
-        // 동물상 예측중.. 판넬 ON
+        // 동물상 예측중 판넬 ON
         predictionPanel.SetActive(true);
 
+        // 촬영한 사진을 Texture 2D로 생성
         Texture2D picture = new Texture2D(frontCameraTexture.width, frontCameraTexture.height);
         picture.SetPixels(frontCameraTexture.GetPixels());
         picture.Apply();
@@ -186,6 +181,7 @@ public class CameraManage : MonoBehaviour
 
         // EC2 인스턴스에서 실행된 Flask 웹 서버에 닉네임 업로드
         StartCoroutine(PostNicknameToEC2("http://43.202.19.142", PlayerInfo.playerInfo.nickname));
+
         // 모델에서 예측된 값과 닉네임이 S3에 저장 -> S3에서 닉네임, 레이블, 확률 가져오기
         StartCoroutine(GetPredictedCharacterFromS3("https://predicted-character.s3.ap-northeast-2.amazonaws.com/" + PlayerInfo.playerInfo.nickname));
     }

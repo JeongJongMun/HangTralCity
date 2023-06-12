@@ -287,7 +287,7 @@ GameObject:
   - component: {fileID: 7156102090065190130}
   - component: {fileID: 7156102090065190127}
   m_Layer: 5
-  m_Name: GoDormBtn
+  m_Name: GoPlayBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

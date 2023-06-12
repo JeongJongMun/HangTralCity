@@ -6,6 +6,9 @@ using System.Collections;
 
 public class MiniGameManage : MonoBehaviourPunCallbacks
 {
+    // lobby, playing, ending
+    static public string mode = "lobby";
+
     [Header("UI")]
     public GameObject exitBtn;
     public GameObject startBtn;
@@ -15,44 +18,38 @@ public class MiniGameManage : MonoBehaviourPunCallbacks
     public GameObject playing;
     public GameObject ending;
 
-    // lobby, playing, ending
-    static public string mode = "lobby";
     [Header("Penalty")]
     public GameObject penaltyTxt;
     public int penaltyScore = 0;
 
     [Header("ETC")]
-    public GameObject timer; 
-    
-    int time = 60;
-    float second = 0;
+    public GameObject timerText;
+
     PhotonView PV;
-    float spawnTimer = 0;
+    int timer = 15; // 출력용 타이머
+    float _timer = 15f; // 실제 계산용 타이머
+    float spawnTimer = 0; // 피트 스폰 타이머
 
 
     void Start()
     {
         PV = gameObject.GetComponent<PhotonView>();
         startBtn.GetComponent<Button>().onClick.AddListener(ClickStartBtn);
-
-        timer.GetComponent<TMP_Text>().text = "남은시간 : " + time.ToString() + "초";
+        timerText.GetComponent<TMP_Text>().text = "남은시간 : " + timer.ToString() + "초";
     }
 
     void Update()
     {
-        if (mode == "lobby") PV.RPC("LobbyMode", RpcTarget.All);
-        else if (mode == "playing") PV.RPC("PlayingMode", RpcTarget.All);
-        else if (mode == "ending") PV.RPC("EndingMode", RpcTarget.All);
-
+        if (mode == "lobby") LobbyMode();
+        else if (mode == "playing") PlayingMode();
+        else if (mode == "ending") EndingMode();
     }
-    [PunRPC]
     void LobbyMode()
     {
         lobby.SetActive(true);
         playing.SetActive(false);
         ending.SetActive(false);
     }
-    [PunRPC]
     void PlayingMode()
     {
         // TimeOut 시 ending으로 전환
@@ -67,7 +64,7 @@ public class MiniGameManage : MonoBehaviourPunCallbacks
         {
             FeetSpawn();
             TimeFlow();
-            PV.RPC("SyncTime", RpcTarget.All, time);
+            PV.RPC("SyncTime", RpcTarget.All, timer);
         }
     }
     [PunRPC]
@@ -80,33 +77,25 @@ public class MiniGameManage : MonoBehaviourPunCallbacks
 
     void SetTimer()
     {
-        timer.GetComponent<TMP_Text>().text = "남은시간 : " + time.ToString() + "초";
+        timerText.GetComponent<TMP_Text>().text = "남은시간 : " + timer.ToString() + "초";
 
-        if (0 < time && time < 10)
+        if (0 < timer && timer < 10)
         {
-            if (time % 2 == 0) timer.GetComponent<TMP_Text>().color = Color.red;
-            if (time % 2 == 1) timer.GetComponent<TMP_Text>().color = Color.white;
+            if (timer % 2 == 0) timerText.GetComponent<TMP_Text>().color = Color.red;
+            if (timer % 2 == 1) timerText.GetComponent<TMP_Text>().color = Color.white;
         }
-        else if (time == 0)
-        {
-            mode = "ending";
-            ending.SetActive(true);
-        }
+        else if (timer <= 0) PV.RPC("SwitchToEndingMode", RpcTarget.All);
     }
     void TimeFlow()
     {
-        if (second > 1)
-        {
-            time -= 1;
-            second = 0;
-        }
-        else second += Time.deltaTime;
+        _timer -= Time.deltaTime;
+        timer = (int)_timer;
     }
     [PunRPC]
     void SyncTime(int masterTime)
     {
         // 마스터 클라이언트가 보낸 시간을 동기화
-        time = masterTime;
+        timer = masterTime;
     }
     void FeetSpawn()
     {
@@ -119,7 +108,6 @@ public class MiniGameManage : MonoBehaviourPunCallbacks
                 GameObject target = PhotonNetwork.Instantiate("Feet", new Vector2(Random.Range(-9, 9), gameObject.transform.position.y), transform.rotation);
                 spawnTimer = 0;
                 StartCoroutine(DestroyAfter(target, 3f));
-
             }
         }
     }
@@ -155,7 +143,16 @@ public class MiniGameManage : MonoBehaviourPunCallbacks
     void SwitchToPlayingMode()
     {
         penaltyScore = 0;
-        time = 60;
+        timer = 15;
+        _timer = 15f;
         mode = "playing";
+    }
+    [PunRPC]
+    void SwitchToEndingMode()
+    {
+        timer = 0;
+        _timer = 0f;
+        mode = "ending";
+        ending.SetActive(true);
     }
 }
