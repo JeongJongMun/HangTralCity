@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine.Networking;
 using System.Collections;
-using UnityEditor.Tilemaps;
-using Unity.VisualScripting;
 
 public class FriendList
 {

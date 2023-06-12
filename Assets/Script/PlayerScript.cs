@@ -11,7 +11,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     public PhotonView PV;
 
     Vector3 curPos;
-    int currentHatCustom, currentEyeCustom;
+    int currentHatCustom, currentEyeCustom, currentAnimatorType;
 
     private float playerScale = 0.1f; // 플레이어 크기 비율
     private float speed = 10f; // 플레이어 이동 속도
@@ -56,7 +56,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             if (PV.IsMine)
             {
                 transform.localPosition = new Vector3(0, 2, -1);
-                SetCharacterType();
+                SetCharacterType(PlayerInfo.playerInfo.characterType);
                 SetCharacterCustom();
             }
         }
@@ -90,8 +90,9 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                     // 캐릭터 세팅
                     currentHatCustom = PlayerInfo.playerInfo.hatCustom; // 초기값 설정
                     currentEyeCustom = PlayerInfo.playerInfo.eyeCustom;
-                    PV.RPC("SetCharacterCustom", RpcTarget.AllBuffered); // 다른 플레이어에게 내 커스텀 정보 및 캐릭터 타입 전달
-                    PV.RPC("SetCharacterType", RpcTarget.AllBuffered);
+                    // 다른 플레이어에게 내 커스텀 정보 및 캐릭터 타입 전달
+                    PV.RPC("SetCharacterCustom", RpcTarget.AllBuffered); 
+                    PV.RPC("SetCharacterType", RpcTarget.AllBuffered, PlayerInfo.playerInfo.characterType);
 
                     // 채팅
                     Chat();
@@ -108,19 +109,31 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         if (stream.IsWriting)
         {
             stream.SendNext(transform.position);
-            // 다른 플레이어에게 내 현재 커스텀 데이터 전달
+
+            // 다른 플레이어에게 내 캐릭터 커스텀 전달
             stream.SendNext(currentHatCustom);
             stream.SendNext(currentEyeCustom);
+
+            // 다른 플레이어게 내 캐릭터 타입 전달
+            stream.SendNext(PlayerInfo.playerInfo.characterType);
         }
         else
         {
             curPos = (Vector3)stream.ReceiveNext();
-            // 다른 플레이어에게 커스텀 데이터 받기
+
+            // 다른 플레이어에게 캐릭터 커스텀 받기
             currentHatCustom = (int)stream.ReceiveNext();
             currentEyeCustom = (int)stream.ReceiveNext();
-            // 다른 플레이어의 커스텀 스프라이트 변경
+
+            // 다른 플레이어의 캐릭터 커스텀 스프라이트 변경
             hatPoint.GetComponent<SpriteRenderer>().sprite = hatSprites[currentHatCustom];
             eyePoint.GetComponent<SpriteRenderer>().sprite = eyeSprites[currentEyeCustom];
+
+            // 다른 플레이어의 캐릭터 타입 받기
+            currentAnimatorType = (int)stream.ReceiveNext();
+            // 다른 플레이어의 캐릭터 타입 변경
+            AN.SetInteger("type", currentAnimatorType);
+
         }
     }
     [PunRPC]
@@ -135,9 +148,9 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     [PunRPC]
-    void SetCharacterType()
+    void SetCharacterType(int _type)
     {
-        AN.SetInteger("type", PlayerInfo.playerInfo.characterType);
+        AN.SetInteger("type", _type);
     }
 
     private void Chat()

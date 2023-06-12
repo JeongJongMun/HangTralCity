@@ -26,6 +26,9 @@ public class CognitoSignIn : MonoBehaviour
     static public string lastLoggedInUserId;
     static public string lastLoggedInPassword;
 
+    [Header("PopUp")]
+    public PopUpManage popUpManage;
+
     private void Start()
     {
         signInBtn.onClick.AddListener(ClickSignInBtn);
@@ -68,13 +71,6 @@ public class CognitoSignIn : MonoBehaviour
                 PlayerPrefs.SetString("LastLoggedInPassword", passwordInputField.text);
                 PlayerPrefs.Save();
 
-                //if (캐릭터를 생성한 적이 있다면) {
-                //    SceneManager.LoadScene("MainScene");
-                //}
-                //else
-                //{
-                //    SceneManager.LoadScene("CharacterCreateScene");
-                //}
                 Debug.Log("SignIn Successful");
 
                 SceneManager.LoadScene("CharacterCreateScene");
@@ -88,6 +84,7 @@ public class CognitoSignIn : MonoBehaviour
         catch (Exception e)
         {
             Debug.LogError(e.Message);
+            popUpManage.ShowPopup(e.Message);
             return null;
         }
     }
