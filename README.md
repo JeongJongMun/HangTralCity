@@ -1,6 +1,21 @@
-# HangTralPark
+# HangTralCity
+**2023-1 산학프로젝트**   
+## 팀원 구성
+프론트 1, 백엔드 2, AI 1
 
-# Rule
+## 주요 기능
+1. 동물상 예측 캐릭터 추천 AI 모델
+2. 학교 정보 접근 챗봇 AI 모델
+3. 캐릭터/방 커스터마이징
+4. 글로벌 채팅
+5. 게시판
+6. 멀티 플레이 게임
+7. AR 학교 마스코트 관람
+
+## 사용 기술
+Unity, Photon, EC2, S3, DynamoDB, Cognito, Lambda, APIGateway
+
+## Rule
 1. 유니티 파일에 한글 절대 쓰지 않기. 무조건 영어
 2. Github에 푸시 했을때 카톡으로 말하기
 3. 하루에 유니티 작업 시작하기 전에 Github Desktop 켜서 pull 받을거 있는지 확인
