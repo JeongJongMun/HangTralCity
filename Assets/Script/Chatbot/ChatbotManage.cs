@@ -9,6 +9,10 @@ using WebSocketSharp;
 
 public class ChatbotManage : MonoBehaviour
 {
+
+    //[Header("Images")]
+    //public Image[] images;
+
     [Header("InputField")]
     public TMP_InputField requestInputField;
 
@@ -18,6 +22,7 @@ public class ChatbotManage : MonoBehaviour
     [Header("Prefab")]
     public GameObject requestGroup;
     public GameObject responseGroup;
+    public GameObject responseGroupImage;
 
     [Header("Content - PrefabSpawnPos")]
     public GameObject content;
@@ -62,6 +67,16 @@ public class ChatbotManage : MonoBehaviour
         _responseGroup.transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = response;
         // 스크롤을 최하단으로 설정
         Invoke("ScrollDown", 0.1f);
+    }
+    void ResponseImage(string imageName)
+    {
+        // 답변 말풍선 생성
+        GameObject _responseGroup = Instantiate(responseGroupImage, new Vector2(0, 0), Quaternion.identity, content.transform);
+        // 답변 적용
+        _responseGroup.transform.GetChild(1).GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>(imageName);
+        // 스크롤을 최하단으로 설정
+        Invoke("ScrollDown", 0.1f);
+        Response("지도의 해당 위치에 있습니다.");
     }
     void ScrollDown()
     {
@@ -115,8 +130,16 @@ public class ChatbotManage : MonoBehaviour
                 response = responseData["response"].ToString();
             }
             Debug.LogFormat("Response\n{0}", response);
+            
+            if (response.Contains("이미지"))
+            {
+                ResponseImage(response);
+            }
+            else
+            {
+                Response(response);
+            }
 
-            Response(response);
         }
         else
         {

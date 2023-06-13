@@ -1823,6 +1823,7 @@ MonoBehaviour:
   sendBtn: {fileID: 1243437958}
   requestGroup: {fileID: 5040124054611880892, guid: bddcbd4e25f61294fa30c44a13e9fbe0, type: 3}
   responseGroup: {fileID: 8167462734559494850, guid: f30d724cb05d0bf4ead6b08577ee0182, type: 3}
+  responseGroupImage: {fileID: 8167462734559494850, guid: 0865002eefbc90548b802489b691405c, type: 3}
   content: {fileID: 333697654}
   scrollbar: {fileID: 332823591}
 --- !u!4 &1661579459
