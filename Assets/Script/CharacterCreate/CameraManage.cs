@@ -5,8 +5,15 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 using System.Collections;
 using System.IO;
-using System.Collections.Generic;
-using Newtonsoft.Json;
+using TMPro;
+
+[System.Serializable]
+public class PredictedAnimal
+{
+    public string nickname;
+    public int label;
+    public int percentage;
+}
 
 public class CameraManage : MonoBehaviour
 {
@@ -16,18 +23,24 @@ public class CameraManage : MonoBehaviour
     [Header("Button")]
     public Button takePictureBtn; // 사진 촬영 버튼
     public Button backBtn; // 뒤로가기 버튼
+    public Button galleryBtn; // 갤러리 버튼
 
     [Header("Panel")]
     public GameObject predictionPanel; // 동물상 예측 중 UI 패널
+    public TMP_Text debug;
 
     // 카메라
     WebCamDevice[] devices;
     WebCamTexture frontCameraTexture = null;
 
+    // 예측값
+    PredictedAnimal predictedData;
+
     private void Start()
     {
         takePictureBtn.onClick.AddListener(TakePicture);
         backBtn.onClick.AddListener(BackToCharacterCreateScene);
+        galleryBtn.onClick.AddListener(ClickGalleryBtn);
         CameraOn();
 
     }
@@ -47,10 +60,13 @@ public class CameraManage : MonoBehaviour
         if (www.result != UnityWebRequest.Result.Success)
         {
             Debug.Log("Post Nickname To EC2 Failed : " + www.error);
+            debug.text += "Post Nickname To EC2 Failed : " + www.error;
         }
         else
         {
             Debug.Log("Post Nickname to EC2 Successful");
+            debug.text += "Post Nickname to EC2 Successful";
+
         }
         www.Dispose();
     }
@@ -70,42 +86,20 @@ public class CameraManage : MonoBehaviour
                 string jsonResponse = www.downloadHandler.text;
 
                 // JSON 데이터를 Dictionary 형태로 파싱
-                Dictionary<string, object> responseData = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonResponse);
+                predictedData = JsonUtility.FromJson<PredictedAnimal>(jsonResponse);
 
-                // 닉네임 추출
-                string nickname = string.Empty;
-                if (responseData.ContainsKey("nickname"))
-                {
-                    nickname = responseData["nickname"].ToString();
-                }
+                Debug.LogFormat("Get Predicted Character Successful \nNickname:{0}, Label:{1}, Percentage:{2}", predictedData.nickname, predictedData.label, predictedData.percentage);
+                debug.text += "Get Predicted Character Successful";
 
-                // 확률 값 추출
-                int percentage = 0;
-                if (responseData.ContainsKey("percentage"))
-                {
-                    if (int.TryParse(responseData["percentage"].ToString(), out int parsedPercentage))
-                    {
-                        percentage = parsedPercentage;
-                    }
-                }
-
-                // 레이블 추출
-                int label = 0;
-                if (responseData.ContainsKey("label"))
-                {
-                    if (int.TryParse(responseData["label"].ToString(), out int parsedLabel))
-                    {
-                        label = parsedLabel;
-                    }
-                }
-                Debug.LogFormat("Get Predicted Character Successful \nNickname:{0}, Label:{1}, Percentage:{2}", nickname, label, percentage);
                 // Label로 Character Type 적용
-                CharacterCreateManage.predictedType = label;
-                CharacterCreateManage.percentage = percentage;
+                CharacterCreateManage.predictedType = predictedData.label;
+                CharacterCreateManage.percentage = predictedData.percentage;
             }
             else
             {
                 Debug.Log("GET Predicted Character failed. Error: " + www.error);
+                debug.text += "GET Predicted Character failed. Error: " + www.error;
+
             }
         }
 
@@ -168,8 +162,12 @@ public class CameraManage : MonoBehaviour
         picture.SetPixels(frontCameraTexture.GetPixels());
         picture.Apply();
 
+
+        // 이미지를 90도 반시계 방향으로 회전하여 파일로 저장
+        Texture2D rotatedPicture = RotateTexture(picture, -90);
+        byte[] bytes = rotatedPicture.EncodeToPNG();
+
         // 이미지를 파일로 저장
-        byte[] bytes = picture.EncodeToPNG();
         string fileName = PlayerInfo.playerInfo.nickname;
         File.WriteAllBytes(Application.persistentDataPath + "/" + fileName, bytes);
 
@@ -180,7 +178,78 @@ public class CameraManage : MonoBehaviour
         _ = S3Manage.s3Manage.PostToS3(Application.persistentDataPath + "/" + fileName, PlayerInfo.playerInfo.nickname);
 
         // EC2 인스턴스에서 실행된 Flask 웹 서버에 닉네임 업로드
-        StartCoroutine(PostNicknameToEC2("http://43.202.19.142", PlayerInfo.playerInfo.nickname));
+        StartCoroutine(PostNicknameToEC2("43.202.19.142", PlayerInfo.playerInfo.nickname));
+
+        // 모델에서 예측된 값과 닉네임이 S3에 저장 -> S3에서 닉네임, 레이블, 확률 가져오기
+        StartCoroutine(GetPredictedCharacterFromS3("https://predicted-character.s3.ap-northeast-2.amazonaws.com/" + PlayerInfo.playerInfo.nickname));
+    }
+
+
+    private Texture2D RotateTexture(Texture2D texture, float angle)
+    {
+        Texture2D rotatedTexture = new Texture2D(texture.height, texture.width);
+        Color32[] pixels = texture.GetPixels32();
+        Color32[] rotatedPixels = new Color32[rotatedTexture.width * rotatedTexture.height];
+
+        int rotatedWidth = rotatedTexture.width;
+        int rotatedHeight = rotatedTexture.height;
+
+        for (int x = 0; x < rotatedWidth; x++)
+        {
+            for (int y = 0; y < rotatedHeight; y++)
+            {
+                int newIndex = y * rotatedWidth + x;
+                int oldIndex = (rotatedWidth - x - 1) * rotatedHeight + y;
+
+                rotatedPixels[newIndex] = pixels[oldIndex];
+            }
+        }
+
+        rotatedTexture.SetPixels32(rotatedPixels);
+        rotatedTexture.Apply();
+
+        return rotatedTexture;
+    }
+    public void ClickGalleryBtn()
+    {
+        NativeGallery.GetImageFromGallery((file) =>
+        {
+            FileInfo seleted = new FileInfo(file);
+
+            // 용량 제한 (바이트 단위 -> 50메가)
+            if (seleted.Length > 50000000) return;
+
+            // 파일이 존재한다면 불러오기
+            if (!string.IsNullOrEmpty(file))
+            {
+                StartCoroutine(UploadImageToS3(file));
+            }
+        });
+    }
+
+    IEnumerator UploadImageToS3(string path)
+    {
+        // 동물상 예측중 판넬 ON
+        predictionPanel.SetActive(true);
+
+        yield return null;
+
+        byte[] fileData = File.ReadAllBytes(path);
+        string fileName = Path.GetFileName(path).Split('.')[0]; // 확장자를 자르기 위해 . 기준으로 나눔
+        string savePath = Application.persistentDataPath + "/Image"; // 불러오고 내부에 저장하기
+
+        // 아직 한번도 저장하지 않았다면
+        if (!Directory.Exists(savePath)) Directory.CreateDirectory(savePath);
+
+        File.WriteAllBytes(savePath + fileName + ".png", fileData); // png로 저장
+
+        _ = S3Manage.s3Manage.PostToS3(savePath + fileName + ".png", PlayerInfo.playerInfo.nickname); // S3에 업로드
+
+        // 0.5초 동안 대기 -> S3에 이미지가 올라갈 시간을 줌
+        yield return new WaitForSeconds(0.5f);
+
+        // EC2 인스턴스에서 실행된 Flask 웹 서버에 닉네임 업로드
+        StartCoroutine(PostNicknameToEC2("43.202.19.142", PlayerInfo.playerInfo.nickname));
 
         // 모델에서 예측된 값과 닉네임이 S3에 저장 -> S3에서 닉네임, 레이블, 확률 가져오기
         StartCoroutine(GetPredictedCharacterFromS3("https://predicted-character.s3.ap-northeast-2.amazonaws.com/" + PlayerInfo.playerInfo.nickname));

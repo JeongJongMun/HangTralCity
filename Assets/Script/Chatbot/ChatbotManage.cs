@@ -3,16 +3,17 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Networking;
 using System.Collections;
-using Newtonsoft.Json;
-using System.Collections.Generic;
 using WebSocketSharp;
+
+[System.Serializable]
+public class PredictedChat
+{
+    public string question;
+    public string response;
+}
 
 public class ChatbotManage : MonoBehaviour
 {
-
-    //[Header("Images")]
-    //public Image[] images;
-
     [Header("InputField")]
     public TMP_InputField requestInputField;
 
@@ -30,6 +31,8 @@ public class ChatbotManage : MonoBehaviour
     [Header("ScrollBar")]
     public Scrollbar scrollbar;
 
+    // 예측값
+    PredictedChat predictedData;
 
     void Start()
     {
@@ -53,7 +56,7 @@ public class ChatbotManage : MonoBehaviour
             // 질문 데이터 수집을 위해 S3에 질문을 저장
             _ = S3Manage.s3Manage.PostToS3(question, PlayerInfo.playerInfo.nickname);
             // EC2 인스턴스에서 실행된 Flask 웹 서버에 질문 업로드
-            StartCoroutine(PostQuestionToEC2("http://15.164.130.22", question, PlayerInfo.playerInfo.nickname));
+            StartCoroutine(PostQuestionToEC2("15.164.130.22", question, PlayerInfo.playerInfo.nickname));
             // 모델이 생성한 응답 데이터를 S3에 저장 -> S3에서 응답 데이터 가져오기
             StartCoroutine(GetChatBotSentenceFromS3("https://chatting-serivce.s3.ap-northeast-2.amazonaws.com/" + PlayerInfo.playerInfo.nickname));
 
@@ -120,24 +123,19 @@ public class ChatbotManage : MonoBehaviour
         {
             string jsonResponse = www.downloadHandler.text;
 
-            // JSON 데이터를 Dictionary 형태로 파싱
-            Dictionary<string, object> responseData = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonResponse);
+            // JSON 데이터를 Class 형태로 파싱
+            predictedData = JsonUtility.FromJson<PredictedChat>(jsonResponse);
 
             // 답변 추출
-            string response = string.Empty;
-            if (responseData.ContainsKey("response"))
-            {
-                response = responseData["response"].ToString();
-            }
-            Debug.LogFormat("Response\n{0}", response);
+            Debug.LogFormat("Response\n{0}", predictedData.response);
             
-            if (response.Contains("이미지"))
+            if (predictedData.response.Contains("이미지"))
             {
-                ResponseImage(response);
+                ResponseImage(predictedData.response);
             }
             else
             {
-                Response(response);
+                Response(predictedData.response);
             }
 
         }
