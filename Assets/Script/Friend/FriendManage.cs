@@ -6,37 +6,49 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine.Networking;
 using System.Collections;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 public class FriendList
 {
     public List<string> friends;
 }
 
-public class FriendResponseBody  // 이름 변경
+public class FriendResponseBody
 {
     public string statusCode;
     public string body;
 }
 
-
 public class FriendManage : MonoBehaviour
 {
+    public GameObject bed;
+    public GameObject carpet1;
+    public GameObject carpet2;
+    public GameObject desk;
+    public GameObject drawer;
+    public GameObject flower_pot;
+    public GameObject sofa;
+    public GameObject trash_bin;
+
     [Header("GoPlay -> Off")]
-    public GameObject addBtn; // 친구 추가 버튼
-    public GameObject inputField; // 친구 이름 입력창
+    public GameObject addBtn;
+    public GameObject inputField;
     public GameObject scrollView;
 
     [Header("GoPlay -> On")]
     public GameObject backBtn;
 
     [Header("Content : Prefab SpawnPos")]
-    public GameObject content; // 동적으로 추가할 친구 프리팹의 부모 오브젝트
+    public GameObject content;
 
     [Header("Prefab")]
-    public GameObject friend; // 동적으로 추가 할 친구 프리팹
+    public GameObject friend;
+    public GameObject playerPrefab;
 
-    Button[] deleteButtons; // 삭제 버튼들
-    Button[] goPlayButtons; // 놀러가기 버튼들
+    Button[] deleteButtons;
+    Button[] goPlayButtons;
+    GameObject playerSpawned;
 
     private void Start()
     {
@@ -48,24 +60,20 @@ public class FriendManage : MonoBehaviour
 
     void SetButtonListener()
     {
-        // 이름으로 모든 삭제 버튼을 찾음
         deleteButtons = FindObjectsOfType<Button>().Where(button => button.name == "DeleteBtn").ToArray();
-        // 이름으로 모든 놀러가기 버튼을 찾음
         goPlayButtons = FindObjectsOfType<Button>().Where(button => button.name == "GoPlayBtn").ToArray();
 
-        // 찾은 버튼들에 대해 동일한 삭제 함수를 연결
         foreach (Button button in deleteButtons)
         {
             button.onClick.AddListener(() => DeleteFriend(button.transform.parent.GetChild(0).GetComponent<TMP_Text>().text, button.transform.parent.gameObject));
         }
-        // 찾은 버튼들에 대해 동일한 놀러가기 함수를 연결
+
         foreach (Button button in goPlayButtons)
         {
             button.onClick.AddListener(() => GoPlayDorm(button.transform.parent.GetChild(0).GetComponent<TMP_Text>().text));
         }
     }
 
-    // 친구 추가
     void AddFriend()
     {
         string friendName;
@@ -73,14 +81,12 @@ public class FriendManage : MonoBehaviour
         {
             friendName = inputField.GetComponent<TMP_InputField>().text;
             inputField.GetComponent<TMP_InputField>().text = null;
-            // 친구 프리팹 추가
+
             GameObject _friend = Instantiate(friend, new Vector2(0, 0), Quaternion.identity, content.transform);
-            // 이름 적용
             _friend.transform.GetChild(0).GetComponent<TMP_Text>().text = friendName;
-            // 추가된 친구 프리팹의 버튼에 리스너 부착
             SetButtonListener();
 
-            Debug.LogFormat("Friend Added : {0}", friendName);
+            Debug.LogFormat("Friend Added: {0}", friendName);
             StartCoroutine(UpdateFriendListInDynamoDB(friendName, _friend));
         }
     }
@@ -88,32 +94,34 @@ public class FriendManage : MonoBehaviour
     void DeleteFriend(string friendName, GameObject parentObject)
     {
         StartCoroutine(DeleteFriendFromDynamoDB(friendName, parentObject));
-
     }
 
     void LoadFriend()
     {
-        // 친구 목록 Db에서 불러오기
         StartCoroutine(GetFriendListFromDynamoDB());
     }
 
-    void GoPlayDorm(string name) // name = 기숙사 놀러가기 버튼 누른 프리팹의 이름
+    void GoPlayDorm(string name)
     {
-        Debug.LogFormat("GoPlayDorm : {0}", name);
-        // 기숙사 배경 보여지기
+        Debug.LogFormat("GoPlayDorm: {0}", name);
+
         addBtn.SetActive(false);
         inputField.SetActive(false);
         scrollView.SetActive(false);
         backBtn.SetActive(true);
+        playerSpawned = Instantiate(playerPrefab, new Vector3(0, 0, -1), Quaternion.identity);
 
-        // 기숙사 정보 불러오기 및 가구 배치
+
+        StartCoroutine(LoadFurniturePositionsFromDynamoDB(name));
     }
+
     void BackToFriendList()
     {
         addBtn.SetActive(true);
         inputField.SetActive(true);
         scrollView.SetActive(true);
         backBtn.SetActive(false);
+        Destroy(playerSpawned);
     }
 
     IEnumerator UpdateFriendListInDynamoDB(string friendName, GameObject _friend)
@@ -135,16 +143,15 @@ public class FriendManage : MonoBehaviour
         {
             FriendResponseBody response = JsonUtility.FromJson<FriendResponseBody>(request.downloadHandler.text);
 
-            // Check if the user was not found
             if (response.statusCode == "400")
             {
                 Debug.Log("User not found, friend not added!");
-                Destroy(_friend); // If failed to add friend, destroy the added friend prefab
+                Destroy(_friend);
             }
             else
             {
                 Debug.Log("Friend list update successful!");
-                LoadFriend();  // Refresh friend list
+                LoadFriend();
             }
         }
         else
@@ -152,13 +159,11 @@ public class FriendManage : MonoBehaviour
             Debug.Log($"Friend list update failed: {request.error}");
             Debug.Log($"Response Code: {(int)request.responseCode}");
             Debug.Log($"Response: {request.downloadHandler.text}");
-            Destroy(_friend); // If failed to add friend, destroy the added friend prefab
+            Destroy(_friend);
         }
 
-        request.Dispose(); // Prevent memory leak
+        request.Dispose();
     }
-
-
 
     IEnumerator GetFriendListFromDynamoDB()
     {
@@ -197,13 +202,10 @@ public class FriendManage : MonoBehaviour
                 {
                     Debug.Log("Friend: " + friendName);
 
-                    // 친구 프리팹 추가
                     GameObject _friend = Instantiate(friend, new Vector2(0, 0), Quaternion.identity, content.transform);
-                    // 이름 적용
                     _friend.transform.GetChild(0).GetComponent<TMP_Text>().text = friendName;
                 }
                 SetButtonListener();
-
             }
             else
             {
@@ -238,9 +240,8 @@ public class FriendManage : MonoBehaviour
             if (request.result == UnityWebRequest.Result.Success)
             {
                 Debug.Log("Friend deletion successful!");
-                // DB에서 성공적으로 친구를 삭제한 후에 프리팹을 삭제
                 Destroy(parentObject);
-                LoadFriend();  // 친구 목록 갱신
+                LoadFriend();
             }
             else
             {
@@ -253,6 +254,125 @@ public class FriendManage : MonoBehaviour
         {
             request.Dispose();
         }
+    }
+
+    IEnumerator LoadFurniturePositionsFromDynamoDB(string friendName)
+    {
+        string apiGatewayUrl = "https://q4xm6p11e1.execute-api.ap-northeast-2.amazonaws.com/test1/dorm-custom";
+
+        // Create the request payload
+        Dictionary<string, object> payloadData = new Dictionary<string, object>
+        {
+            { "data", new Dictionary<string, string> { { "nickname", friendName } } }
+        };
+        string payloadJson = JsonConvert.SerializeObject(payloadData);
+
+        // Send the request to the API Gateway
+        UnityWebRequest request = new UnityWebRequest(apiGatewayUrl, "POST");
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(payloadJson);
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+
+        yield return request.SendWebRequest();
+
+        // Check for errors
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            FriendResponseBody response = JsonConvert.DeserializeObject<FriendResponseBody>(request.downloadHandler.text);
+            Debug.Log(response.statusCode);
+            Debug.Log(response.body);
+
+
+            // Check if the request was successful
+            if (response.statusCode == "200")
+            {
+                // Get the furniture positions from the response body
+                Body body = JsonConvert.DeserializeObject<Body>(response.body);
+                Dictionary<string, string> furniturePositions = body.furniture_positions;
+
+                // 씬의 모든 오브젝트 가져오기
+                GameObject[] allObjects = FindObjectsOfType<GameObject>();
+
+                // 모든 오브젝트를 순환하며 태그를 비교하여 기존 방 커스터마이징 정보 삭제
+                foreach (GameObject obj in allObjects) if (obj.tag == "Custom_Dorm") Destroy(obj);
+
+                // Apply the furniture positions to the panel
+                foreach (KeyValuePair<string, string> furniturePosition in furniturePositions)
+                {
+                    string furnitureName = furniturePosition.Key;
+                    Debug.LogFormat("FurnitureName:{0}", furnitureName);
+                    JArray positionsArrayRaw = JArray.Parse(furniturePosition.Value);
+                    Vector3[] positionsArray = positionsArrayRaw.ToObject<Vector3[]>();
+
+                    List<Vector3> positionsList = new List<Vector3>(positionsArray);
+                    PlayerInfo.playerInfo.funiturePos[furnitureName] = positionsList;
+
+                    GameObject furniturePrefab = GetFurniturePrefab(furnitureName);
+                    if (furniturePrefab != null)
+                    {
+                        InstantiateFurniture(furniturePrefab, positionsList);
+                    }
+                }
+            }
+            else
+            {
+                Debug.LogError("Failed to load friend's furniture positions: " + response.body);
+            }
+        }
+        else
+        {
+            Debug.LogError("Error loading friend's furniture positions: " + request.error);
+        }
+
+        request.Dispose(); // Prevent memory leak
+    }
+
+
+    void InstantiateFurniture(GameObject prefab, List<Vector3> positions)
+    {
+        foreach (Vector3 position in positions)
+        {
+            Instantiate(prefab, position, Quaternion.identity);
+        }
+    }
+
+    GameObject GetFurniturePrefab(string furnitureName)
+    {
+        GameObject prefab = null;
+
+        switch (furnitureName)
+        {
+            case "Bed(Clone)":
+                prefab = bed;
+                break;
+            case "Carpet1(Clone)":
+                prefab = carpet1;
+                break;
+            case "Carpet2(Clone)":
+                prefab = carpet2;
+                break;
+            case "Desk(Clone)":
+                prefab = desk;
+                break;
+            case "Drawer(Clone)":
+                prefab = drawer;
+                break;
+            case "FlowerPot(Clone)":
+                prefab = flower_pot;
+                break;
+            case "Sofa(Clone)":
+                prefab = sofa;
+                break;
+            case "TrashBin(Clone)":
+                prefab = trash_bin;
+                break;
+            default:
+                Debug.LogWarning("Prefab not found for furniture: " + furnitureName);
+                break;
+        }
+
+        return prefab;
     }
 
 }

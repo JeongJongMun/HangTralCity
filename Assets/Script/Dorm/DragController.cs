@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class DragController : MonoBehaviour
@@ -10,7 +11,10 @@ public class DragController : MonoBehaviour
 
     void Start()
     {
-        editToggle = GameObject.Find("EditToggle").GetComponent<Toggle>();
+        if (SceneManager.GetActiveScene().name == "DormScene")
+        {
+            editToggle = GameObject.Find("EditToggle").GetComponent<Toggle>();
+        }
     }
     void Update()
     {

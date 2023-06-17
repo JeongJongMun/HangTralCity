@@ -4749,12 +4749,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b6b8dd8a8e424d4ca73db44fdf0c96a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bed: {fileID: 8728349253131858858, guid: 8219731a7c45aa742bd4d994325cbb1d, type: 3}
+  carpet1: {fileID: 6952779960609072472, guid: c3a347480476a684195321743a9e1f54, type: 3}
+  carpet2: {fileID: 4727325555750561362, guid: 42e3505899ad08e45803d16afef6686a, type: 3}
+  desk: {fileID: 5091348893949393960, guid: 506959684b182774e96ed6c0317ef50d, type: 3}
+  drawer: {fileID: 6609352618417240811, guid: 898bf2f372d44fa4d921294588fa0582, type: 3}
+  flower_pot: {fileID: 5643718184698701353, guid: da0ecb94e579b6847a7fe8c2bff4efe2, type: 3}
+  sofa: {fileID: 4827858825106943486, guid: e91348a52c055dd43af7fd7ddda700d2, type: 3}
+  trash_bin: {fileID: 4899152414871960755, guid: 016754d2cc2f1ba49b88a619254011ec, type: 3}
   addBtn: {fileID: 251036854}
   inputField: {fileID: 2063094610}
   scrollView: {fileID: 1083984013}
   backBtn: {fileID: 214835705}
   content: {fileID: 1378913795}
   friend: {fileID: 7156102090375200746, guid: 9ee8d0d6be043a540bae81a9ebe335d7, type: 3}
+  playerPrefab: {fileID: 3770448723398332660, guid: f24830e3694e3b74dbd1a020e9b6c3c3, type: 3}
 --- !u!4 &701442634
 Transform:
   m_ObjectHideFlags: 0

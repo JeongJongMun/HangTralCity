@@ -88,6 +88,7 @@ public class DormManage : MonoBehaviour
     public Toggle edit;
     public GameObject save_btn, reset_btn, furniture_list, left_btn, right_btn;
     public GameObject bed, carpet1, carpet2, desk, drawer, flower_pot, sofa, trash_bin;
+
     private void Start()
     {
         edit.onValueChanged.AddListener(delegate { Edit(); });
