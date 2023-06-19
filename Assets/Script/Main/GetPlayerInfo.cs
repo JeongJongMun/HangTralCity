@@ -27,7 +27,10 @@ public class GetPlayerInfo : MonoBehaviour
 
         access_token = PlayerInfo.playerInfo.access_token; // 로그인 성공 후 반환받은 엑세스 토큰
 
-        GetUserInformation(); // 메인 화면 시작시 자동으로 유저 정보 가져오기
+        if (gameObject != null)
+        {
+            GetUserInformation(); // 메인 화면 시작시 자동으로 유저 정보 가져오기
+        }
     }
 
     async void GetUserInformation()

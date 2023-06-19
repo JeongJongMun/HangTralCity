@@ -69,7 +69,7 @@ public class ChatbotManage : MonoBehaviour
         // 답변 적용
         _responseGroup.transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = response;
         // 스크롤을 최하단으로 설정
-        Invoke("ScrollDown", 0.1f);
+        Invoke("ScrollDown", 0.2f);
     }
     void ResponseImage(string imageName)
     {
@@ -78,7 +78,7 @@ public class ChatbotManage : MonoBehaviour
         // 답변 적용
         _responseGroup.transform.GetChild(1).GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>(imageName);
         // 스크롤을 최하단으로 설정
-        Invoke("ScrollDown", 0.1f);
+        Invoke("ScrollDown", 0.2f);
         Response("지도의 해당 위치에 있습니다.");
     }
     void ScrollDown()

@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 using System.Collections;
 using System.IO;
-using TMPro;
 
 [System.Serializable]
 public class PredictedAnimal
@@ -27,7 +26,6 @@ public class CameraManage : MonoBehaviour
 
     [Header("Panel")]
     public GameObject predictionPanel; // 동물상 예측 중 UI 패널
-    public TMP_Text debug;
 
     // 카메라
     WebCamDevice[] devices;
@@ -60,13 +58,10 @@ public class CameraManage : MonoBehaviour
         if (www.result != UnityWebRequest.Result.Success)
         {
             Debug.Log("Post Nickname To EC2 Failed : " + www.error);
-            debug.text += "Post Nickname To EC2 Failed : " + www.error;
         }
         else
         {
             Debug.Log("Post Nickname to EC2 Successful");
-            debug.text += "Post Nickname to EC2 Successful";
-
         }
         www.Dispose();
     }
@@ -89,7 +84,6 @@ public class CameraManage : MonoBehaviour
                 predictedData = JsonUtility.FromJson<PredictedAnimal>(jsonResponse);
 
                 Debug.LogFormat("Get Predicted Character Successful \nNickname:{0}, Label:{1}, Percentage:{2}", predictedData.nickname, predictedData.label, predictedData.percentage);
-                debug.text += "Get Predicted Character Successful";
 
                 // Label로 Character Type 적용
                 CharacterCreateManage.predictedType = predictedData.label;
@@ -98,8 +92,6 @@ public class CameraManage : MonoBehaviour
             else
             {
                 Debug.Log("GET Predicted Character failed. Error: " + www.error);
-                debug.text += "GET Predicted Character failed. Error: " + www.error;
-
             }
         }
 

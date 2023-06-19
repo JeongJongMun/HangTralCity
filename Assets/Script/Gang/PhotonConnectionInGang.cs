@@ -98,15 +98,39 @@ public class PhotonConnectionInGang : MonoBehaviourPunCallbacks
         // 아직 한번도 저장하지 않았다면
         if (!Directory.Exists(savePath)) Directory.CreateDirectory(savePath);
 
-        File.WriteAllBytes(savePath + fileName + ".png", fileData); // png로 저장
+        // Rotate the image clockwise by 90 degrees
+        Texture2D originalTexture = new Texture2D(2, 2);
+        originalTexture.LoadImage(fileData);
+        Texture2D rotatedTexture = RotateTexture(originalTexture, -90);
+
+        // Convert the rotated texture back to bytes
+        byte[] rotatedFileData = rotatedTexture.EncodeToPNG();
+        File.WriteAllBytes(savePath + fileName + ".png", rotatedFileData); // png로 저장
 
         _ = S3Manage.s3Manage.PostToS3(savePath + fileName + ".png", PlayerInfo.playerInfo.nickname); // S3에 업로드
 
-        // 0.5초 동안 대기 -> S3에 이미지가 올라갈 시간을 줌
-        yield return new WaitForSeconds(0.5f);
+        // 2초 동안 대기 -> S3에 이미지가 올라갈 시간을 줌
+        yield return new WaitForSeconds(2f);
 
         string url = S3Manage.s3Manage.Finding(); // url 가져오기
         PV.RPC("GetImage", RpcTarget.AllBuffered, url);
+    }
+    // Rotate a texture by the specified angle
+    Texture2D RotateTexture(Texture2D originalTexture, float angle)
+    {
+        Texture2D rotatedTexture = new Texture2D(originalTexture.height, originalTexture.width);
+
+        for (int x = 0; x < originalTexture.width; x++)
+        {
+            for (int y = 0; y < originalTexture.height; y++)
+            {
+                rotatedTexture.SetPixel(y, originalTexture.width - x - 1, originalTexture.GetPixel(x, y));
+            }
+        }
+
+        rotatedTexture.Apply();
+
+        return rotatedTexture;
     }
     [PunRPC]
     void GetImage(string url)

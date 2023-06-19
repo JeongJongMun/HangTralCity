@@ -11,8 +11,8 @@ public class S3Manage : MonoBehaviour
 {
     public static S3Manage s3Manage;
 
-    string accessKey = "AKIA4SLVEG5W3BBNELIJ";
-    string secretKey = "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";
+    string accessKey = "";
+    string secretKey = "";
 
     public AmazonS3Client s3Client;
 
