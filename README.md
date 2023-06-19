@@ -13,7 +13,7 @@
 7. AR 학교 마스코트 관람
 
 ## 사용 기술
-Unity, AR, Photon, EC2, S3, DynamoDB, Cognito, Lambda, APIGateway
+Unity, AR, AI, Photon, EC2, S3, DynamoDB, Cognito, Lambda, APIGateway
 
 ## Rule
 1. 유니티 파일에 한글 절대 쓰지 않기. 무조건 영어
